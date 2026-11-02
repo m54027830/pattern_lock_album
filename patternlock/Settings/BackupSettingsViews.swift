@@ -18,7 +18,7 @@ struct BackupExportView: View {
                 Label("Encrypted backup", systemImage: "lock.icloud")
                 Text("Your photos, videos, folders, and vault name are encrypted before saving. Choose iCloud Drive in Files to keep the backup in iCloud.")
                 SecureField("This vault’s recovery phrase", text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
-            } footer: { Text("Save the phrase separately. Pattern can’t recover an encrypted backup without the phrase used to create it.") }
+            } footer: { Text("Save the phrase separately and wait for iCloud Drive to finish uploading before deleting Pattern. Deleting the app removes local vaults. Restoration needs both the backup file and its original phrase.") }
             Section {
                 Button("Back up now", systemImage: "icloud.and.arrow.up", action: createBackup).disabled(phrase.isEmpty || busy || store.isBusy)
                 if busy { ProgressView("Encrypting backup…") }
@@ -111,23 +111,25 @@ struct RestoreVaultView: View {
             } else if restored {
                 Section {
                     Label("Vault restored", systemImage: "checkmark.circle")
-                    Text("Lock Pattern, then draw the new pattern to open the restored vault.")
+                    Text("Draw your new pattern on the lock screen to open the restored vault.")
                     Button("Done") { onRestored?(); dismiss() }
                 }
             } else {
                 Section {
-                    Button(url == nil ? "Choose backup from Files" : "Choose another backup", systemImage: "folder") { selectingFile = true }
+                    Label("Restore from iCloud Drive", systemImage: "lock.icloud")
+                    Text("In Files, open Browse → iCloud Drive and select your saved .patternbackup file. Sign in to the same Apple Account and turn on iCloud Drive if it isn’t listed.")
+                    Button(url == nil ? "Choose iCloud backup" : "Choose another backup", systemImage: "icloud.and.arrow.down") { selectingFile = true }
                     if let url { Text(url.lastPathComponent).font(.caption).foregroundStyle(AlbumTheme.secondary) }
                     SecureField("Phrase used for this backup", text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
                     Button("Open encrypted backup", action: prepare).disabled(url == nil || phrase.isEmpty || busy)
                     if busy { ProgressView("Opening backup…") }
                     if let error { Text(error).foregroundStyle(.red) }
-                } footer: { Text("Choose a .patternbackup file from iCloud Drive or another Files location. If you changed your phrase, older backups still use the old phrase.") }
+                } footer: { Text("You need a backup saved before the app was deleted and the recovery phrase used to encrypt it. A recovery phrase alone cannot restore deleted photos or videos.") }
             }
         }
         .disabled(busy)
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
-        .navigationTitle("Restore backup").navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("Restore from iCloud").navigationBarTitleDisplayMode(.inline)
         .fileImporter(isPresented: $selectingFile, allowedContentTypes: [.data]) { result in
             do { url = try result.get(); error = nil }
             catch { self.error = error.localizedDescription }
@@ -169,7 +171,7 @@ struct RecoverPatternView: View {
             } else {
                 Section {
                     SecureField("Recovery phrase", text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
-                } footer: { Text("Enter the phrase for the vault you want to recover. Your files stay in place.") }
+                } footer: { Text("This resets a pattern for a vault still on this device. After deleting and reinstalling Pattern, use Restore from iCloud instead; you’ll need your saved backup file and its phrase.") }
                 Section {
                     NavigationLink("Choose a new pattern") {
                         PatternSetupView(title: "Reset pattern", needsCurrentPattern: false) { _, pattern in

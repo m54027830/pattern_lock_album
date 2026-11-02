@@ -3,8 +3,8 @@ import Foundation
 import ImageIO
 import UniformTypeIdentifiers
 
-/// Originals and the manifest live in Application Support and participate in device backup.
-/// Each future pattern vault can use its own root without changing the album model.
+/// Local originals and the manifest are excluded from device backup.
+/// Restoration uses the user's explicitly saved encrypted archive in iCloud Drive.
 actor LibraryRepository {
     nonisolated let root: URL
     nonisolated let security: VaultSecurityState
@@ -31,12 +31,9 @@ actor LibraryRepository {
                 try files.moveItem(at: staged, to: root)
             }
         }
+        try LocalVaultStorage.prepareDirectory(root)
         try files.createDirectory(at: root.appending(path: "Originals"), withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.complete])
         try files.createDirectory(at: root.appending(path: "Thumbnails"), withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.complete])
-        var backedUpRoot = root
-        var values = URLResourceValues()
-        values.isExcludedFromBackup = try security.backupsDisabled || (root.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == true)
-        try backedUpRoot.setResourceValues(values)
         let manifest = root.appending(path: "library.json")
         let loaded: LibrarySnapshot
         if files.fileExists(atPath: manifest.path) {

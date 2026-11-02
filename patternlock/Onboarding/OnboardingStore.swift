@@ -17,6 +17,12 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, grid, pattern
     private(set) var error: String?
     private(set) var revision = 0
     private(set) var busy = false
+
+    // Avoid Swift 6.2's synthesized isolated-deinit crash on iOS 26.2.
+    // This store has no cleanup that needs to run on the main actor.
+    // https://github.com/swiftlang/swift/issues/88036
+    deinit {}
+
     var phrase: String { useCustomPhrase ? RecoveryPhrase.normalized(customPhrase) : generatedPhrase }
     var canFinish: Bool { savedPhrase && !phrase.isEmpty && RecoveryPhrase.normalized(confirmation) == phrase }
 
@@ -56,7 +62,7 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, grid, pattern
         case .verifyRecovery: confirmation = ""; savedPhrase = false; step = .recovery
         }
     }
-    func finish(_ save: (String, [Int], Int, String) async throws -> Void) async {
+    func finish(_ save: @MainActor (String, [Int], Int, String) async throws -> Void) async {
         guard step == .verifyRecovery, canFinish, !busy else { return }
         busy = true; error = nil
         defer { busy = false }

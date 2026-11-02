@@ -43,11 +43,12 @@ final class PatternGeometryTests: XCTestCase {
     }
 }
 
-final class MemoryPatternStorage: PatternCredentialStorage, @unchecked Sendable {
+final class MemoryPatternStorage: ResettablePatternCredentialStorage, @unchecked Sendable {
     private let lock = NSLock()
     private var value: Data?
     init(data: Data? = nil) { value = data }
     func read() throws -> Data? { lock.withLock { value } }
+    func remove() throws { lock.withLock { value = nil } }
     func create(_ data: Data) throws {
         try lock.withLock {
             guard value == nil else { throw PatternCredentialError.alreadyRegistered }

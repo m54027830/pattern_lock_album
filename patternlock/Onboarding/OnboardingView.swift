@@ -3,7 +3,8 @@ import UIKit
 
 struct OnboardingView: View {
     var onRestored: (() -> Void)?
-    let completion: (String, [Int], Int, String) async throws -> Void
+    // Setup and its completion share the main actor, including stored callbacks.
+    let completion: @MainActor (String, [Int], Int, String) async throws -> Void
     @State private var setup: OnboardingStore
     @State private var showingRestore = false
     @State private var drawing = false
@@ -11,7 +12,7 @@ struct OnboardingView: View {
     @State private var operation: Task<Void, Never>?
 
     init(setup: OnboardingStore? = nil, onRestored: (() -> Void)? = nil,
-         completion: @escaping (String, [Int], Int, String) async throws -> Void) {
+         completion: @escaping @MainActor (String, [Int], Int, String) async throws -> Void) {
         _setup = State(initialValue: setup ?? OnboardingStore())
         self.onRestored = onRestored
         self.completion = completion
@@ -37,7 +38,7 @@ struct OnboardingView: View {
     }
     private var subtitle: String {
         switch setup.step {
-        case .welcome: ["Welcome to Pattern. A calm home for the photos and videos you want to keep close.", "Each pattern opens its own vault, with separate photos, videos, and folders.", "Keep your media locally. When you’re ready, save an encrypted backup to iCloud Drive from settings."][setup.welcomePage]
+        case .welcome: ["Welcome to Pattern. A calm home for the photos and videos you want to keep close.", "Each pattern opens its own vault, with separate photos, videos, and folders.", "Deleting Pattern removes your local vaults. Save an encrypted backup to iCloud Drive in settings so you can restore after reinstalling."][setup.welcomePage]
         case .grid: "Choose the grid you’ll use for every vault. More dots give you more room to draw."
         case .pattern: "Name your first vault, then connect at least 4 different dots."
         case .confirm: "Draw the same pattern again to confirm it."
@@ -167,7 +168,7 @@ struct OnboardingView: View {
                 .padding(18).background(.white, in: RoundedRectangle(cornerRadius: 18))
                 .accessibilityIdentifier("onboardingPhraseConfirmation")
             Toggle("I saved my phrase outside Pattern", isOn: $setup.savedPhrase).font(.subheadline)
-            Text("The phrase won’t be shown again after setup. Anyone with it can reset this vault’s pattern and open backups made with it.")
+            Text("The phrase won’t be shown again after setup. Keep it to reset a forgotten pattern or open an iCloud backup. A phrase alone cannot restore photos after deleting the app.")
                 .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
         }
     }
@@ -181,7 +182,7 @@ struct OnboardingView: View {
                     else { setup.startSetup() }
                 }
                 if onRestored != nil {
-                    Button("Restore an existing backup") { showingRestore = true }.font(.caption).padding(.top, 4)
+                    Button("Restore from iCloud") { showingRestore = true }.font(.caption).padding(.top, 4)
                 }
             case .grid: primary("Use \(setup.gridSize) × \(setup.gridSize) grid", action: setup.chooseGrid)
             case .pattern: EmptyView()

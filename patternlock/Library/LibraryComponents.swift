@@ -107,6 +107,10 @@ struct MediaCell: View {
             }
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .overlay { RoundedRectangle(cornerRadius: 12).strokeBorder(isSelected ? AlbumTheme.accent : .clear, lineWidth: 3) }
+            // Aspect-fill images can extend past the visible crop. Clipping only
+            // affects drawing; constrain taps to this tile so neighbors cannot
+            // intercept selection, opening, or a long press.
+            .contentShape(.interaction, RoundedRectangle(cornerRadius: 12))
             .task(id: url) { image = await ImageLoader.shared.image(at: url) }
     }
 }

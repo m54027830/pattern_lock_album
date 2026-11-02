@@ -98,6 +98,30 @@ private final class GridStorage: PatternCredentialStorage, @unchecked Sendable {
         }
     }
 
+    func testOnboardingWizardCompletesAndOpensItsSelectedGrid() async throws {
+        for size in PatternRules.supportedSizes {
+            let storage = GridStorage(), auth = PatternAuthenticator(storage: storage)
+            let lock = PatternLockStore(authenticator: auth)
+            await lock.activate()
+            let setup = OnboardingStore()
+            setup.startSetup(); setup.gridSize = size; setup.chooseGrid()
+            setup.submit(newA); setup.submit(newA)
+            let recoveryPhrase = setup.phrase
+            setup.confirmRecovery(); setup.confirmation = recoveryPhrase; setup.savedPhrase = true
+            let view = OnboardingView(setup: setup) { name, pattern, gridSize, phrase in
+                try await lock.finishOnboarding(name: name, pattern: pattern, gridSize: gridSize, recoveryPhrase: phrase)
+            }
+            await setup.finish(view.completion)
+            XCTAssertNil(setup.error)
+            XCTAssertEqual(lock.stage, .unlocked)
+            XCTAssertEqual(lock.gridSize, size)
+            let vault = try XCTUnwrap(lock.unlockedVault)
+            try await auth.validateRecoveryPhrase(vaultID: vault.id, phrase: recoveryPhrase)
+            XCTAssertTrue(setup.pattern.isEmpty)
+            XCTAssertTrue(setup.phrase.isEmpty)
+        }
+    }
+
     func testInvalidOrFailedOnboardingNeverPersistsPartialVault() async throws {
         let storage = GridStorage(), auth = PatternAuthenticator(storage: storage)
         for size in [2, 6] {

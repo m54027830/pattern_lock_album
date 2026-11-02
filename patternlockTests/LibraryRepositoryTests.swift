@@ -138,12 +138,12 @@ import XCTest
         XCTAssertEqual(recovered.items, imported.items)
     }
 
-    func testLibraryParticipatesInBackupAndUsesFileProtection() async throws {
+    func testLocalLibraryIsExcludedFromDeviceBackupAndUsesFileProtection() async throws {
         let root = try workspace()
         let repository = LibraryRepository(root: root)
         _ = try await repository.createFolder(name: "Backup", colorIndex: 0)
         let values = try root.resourceValues(forKeys: [.isExcludedFromBackupKey])
-        XCTAssertEqual(values.isExcludedFromBackup, false)
+        XCTAssertEqual(values.isExcludedFromBackup, true)
         // The simulator does not emulate iOS Data Protection attributes.
         #if !targetEnvironment(simulator)
         let attributes = try FileManager.default.attributesOfItem(atPath: root.appending(path: "library.json").path)

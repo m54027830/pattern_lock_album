@@ -144,7 +144,7 @@ struct PatternLockView: View {
                             if lock.stage != .create {
                                 Button("Recover vault") { showingRecovery = true }
                             }
-                            Button("Restore backup") { showingRestore = true }
+                            Button("Restore from iCloud") { showingRestore = true }
                         }.font(.caption).padding(.bottom, 20).disabled(lock.isBusy)
                     }
                 }

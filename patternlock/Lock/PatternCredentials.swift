@@ -34,7 +34,7 @@ nonisolated protocol PatternCredentialStorage: Sendable {
     func update(_ data: Data) throws
 }
 
-nonisolated struct KeychainPatternStorage: PatternCredentialStorage {
+nonisolated struct KeychainPatternStorage: ResettablePatternCredentialStorage {
     let service: String
     init(service: String = "jp.gm.patternlock.pattern-lock.v1") { self.service = service }
 
@@ -68,6 +68,11 @@ nonisolated struct KeychainPatternStorage: PatternCredentialStorage {
     func update(_ data: Data) throws {
         let status = SecItemUpdate(query as CFDictionary, [kSecValueData as String: data] as CFDictionary)
         guard status == errSecSuccess else { throw PatternCredentialError.inaccessible }
+    }
+
+    func remove() throws {
+        let status = SecItemDelete(query as CFDictionary)
+        guard status == errSecSuccess || status == errSecItemNotFound else { throw PatternCredentialError.inaccessible }
     }
 }
 
@@ -149,7 +154,7 @@ actor PatternAuthenticator: PatternAuthenticating {
     }
     private var faceIDChallenges: [UUID: PendingFaceID] = [:]
 
-    init(storage: any PatternCredentialStorage = KeychainPatternStorage(),
+    init(storage: any PatternCredentialStorage = InstallationCredentialStorage(),
          security: VaultSecurityState = VaultSecurityState(),
          purchaseAccess: PurchaseAccess = .shared,
          directory: URL = URL.applicationSupportDirectory.appending(path: "Vaults")) {
@@ -542,11 +547,12 @@ actor PatternAuthenticator: PatternAuthenticating {
         let restored = try JSONDecoder().decode(LibrarySnapshot.self, from: Data(contentsOf: preparedDirectory.appending(path: "library.json")))
         try purchaseAccess.checkMediaAddition(currentCount: 0, adding: restored.items.count)
         let files = FileManager.default
-        try files.createDirectory(at: directory, withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.complete])
+        try LocalVaultStorage.prepareDirectory(directory)
         let staging = directory.appending(path: "InstallingVault-" + vault.id)
         do {
             try Task.checkCancellation()
             try files.copyItem(at: preparedDirectory, to: staging)
+            try LocalVaultStorage.excludeFromBackup(staging)
             try purchaseAccess.checkMediaAddition(currentCount: 0, adding: restored.items.count)
             try registerRestoredVault(vault, pattern: pattern)
         } catch {

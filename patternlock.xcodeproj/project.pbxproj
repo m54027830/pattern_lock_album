@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-        B20000000000000000000002 /* Pattern.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* Pattern.storekit */; };
+		B20000000000000000000002 /* StoreKit/Pattern.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* StoreKit/Pattern.storekit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -21,9 +21,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-        B20000000000000000000001 /* Pattern.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = StoreKit/Pattern.storekit; sourceTree = SOURCE_ROOT; };
 		375C793A30918C8500A5C58A /* patternlock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = patternlock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000001 /* patternlockTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = patternlockTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B20000000000000000000001 /* StoreKit/Pattern.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = StoreKit/Pattern.storekit; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -42,13 +42,17 @@
 /* Begin PBXFrameworksBuildPhase section */
 		375C793730918C8500A5C58A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A10000000000000000000004 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -56,7 +60,7 @@
 		375C793130918C8500A5C58A = {
 			isa = PBXGroup;
 			children = (
-				B20000000000000000000001 /* Pattern.storekit */,
+				B20000000000000000000001 /* StoreKit/Pattern.storekit */,
 				375C793C30918C8500A5C58A /* patternlock */,
 				A10000000000000000000002 /* patternlockTests */,
 				375C793B30918C8500A5C58A /* Products */,
@@ -84,6 +88,8 @@
 				375C793830918C8500A5C58A /* Resources */,
 			);
 			buildRules = (
+			);
+			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
 				375C793C30918C8500A5C58A /* patternlock */,
@@ -126,7 +132,11 @@
 				TargetAttributes = {
 					375C793930918C8500A5C58A = {
 						CreatedOnToolsVersion = 27.0;
-                        SystemCapabilities = { com.apple.InAppPurchase = { enabled = 1; }; };
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -153,27 +163,35 @@
 /* Begin PBXResourcesBuildPhase section */
 		375C793830918C8500A5C58A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A10000000000000000000005 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
-                B20000000000000000000002 /* Pattern.storekit in Resources */,
+				B20000000000000000000002 /* StoreKit/Pattern.storekit in Resources */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		375C793630918C8500A5C58A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A10000000000000000000003 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
@@ -186,7 +204,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		375C794330918C8600A5C58A /* Debug configuration for PBXProject "patternlock" */ = {
+		375C794330918C8600A5C58A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -250,7 +268,7 @@
 			};
 			name = Debug;
 		};
-		375C794430918C8600A5C58A /* Release configuration for PBXProject "patternlock" */ = {
+		375C794430918C8600A5C58A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -307,7 +325,7 @@
 			};
 			name = Release;
 		};
-		375C794630918C8600A5C58A /* Debug configuration for PBXNativeTarget "patternlock" */ = {
+		375C794630918C8600A5C58A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -318,7 +336,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Pattern;
-                INFOPLIST_KEY_NSFaceIDUsageDescription = "Require Face ID after your pattern to open protected vaults.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Require Face ID after your pattern to open protected vaults.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save the photos and videos you choose to your Photos library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Delete original photos and videos from Photos only when you choose, after copies are saved in your vault.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -343,7 +361,7 @@
 			};
 			name = Debug;
 		};
-		375C794730918C8600A5C58A /* Release configuration for PBXNativeTarget "patternlock" */ = {
+		375C794730918C8600A5C58A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -354,7 +372,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Pattern;
-                INFOPLIST_KEY_NSFaceIDUsageDescription = "Require Face ID after your pattern to open protected vaults.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Require Face ID after your pattern to open protected vaults.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save the photos and videos you choose to your Photos library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Delete original photos and videos from Photos only when you choose, after copies are saved in your vault.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -379,7 +397,7 @@
 			};
 			name = Release;
 		};
-		A1000000000000000000000A /* Debug configuration for PBXNativeTarget "patternlockTests" */ = {
+		A1000000000000000000000A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -401,7 +419,7 @@
 			};
 			name = Debug;
 		};
-		A1000000000000000000000B /* Release configuration for PBXNativeTarget "patternlockTests" */ = {
+		A1000000000000000000000B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -429,29 +447,31 @@
 		375C793530918C8500A5C58A /* Build configuration list for PBXProject "patternlock" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				375C794330918C8600A5C58A /* Debug configuration for PBXProject "patternlock" */,
-				375C794430918C8600A5C58A /* Release configuration for PBXProject "patternlock" */,
+				375C794330918C8600A5C58A /* Debug */,
+				375C794430918C8600A5C58A /* Release */,
 			);
+			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		375C794530918C8600A5C58A /* Build configuration list for PBXNativeTarget "patternlock" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				375C794630918C8600A5C58A /* Debug configuration for PBXNativeTarget "patternlock" */,
-				375C794730918C8600A5C58A /* Release configuration for PBXNativeTarget "patternlock" */,
+				375C794630918C8600A5C58A /* Debug */,
+				375C794730918C8600A5C58A /* Release */,
 			);
+			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		A10000000000000000000009 /* Build configuration list for PBXNativeTarget "patternlockTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A1000000000000000000000A /* Debug configuration for PBXNativeTarget "patternlockTests" */,
-				A1000000000000000000000B /* Release configuration for PBXNativeTarget "patternlockTests" */,
+				A1000000000000000000000A /* Debug */,
+				A1000000000000000000000B /* Release */,
 			);
+			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
 	rootObject = 375C793230918C8500A5C58A /* Project object */;
-	validationLevel = 1;
 }

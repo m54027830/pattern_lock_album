@@ -60,10 +60,10 @@ struct VaultSettingsView: View {
                         Label("Back up to iCloud Drive", systemImage: "icloud.and.arrow.up")
                     }.disabled(!hasRecovery || backupsDisabled)
                     NavigationLink { RestoreVaultView(authenticator: authenticator) } label: {
-                        Label("Restore a backup", systemImage: "icloud.and.arrow.down")
+                        Label("Restore from iCloud", systemImage: "icloud.and.arrow.down")
                     }
                 } header: { Text("Backup") } footer: {
-                    Text(backupsDisabled ? "Duress unlock turned off backups from Pattern on this device, including future device backups of local vault files. Saved backups remain in Files. This version doesn’t use automatic iCloud sync." : hasRecovery ? "Save an encrypted backup through Files and choose iCloud Drive. You’ll need your recovery phrase to open it. Backups are manual; they don’t sync automatically." : "Set up a recovery phrase below to make encrypted backups. You can save them to iCloud Drive through Files.")
+                    Text(backupsDisabled ? "Duress unlock turned off new backups from Pattern on this device. Previously saved iCloud Drive backups remain available for restoration." : hasRecovery ? "Save an encrypted backup through Files and choose iCloud Drive. Deleting the app removes local vaults; restoring requires this backup and its recovery phrase. Backups are manual." : "Set up a recovery phrase below, then save an encrypted backup to iCloud Drive. Local vaults are removed when you delete the app and aren’t included in device backups.")
                 }
 
                 Section {

@@ -12,7 +12,12 @@ struct PatternAppRoot: View {
 
     var body: some View {
         ZStack {
-            if lock.stage == .unlocked, let vault = lock.unlockedVault {
+            if lock.stage == .loading {
+                // Registration is still unknown. Never flash the returning-user
+                // lock screen before deciding whether onboarding is needed.
+                AlbumTheme.background.ignoresSafeArea()
+                    .accessibilityIdentifier("initialLoadingScreen")
+            } else if lock.stage == .unlocked, let vault = lock.unlockedVault {
                 ContentView(store: libraries.store(for: vault), vaultName: vault.name,
                             createVault: lock.isDummySession ? nil : { beginNewVault(from: vault) },
                             lockVault: { libraries.dismissPresentations(); lock.lock(); Task { await lock.activate() } },

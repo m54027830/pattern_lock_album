@@ -173,30 +173,24 @@ struct ContentView: View {
                 .disabled((visibleItems.isEmpty && !isSelecting) || store.isBusy)
                 .accessibilityIdentifier("selectMedia")
             }
-            HStack(alignment: .bottom) {
-                VStack(alignment: .leading, spacing: 7) {
-                    Text(currentFolder?.name ?? "Library")
-                        .font(.system(size: 38, weight: .semibold, design: .rounded))
-                        .tracking(-1.4)
-                        .foregroundStyle(AlbumTheme.ink)
-                    Text(currentFolderID == nil ? "Your moments. Your space." : itemCount(scopedItems.count))
-                        .font(.subheadline)
-                        .foregroundStyle(AlbumTheme.secondary)
-                }
-                Spacer()
-                if let currentFolder {
+            if let currentFolder {
+                HStack(alignment: .bottom) {
+                    VStack(alignment: .leading, spacing: 7) {
+                        Text(currentFolder.name)
+                            .font(.system(size: 38, weight: .semibold, design: .rounded))
+                            .tracking(-1.4)
+                            .foregroundStyle(AlbumTheme.ink)
+                        Text(itemCount(scopedItems.count))
+                            .font(.subheadline)
+                            .foregroundStyle(AlbumTheme.secondary)
+                    }
+                    Spacer()
                     Menu {
                         Button("Edit folder", systemImage: "pencil") { folderEditor = .init(folder: currentFolder) }
                         Button("Delete folder", systemImage: "trash", role: .destructive) { folderToDelete = currentFolder }
                     } label: { Image(systemName: "ellipsis").font(.title3).padding(12).background(.white, in: Circle()) }
                     .disabled(store.isBusy)
                     .accessibilityLabel("Folder options")
-                } else {
-                    Image(systemName: "square.stack.3d.up")
-                        .font(.system(size: 26, weight: .light))
-                        .foregroundStyle(AlbumTheme.accent.opacity(0.7))
-                        .padding(.bottom, 4)
-                        .accessibilityHidden(true)
                 }
             }
         }
@@ -336,6 +330,7 @@ struct ContentView: View {
                             Button("Delete", systemImage: "trash", role: .destructive) { selected = [item.id]; isSelecting = true; showingDelete = true }
                         }
                         .accessibilityLabel("\(item.kind == .video ? "Video" : "Photo"), \(item.originalName)\(selected.contains(item.id) ? ", selected" : "")")
+                        .accessibilityIdentifier("mediaItem-\(item.id.uuidString)")
                     }
                 }
                 .disabled(store.isBusy)
