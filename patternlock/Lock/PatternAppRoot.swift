@@ -12,9 +12,9 @@ struct PatternAppRoot: View {
         ZStack {
             if lock.stage == .unlocked, let vault = lock.unlockedVault {
                 ContentView(store: libraries.store(for: vault), vaultName: vault.name,
-                            createVault: { libraries.dismissPresentations(); lock.beginNewVault() },
+                            createVault: lock.isDummySession ? nil : { libraries.dismissPresentations(); lock.beginNewVault() },
                             lockVault: { libraries.dismissPresentations(); lock.lock(); Task { await lock.activate() } },
-                            vault: vault,
+                            vault: lock.isDummySession ? nil : vault,
                             onVaultChanged: { lock.updateUnlockedVault($0) },
                             onVaultDeleted: { libraries.forget(vault); lock.lock(); Task { await lock.activate() } })
                     .id(vault.id + "-" + String(presentationRevision))

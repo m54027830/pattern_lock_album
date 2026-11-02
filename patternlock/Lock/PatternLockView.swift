@@ -14,6 +14,7 @@ struct PatternLockView: View {
         case .create: lock.isCreatingVault ? "A new pattern." : "Make it yours."
         case .confirm: "Once more."
         case .locked: "Welcome back."
+        case .faceID: "One more step."
         case .unavailable: "Your library is locked."
         default: "Your space, protected."
         }
@@ -25,6 +26,7 @@ struct PatternLockView: View {
         case .create: lock.isCreatingVault ? "Choose a unique pattern for \(lock.vaultName).\nConnect at least 4 dots." : "Draw a pattern to lock your library.\nConnect at least 4 dots."
         case .confirm: "Draw the same pattern again\nto make sure you remember it."
         case .locked: "Draw a pattern to open its vault."
+        case .faceID: "Use Face ID to open your vault."
         case .unavailable: "We couldn’t access your saved pattern."
         default: "Getting your lock ready…"
         }
@@ -49,7 +51,7 @@ struct PatternLockView: View {
                     }
                     .padding(.top, 25).padding(.bottom, 35)
 
-                    Image(systemName: lock.stage == .confirm ? "checkmark.shield" : "lock")
+                    Image(systemName: lock.stage == .faceID ? "faceid" : lock.stage == .confirm ? "checkmark.shield" : "lock")
                         .font(.system(size: 23, weight: .light))
                         .foregroundStyle(AlbumTheme.accent)
                         .frame(width: 62, height: 62)
@@ -187,7 +189,7 @@ struct PatternLockView: View {
 
     @ViewBuilder private func status(remaining: Int) -> some View {
         if lock.isBusy {
-            HStack(spacing: 9) { ProgressView(); Text(lock.stage == .confirm ? "Saving your pattern…" : "Checking your pattern…").font(.caption) }
+            HStack(spacing: 9) { ProgressView(); Text(lock.stage == .faceID ? "Waiting for Face ID…" : lock.stage == .confirm ? "Saving your pattern…" : "Checking your pattern…").font(.caption) }
                 .foregroundStyle(AlbumTheme.secondary)
         } else if remaining > 0 {
             VStack(spacing: 5) {

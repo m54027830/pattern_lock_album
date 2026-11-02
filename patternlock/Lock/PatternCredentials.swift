@@ -78,6 +78,8 @@ nonisolated struct PatternLockStatus: Sendable {
 
 nonisolated enum PatternVerification: Equatable, Sendable {
     case accepted(Vault)
+    case requiresFaceID(FaceIDChallenge)
+    case dummy(Vault)
     case rejected(retryAfter: Date?)
 }
 
@@ -87,10 +89,15 @@ nonisolated protocol PatternAuthenticating: Sendable {
     func createVault(name: String, pattern: [Int]) async throws -> Vault
     func createVault(name: String, pattern: [Int], from vaultID: String) async throws -> Vault
     func verify(_ nodes: [Int], now: Date) async throws -> PatternVerification
+    func completeFaceID(_ challenge: FaceIDChallenge, result: FaceIDResult) async throws -> PatternVerification
+    func cancelFaceID(_ challenge: FaceIDChallenge) async
     nonisolated func accessIsAllowed(to vaultID: String) -> Bool
 }
 
 extension PatternAuthenticating {
+    func completeFaceID(_ challenge: FaceIDChallenge, result: FaceIDResult) async throws -> PatternVerification { throw VaultAccessError.changed }
+    func cancelFaceID(_ challenge: FaceIDChallenge) async {}
+
     func createVault(name: String, pattern: [Int], from vaultID: String) async throws -> Vault {
         try await createVault(name: name, pattern: pattern)
     }
@@ -103,6 +110,8 @@ nonisolated struct VaultCredential: Codable, Sendable {
     var recovery: RecoveryCredential?
     var duressVaultID: String? // Read compatibility with the earlier decoy configuration.
     var isDuressVault: Bool?
+    var requiresFaceID: Bool?
+    var dummyVaultID: String?
     var pendingRecoveryPhrase: String? // Keychain-only, removed after the user saves it.
 }
 
@@ -124,6 +133,15 @@ actor PatternAuthenticator: PatternAuthenticating {
     private let storage: any PatternCredentialStorage
     nonisolated let security: VaultSecurityState
     private let directory: URL
+    private struct PendingFaceID {
+        let vaultID: String
+        let verifier: Data
+        let dummyVaultID: String?
+        let isDuressVault: Bool
+        let lease: VaultSecurityState.Lease
+        let expires: Date
+    }
+    private var faceIDChallenges: [UUID: PendingFaceID] = [:]
 
     init(storage: any PatternCredentialStorage = KeychainPatternStorage(),
          security: VaultSecurityState = VaultSecurityState(),
@@ -180,10 +198,21 @@ actor PatternAuthenticator: PatternAuthenticating {
         if let vault = try matchingVault(nodes, in: registry) {
             registry.failedAttempts = 0
             registry.retryAfter = nil
-            if registry.vaults.contains(where: { $0.vault.id == vault.id && $0.isDuressVault == true }) {
-                try activateDuress(vault, registry: &registry)
-            } else {
-                try storage.update(JSONEncoder().encode(registry))
+            let entry = registry.vaults.first { $0.vault.id == vault.id }!
+            // A missing dummy must never expose a Face ID-protected source.
+            // In that case, authenticate before opening it or applying duress.
+            if entry.isDuressVault == true && (entry.requiresFaceID != true || entry.dummyVaultID != nil) {
+                let display = try activateDuress(vault, registry: &registry)
+                return display.id == vault.id ? .accepted(display) : .dummy(display)
+            }
+            try storage.update(JSONEncoder().encode(registry))
+            if entry.requiresFaceID == true {
+                faceIDChallenges = faceIDChallenges.filter { $0.value.expires > Date() }
+                let challenge = FaceIDChallenge(id: UUID(), vaultID: vault.id)
+                faceIDChallenges[challenge.id] = PendingFaceID(vaultID: vault.id, verifier: entry.pattern.verifier,
+                    dummyVaultID: entry.dummyVaultID, isDuressVault: entry.isDuressVault == true,
+                    lease: try security.lease(for: vault.id), expires: Date().addingTimeInterval(120))
+                return .requiresFaceID(challenge)
             }
             return .accepted(vault)
         }
@@ -191,6 +220,70 @@ actor PatternAuthenticator: PatternAuthenticating {
         registry.retryAfter = registry.failedAttempts < 5 ? nil : now.addingTimeInterval(min(300, 30 * pow(2, Double(registry.failedAttempts - 5))))
         try storage.update(JSONEncoder().encode(registry))
         return .rejected(retryAfter: registry.retryAfter)
+    }
+
+    func cancelFaceID(_ challenge: FaceIDChallenge) async { faceIDChallenges.removeValue(forKey: challenge.id) }
+
+    func completeFaceID(_ challenge: FaceIDChallenge, result: FaceIDResult) async throws -> PatternVerification {
+        guard let pending = faceIDChallenges.removeValue(forKey: challenge.id), pending.vaultID == challenge.vaultID,
+              pending.expires > Date(), var registry = try read(),
+              let entry = registry.vaults.first(where: { $0.vault.id == pending.vaultID }),
+              entry.requiresFaceID == true, (entry.isDuressVault == true) == pending.isDuressVault,
+              entry.pattern.verifier == pending.verifier, entry.dummyVaultID == pending.dummyVaultID else { throw VaultAccessError.changed }
+        try security.check(pending.lease)
+        switch result {
+        case .authenticated:
+            if pending.isDuressVault { return .accepted(try activateDuress(entry.vault, registry: &registry)) }
+            return .accepted(entry.vault)
+        case .interrupted: throw VaultAccessError.interrupted
+        case .failed:
+            guard let id = entry.dummyVaultID, id != entry.vault.id,
+                  let dummy = registry.vaults.first(where: { $0.vault.id == id }) else { throw VaultAccessError.invalidDummy }
+            try security.checkAccess(to: id)
+            // Display only. Do not verify the dummy's pattern, rotate recovery,
+            // revoke credentials, disable backups, or emit a duress event.
+            return .dummy(dummy.vault)
+        }
+    }
+
+    func availableDummyVaults(for vaultID: String) throws -> [Vault] {
+        guard let registry = try read(), registry.vaults.contains(where: { $0.vault.id == vaultID }) else { throw VaultSettingsError.missingVault }
+        return registry.vaults.map(\.vault).filter { $0.id != vaultID }.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+    }
+
+    func setAccessSettings(vaultID: String, requireFaceID: Bool, dummyVaultID: String?, currentPattern: [Int],
+                           dummyPattern: [Int]?, faceID: any FaceIDAuthenticating) async throws {
+        let original = try authorizedRegistry(vaultID: vaultID, pattern: currentPattern)
+        let source = original.vaults.first { $0.vault.id == vaultID }!
+        let sourceLease = try security.lease(for: vaultID)
+        if requireFaceID && dummyVaultID == nil { throw VaultAccessError.chooseDummy }
+        let target = original.vaults.first { $0.vault.id == dummyVaultID }
+        if let dummyVaultID {
+            guard dummyVaultID != vaultID, target != nil else { throw VaultAccessError.invalidDummy }
+            if dummyVaultID != source.dummyVaultID {
+                guard let dummyPattern else { throw VaultSettingsError.wrongPattern }
+                _ = try authorizedRegistry(vaultID: dummyVaultID, pattern: dummyPattern)
+            }
+        }
+        if source.requiresFaceID == true || requireFaceID || (target?.requiresFaceID == true && dummyVaultID != source.dummyVaultID) {
+            guard await faceID.authenticate(reason: "Confirm Face ID to update vault access.") == .authenticated else { throw VaultAccessError.faceIDRequired }
+        }
+        try Task.checkCancellation()
+        guard var registry = try read(), let index = registry.vaults.firstIndex(where: { $0.vault.id == vaultID }) else { throw VaultAccessError.changed }
+        try security.check(sourceLease)
+        let latest = registry.vaults[index]
+        guard latest.pattern.verifier == source.pattern.verifier, latest.requiresFaceID == source.requiresFaceID,
+              latest.dummyVaultID == source.dummyVaultID, latest.isDuressVault == source.isDuressVault else { throw VaultAccessError.changed }
+        if let target {
+            guard let current = registry.vaults.first(where: { $0.vault.id == target.vault.id }),
+                  current.pattern.verifier == target.pattern.verifier, current.requiresFaceID == target.requiresFaceID else { throw VaultAccessError.changed }
+        }
+        registry.vaults[index].requiresFaceID = requireFaceID
+        registry.vaults[index].dummyVaultID = dummyVaultID
+        registry.failedAttempts = 0; registry.retryAfter = nil
+        try storage.update(JSONEncoder().encode(registry))
+        // Invalidate challenges issued before this configuration change.
+        faceIDChallenges = faceIDChallenges.filter { $0.value.vaultID != vaultID }
     }
 
     private func makeCredential(_ nodes: [Int]) throws -> PatternCredential {
@@ -224,6 +317,7 @@ actor PatternAuthenticator: PatternAuthenticating {
                           && !entry.vault.name.isEmpty && entry.vault.name.count <= 40
                           && valid(entry.pattern)
                           && (entry.recovery == nil || (entry.recovery?.rounds == RecoveryPhrase.rounds && entry.recovery?.salt.count == 32 && entry.recovery?.verifier.count == 32))
+                          && (entry.dummyVaultID == nil || (entry.dummyVaultID != entry.vault.id && registry.vaults.contains { $0.vault.id == entry.dummyVaultID }))
                           && (entry.duressVaultID == nil || (entry.duressVaultID != entry.vault.id && registry.vaults.contains { $0.vault.id == entry.duressVaultID }))
                   }) else { throw PatternCredentialError.invalid }
             // A former decoy must not silently become destructive on upgrade.
@@ -360,13 +454,16 @@ actor PatternAuthenticator: PatternAuthenticating {
         try storage.update(JSONEncoder().encode(registry))
     }
 
-    private func activateDuress(_ vault: Vault, registry: inout VaultRegistry) throws {
-        let revoked = Set(registry.vaults.filter { $0.vault.id != vault.id }.map { $0.vault.id })
-        var survivor = registry.vaults.first { $0.vault.id == vault.id }!
+    private func activateDuress(_ vault: Vault, registry: inout VaultRegistry) throws -> Vault {
+        let trigger = registry.vaults.first { $0.vault.id == vault.id }!
+        let displayID = trigger.dummyVaultID ?? vault.id
+        guard var survivor = registry.vaults.first(where: { $0.vault.id == displayID }) else { throw VaultAccessError.invalidDummy }
+        let revoked = Set(registry.vaults.filter { $0.vault.id != displayID }.map { $0.vault.id })
         let phrase = try RecoveryPhrase.generate()
         survivor.recovery = try RecoveryPhrase.credential(for: phrase)
         survivor.pendingRecoveryPhrase = phrase
         survivor.duressVaultID = nil
+        survivor.dummyVaultID = nil
         registry.vaults = [survivor]
         registry.revokedVaultIDs = Set((registry.revokedVaultIDs ?? []) + Array(revoked)).sorted()
         registry.backupsDisabled = true
@@ -387,7 +484,9 @@ actor PatternAuthenticator: PatternAuthenticating {
         // revocation have a single durable commit point.
         try storage.update(JSONEncoder().encode(registry))
         security.update(from: registry)
+        faceIDChallenges.removeAll()
         NotificationCenter.default.post(name: VaultEvents.duressActivated, object: DuressActivation(revokedVaultIDs: revoked))
+        return survivor.vault
     }
 
     /// The directory is staged before the credential is removed. If the app stops
@@ -401,7 +500,10 @@ actor PatternAuthenticator: PatternAuthenticating {
         let exists = files.fileExists(atPath: root.path)
         if exists { try files.moveItem(at: root, to: staged) }
         registry.vaults.removeAll { $0.vault.id == vaultID }
-        for index in registry.vaults.indices where registry.vaults[index].duressVaultID == vaultID { registry.vaults[index].duressVaultID = nil }
+        for index in registry.vaults.indices {
+            if registry.vaults[index].duressVaultID == vaultID { registry.vaults[index].duressVaultID = nil }
+            if registry.vaults[index].dummyVaultID == vaultID { registry.vaults[index].dummyVaultID = nil }
+        }
         do { try storage.update(JSONEncoder().encode(registry)) }
         catch {
             if exists { try? files.moveItem(at: staged, to: root) }

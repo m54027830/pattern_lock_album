@@ -2,12 +2,13 @@ import Foundation
 import Observation
 
 nonisolated enum PatternLockStage: Equatable {
-    case loading, nameVault, create, confirm, locked, unlocked, unavailable
+    case loading, nameVault, create, confirm, locked, faceID, unlocked, unavailable
 }
 
 @MainActor @Observable final class PatternLockStore {
     private(set) var stage = PatternLockStage.loading
     private(set) var unlockedVault: Vault?
+    private(set) var isDummySession = false
     private(set) var isCreatingVault = false
     var vaultName = ""
     private(set) var isBusy = false
@@ -20,11 +21,19 @@ nonisolated enum PatternLockStage: Equatable {
     private var returnVault: Vault?
     private var generation = 0
     private let authenticator: any PatternAuthenticating
+    private let faceID: any FaceIDAuthenticating
+    private var faceIDChallenge: FaceIDChallenge?
+    private var activeWaiter: CheckedContinuation<Bool, Never>?
 
-    init(authenticator: any PatternAuthenticating = PatternAuthenticator.shared) { self.authenticator = authenticator }
+    init(authenticator: any PatternAuthenticating = PatternAuthenticator.shared, faceID: (any FaceIDAuthenticating)? = nil) {
+        self.authenticator = authenticator
+        self.faceID = faceID ?? FaceIDAuthenticator()
+    }
 
     func activate() async {
         isActive = true
+        activeWaiter?.resume(returning: true)
+        activeWaiter = nil
         guard (stage == .loading || stage == .unavailable), !isBusy else { return }
         let operation = generation
         isBusy = true
@@ -45,6 +54,9 @@ nonisolated enum PatternLockStage: Equatable {
     func becameInactive() {
         guard isActive else { return }
         isActive = false
+        // Face ID's own system prompt can temporarily deactivate the scene.
+        // Only backgrounding cancels this request and invalidates its result.
+        if stage == .faceID && faceIDChallenge != nil { inputRevision += 1; return }
         generation += 1
         inputRevision += 1
         if isBusy { resetSession(); stage = .loading }
@@ -73,13 +85,13 @@ nonisolated enum PatternLockStage: Equatable {
 
     @discardableResult
     func revokeAccess(to vaultID: String) -> Bool {
-        guard unlockedVault?.id == vaultID || returnVault?.id == vaultID else { return false }
+        guard unlockedVault?.id == vaultID || returnVault?.id == vaultID || faceIDChallenge?.vaultID == vaultID else { return false }
         lock()
         return true
     }
 
     func beginNewVault() {
-        guard stage == .unlocked, isActive, !isBusy, let unlockedVault else { return }
+        guard stage == .unlocked, !isDummySession, isActive, !isBusy, let unlockedVault else { return }
         returnVault = unlockedVault
         self.unlockedVault = nil
         isCreatingVault = true
@@ -161,12 +173,30 @@ nonisolated enum PatternLockStage: Equatable {
             guard operation == generation, isActive else { return }
             switch result {
             case .accepted(let vault):
-                guard authenticator.accessIsAllowed(to: vault.id) else { throw VaultSettingsError.missingVault }
-                resetSession()
-                unlockedVault = vault
-                retryAfter = nil
-                stage = .unlocked
+                try open(vault, dummy: false)
+            case .dummy(let vault):
+                try open(vault, dummy: true)
+            case .requiresFaceID(let challenge):
+                faceIDChallenge = challenge
+                stage = .faceID
                 inputRevision += 1
+                let result = await faceID.authenticate(reason: "Unlock your vault after entering its pattern.")
+                guard operation == generation else { return }
+                guard result != .interrupted else {
+                    await authenticator.cancelFaceID(challenge)
+                    guard operation == generation else { return }
+                    resetSession(); stage = .locked
+                    message = VaultAccessError.interrupted.localizedDescription
+                    return
+                }
+                guard await waitUntilActive(operation: operation) else { return }
+                let resolved = try await authenticator.completeFaceID(challenge, result: result)
+                guard await waitUntilActive(operation: operation) else { return }
+                switch resolved {
+                case .accepted(let vault): try open(vault, dummy: false)
+                case .dummy(let vault): try open(vault, dummy: true)
+                default: throw VaultAccessError.changed
+                }
             case .rejected(let retryAfter):
                 self.retryAfter = retryAfter
                 reject(retryAfter == nil ? "That pattern wasn’t right. Try again." : "Too many attempts. Take a moment and try again.")
@@ -176,8 +206,14 @@ nonisolated enum PatternLockStage: Equatable {
             pendingPattern = nil
             stage = error == .duplicatePattern ? .create : .nameVault
             reject(error.localizedDescription)
+        } catch is VaultAccessError {
+            guard operation == generation else { return }
+            resetSession()
+            stage = .locked
+            message = "Couldn’t open the vault. Enter your pattern to try again."
+            inputRevision += 1
         } catch {
-            guard operation == generation, isActive else { return }
+            guard operation == generation, isActive || stage == .faceID else { return }
             resetSession()
             stage = .unavailable
             message = error.localizedDescription
@@ -185,7 +221,30 @@ nonisolated enum PatternLockStage: Equatable {
         }
     }
 
+    private func waitUntilActive(operation: Int) async -> Bool {
+        guard operation == generation else { return false }
+        if isActive { return true }
+        let resumed = await withCheckedContinuation { activeWaiter = $0 }
+        return resumed && operation == generation && isActive
+    }
+
+    private func open(_ vault: Vault, dummy: Bool) throws {
+        guard authenticator.accessIsAllowed(to: vault.id) else { throw VaultSettingsError.missingVault }
+        resetSession()
+        unlockedVault = vault
+        isDummySession = dummy
+        retryAfter = nil
+        stage = .unlocked
+        inputRevision += 1
+    }
+
     private func resetSession() {
+        faceID.cancel()
+        activeWaiter?.resume(returning: false)
+        activeWaiter = nil
+        if let challenge = faceIDChallenge { Task { await authenticator.cancelFaceID(challenge) } }
+        faceIDChallenge = nil
+        isDummySession = false
         pendingPattern = nil
         unlockedVault = nil
         returnVault = nil

@@ -126,12 +126,14 @@ struct ContentView: View {
                         Label("Library", systemImage: "arrow.left").font(.subheadline.weight(.medium))
                     }
                 } else {
-                    if let createVault, let lockVault {
+                    if let lockVault {
                         Menu {
                             Text(vaultName)
-                            Button("Vault settings", systemImage: "gearshape") { showingSettings = true }
-                                .disabled(store.isBusy)
-                            Button("New vault", systemImage: "plus.rectangle.on.folder", action: createVault)
+                            if vault != nil {
+                                Button("Vault settings", systemImage: "gearshape") { showingSettings = true }
+                                    .disabled(store.isBusy)
+                            }
+                            if let createVault { Button("New vault", systemImage: "plus.rectangle.on.folder", action: createVault) }
                             Button("Switch vault", systemImage: "arrow.triangle.2.circlepath", action: lockVault)
                             Button("Lock vault", systemImage: "lock", action: lockVault)
                         } label: { vaultLabel }
@@ -193,7 +195,7 @@ struct ContentView: View {
             Text(vaultName.uppercased())
                 .font(.system(size: 10, weight: .semibold, design: .monospaced)).tracking(2)
                 .lineLimit(1)
-            if createVault != nil { Image(systemName: "chevron.down").font(.system(size: 9, weight: .semibold)) }
+            if lockVault != nil { Image(systemName: "chevron.down").font(.system(size: 9, weight: .semibold)) }
         }
         .foregroundStyle(AlbumTheme.ink)
         .frame(minHeight: 44)

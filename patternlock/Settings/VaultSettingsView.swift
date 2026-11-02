@@ -10,6 +10,7 @@ struct VaultSettingsView: View {
     @State private var storageBytes: Int64?
     @State private var hasRecovery = false
     @State private var isDuressVault = false
+    @State private var requiresFaceID = false
     @State private var backupsDisabled = false
     @State private var hasPendingRecovery = false
     @State private var isLoaded = false
@@ -33,6 +34,16 @@ struct VaultSettingsView: View {
                         try await authenticator.changePattern(vaultID: vault.id, current: current, replacement: replacement)
                     } } label: { Label("Change pattern", systemImage: "hand.draw") }
                 } header: { Text("Pattern") }
+
+                Section {
+                    NavigationLink {
+                        FaceIDSettingsView(vault: vault, authenticator: authenticator) { revision += 1 }
+                    } label: {
+                        valueRow("Face ID & dummy vault", value: requiresFaceID ? "On" : "Off", icon: "faceid")
+                    }
+                } header: { Text("Access") } footer: {
+                    Text("Add Face ID after your pattern and choose which vault to show if it fails. Failed Face ID never activates duress.")
+                }
 
                 Section {
                     valueRow("Backups on this device", value: backupsDisabled ? "Off" : "Available", icon: "icloud")
@@ -123,6 +134,7 @@ struct VaultSettingsView: View {
             let settings = try await authenticator.settings(for: vault.id)
             hasRecovery = settings.recovery != nil
             isDuressVault = settings.isDuressVault == true
+            requiresFaceID = settings.requiresFaceID == true
             hasPendingRecovery = settings.pendingRecoveryPhrase != nil
             backupsDisabled = try await authenticator.backupsAreDisabled()
             storageBytes = try await store.repository.storageUsed()
@@ -132,8 +144,8 @@ struct VaultSettingsView: View {
 }
 
 private enum DuressExplanation {
-    static let summary = "Drawing this vault’s pattern removes access to your other vaults on this device and stops backups here. This vault opens as usual with a new recovery phrase and active sharing closed."
-    static let limits = "Other vaults’ patterns and recovery phrases are removed from this device. Their local files are kept, but you’ll need a saved backup to restore access in Pattern. Already saved iCloud backups and copies sent to others can’t be recalled. Automatic iCloud sync and revocable share links aren’t available in this version."
+    static let summary = "Drawing this vault’s pattern removes access to every vault except the one displayed and stops backups here. Your selected dummy vault opens, or this vault if no dummy is set. The surviving vault gets a new recovery phrase and active sharing closes."
+    static let limits = "Other vaults’ patterns and recovery phrases are removed from this device, including this vault’s if a different dummy vault is selected. Their local files are kept, but you’ll need a saved backup to restore access in Pattern. Already saved iCloud backups and copies sent to others can’t be recalled. Automatic iCloud sync and revocable share links aren’t available in this version."
 }
 
 private struct DuressSetupView: View {
@@ -161,7 +173,7 @@ private struct DuressSetupView: View {
                     }
                 }.disabled(!enabled && !understood)
             } footer: {
-                Text(enabled ? "Every unlock with this vault’s pattern repeats the duress action until you turn it off." : "Enabling this setting doesn’t activate it immediately. You can keep adding everyday photos here before locking the app.")
+                Text(enabled ? "If this vault survives, each unlock with its duress pattern repeats the action. If a different dummy is selected, only the dummy vault survives." : "Enabling this setting doesn’t activate it immediately. You can keep adding everyday photos here before locking the app.")
             }
         }
         .scrollContentBackground(.hidden).background(AlbumTheme.background)

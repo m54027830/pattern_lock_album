@@ -310,6 +310,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Pattern;
+                INFOPLIST_KEY_NSFaceIDUsageDescription = "Require Face ID after your pattern to open protected vaults.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save the photos and videos you choose to your Photos library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Delete original photos and videos from Photos only when you choose, after copies are saved in your vault.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -345,6 +346,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Pattern;
+                INFOPLIST_KEY_NSFaceIDUsageDescription = "Require Face ID after your pattern to open protected vaults.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save the photos and videos you choose to your Photos library.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Delete original photos and videos from Photos only when you choose, after copies are saved in your vault.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
