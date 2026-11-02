@@ -66,6 +66,18 @@ nonisolated enum PatternLockStage: Equatable {
         inputRevision += 1
     }
 
+    func updateUnlockedVault(_ vault: Vault) {
+        guard stage == .unlocked, unlockedVault?.id == vault.id else { return }
+        unlockedVault = vault
+    }
+
+    @discardableResult
+    func revokeAccess(to vaultID: String) -> Bool {
+        guard unlockedVault?.id == vaultID || returnVault?.id == vaultID else { return false }
+        lock()
+        return true
+    }
+
     func beginNewVault() {
         guard stage == .unlocked, isActive, !isBusy, let unlockedVault else { return }
         returnVault = unlockedVault
@@ -97,6 +109,7 @@ nonisolated enum PatternLockStage: Equatable {
 
     func cancelNewVault() {
         guard isCreatingVault, !isBusy, isActive, let returnVault else { return }
+        guard authenticator.accessIsAllowed(to: returnVault.id) else { lock(); return }
         resetSession()
         unlockedVault = returnVault
         stage = .unlocked
@@ -139,7 +152,7 @@ nonisolated enum PatternLockStage: Equatable {
             let result: PatternVerification
             if registering {
                 let vault = isCreatingVault
-                    ? try await authenticator.createVault(name: vaultName, pattern: nodes)
+                    ? try await authenticator.createVault(name: vaultName, pattern: nodes, from: returnVault!.id)
                     : try await authenticator.register(nodes)
                 result = .accepted(vault)
             } else {
@@ -148,6 +161,7 @@ nonisolated enum PatternLockStage: Equatable {
             guard operation == generation, isActive else { return }
             switch result {
             case .accepted(let vault):
+                guard authenticator.accessIsAllowed(to: vault.id) else { throw VaultSettingsError.missingVault }
                 resetSession()
                 unlockedVault = vault
                 retryAfter = nil

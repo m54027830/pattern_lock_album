@@ -1,3 +1,4 @@
+import Photos
 import PhotosUI
 import SwiftUI
 
@@ -7,12 +8,18 @@ struct ContentView: View {
     private let vaultName: String
     private let createVault: (() -> Void)?
     private let lockVault: (() -> Void)?
+    private let vault: Vault?
+    private let onVaultChanged: ((Vault) -> Void)?
+    private let onVaultDeleted: (() -> Void)?
 
-    init(store: LibraryStore? = nil, vaultName: String = "Personal", createVault: (() -> Void)? = nil, lockVault: (() -> Void)? = nil) {
+    init(store: LibraryStore? = nil, vaultName: String = "Personal", createVault: (() -> Void)? = nil, lockVault: (() -> Void)? = nil, vault: Vault? = nil, onVaultChanged: ((Vault) -> Void)? = nil, onVaultDeleted: (() -> Void)? = nil) {
         _store = State(initialValue: store ?? LibraryStore())
         self.vaultName = vaultName
         self.createVault = createVault
         self.lockVault = lockVault
+        self.vault = vault
+        self.onVaultChanged = onVaultChanged
+        self.onVaultDeleted = onVaultDeleted
     }
     @State private var currentFolderID: UUID?
     @State private var filter = MediaFilter.all
@@ -21,6 +28,8 @@ struct ContentView: View {
     @State private var selected: Set<UUID> = []
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var showingPicker = false
+    @State private var showingImportResult = false
+    @State private var showingSettings = false
     @State private var folderEditor: FolderEditorDestination?
     @State private var folderToDelete: AlbumFolder?
     @State private var showingDelete = false
@@ -51,7 +60,7 @@ struct ContentView: View {
             .background(AlbumTheme.background)
             .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
             .toolbar(.hidden, for: .navigationBar)
-            .photosPicker(isPresented: $showingPicker, selection: $pickerItems, matching: .any(of: [.images, .videos]), preferredItemEncoding: .current)
+            .photosPicker(isPresented: $showingPicker, selection: $pickerItems, matching: .any(of: [.images, .videos]), preferredItemEncoding: .current, photoLibrary: .shared())
             .onChange(of: pickerItems) { _, items in
                 guard !items.isEmpty else { return }
                 let destination = currentFolderID
@@ -59,6 +68,11 @@ struct ContentView: View {
             }
             .sheet(item: $folderEditor) { destination in
                 FolderEditor(folder: destination.folder, store: store)
+            }
+            .sheet(isPresented: $showingSettings) {
+                if let vault {
+                    VaultSettingsView(store: store, vault: vault, onVaultChanged: { onVaultChanged?($0) }, onDeleted: { onVaultDeleted?() })
+                }
             }
             .sheet(isPresented: $showingMove) {
                 MoveMediaSheet(store: store, selected: selected) { finishSelection() }
@@ -72,6 +86,17 @@ struct ContentView: View {
             .alert("Something went wrong", isPresented: Binding(get: { store.errorMessage != nil && viewer == nil && folderEditor == nil && !showingMove }, set: { if !$0 { store.errorMessage = nil } })) {
                 Button("OK", role: .cancel) { store.errorMessage = nil }
             } message: { Text(store.errorMessage ?? "") }
+            .onChange(of: store.importSummary?.id, initial: true) { _, id in
+                showingImportResult = id != nil
+            }
+            .alert("Import complete", isPresented: $showingImportResult, presenting: store.importSummary) { summary in
+                Button("Keep originals", role: .cancel) { store.dismissImportSummary() }
+                if !summary.originals.isEmpty {
+                    Button("Delete originals from Photos", role: .destructive) {
+                        Task { await store.deleteImportedOriginals(summaryID: summary.id) }
+                    }
+                }
+            } message: { summary in Text(summary.message) }
             .confirmationDialog("Delete \(selected.count) \(selected.count == 1 ? "item" : "items")?", isPresented: $showingDelete, titleVisibility: .visible) {
                 Button("Delete \(selected.count) \(selected.count == 1 ? "item" : "items")", role: .destructive) {
                     Task { if await store.delete(selected) { finishSelection() } }
@@ -104,6 +129,8 @@ struct ContentView: View {
                     if let createVault, let lockVault {
                         Menu {
                             Text(vaultName)
+                            Button("Vault settings", systemImage: "gearshape") { showingSettings = true }
+                                .disabled(store.isBusy)
                             Button("New vault", systemImage: "plus.rectangle.on.folder", action: createVault)
                             Button("Switch vault", systemImage: "arrow.triangle.2.circlepath", action: lockVault)
                             Button("Lock vault", systemImage: "lock", action: lockVault)
@@ -113,6 +140,13 @@ struct ContentView: View {
                     } else { vaultLabel }
                 }
                 Spacer()
+                if vault != nil {
+                    Button { showingSettings = true } label: {
+                        Image(systemName: "gearshape").font(.system(size: 18)).padding(11).background(.white, in: Circle())
+                    }
+                    .disabled(store.isBusy)
+                    .accessibilityLabel("Vault settings").accessibilityIdentifier("vaultSettings")
+                }
                 Button(isSelecting ? "Done" : "Select") {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         if isSelecting { finishSelection() } else { isSelecting = true }

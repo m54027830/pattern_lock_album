@@ -1,6 +1,7 @@
 import CoreTransferable
 import Foundation
 import Observation
+import Photos
 import PhotosUI
 import SwiftUI
 import UniformTypeIdentifiers
@@ -29,6 +30,17 @@ nonisolated struct ImportedMedia: Transferable, Sendable {
     }
 }
 
+nonisolated protocol MediaImportSource: Sendable {
+    var itemIdentifier: String? { get }
+    func loadImportedMedia() async throws -> ImportedMedia?
+}
+
+extension PhotosPickerItem: MediaImportSource {
+    nonisolated func loadImportedMedia() async throws -> ImportedMedia? {
+        try await loadTransferable(type: ImportedMedia.self)
+    }
+}
+
 struct ExportSession: Identifiable {
     let id = UUID()
     let directory: URL
@@ -43,17 +55,28 @@ final class LibraryStore {
     private(set) var progress = ""
     var errorMessage: String?
     var exportSession: ExportSession?
+    private(set) var importSummary: MediaImportSummary?
+    private var importGeneration = 0
+    private var accessRevoked = false
+    private let originalDeleter: any OriginalMediaDeleting
     private var exportDirectory: URL?
     private var exportGeneration = 0
     let repository: LibraryRepository
 
-    init(root: URL = URL.applicationSupportDirectory.appending(path: "Vaults/Personal")) {
-        repository = LibraryRepository(root: root)
+    init(root: URL = URL.applicationSupportDirectory.appending(path: "Vaults/Personal"), originalDeleter: any OriginalMediaDeleting = PhotoLibraryOriginalDeleter(), security: VaultSecurityState = .shared) {
+        repository = LibraryRepository(root: root, security: security)
+        self.originalDeleter = originalDeleter
     }
 
+    private var canAccess: Bool { !accessRevoked && repository.security.allowsAccess(to: repository.root.lastPathComponent) }
+
     func load() async {
-        guard !isLoaded else { return }
-        do { snapshot = try await repository.load(); isLoaded = true }
+        guard !isLoaded, canAccess else { return }
+        do {
+            let value = try await repository.load()
+            guard canAccess else { return }
+            snapshot = value; isLoaded = true
+        }
         catch { errorMessage = error.localizedDescription }
     }
 
@@ -80,32 +103,82 @@ final class LibraryStore {
         await perform { try await self.repository.delete(ids: ids) }
     }
 
-    func importItems(_ items: [PhotosPickerItem], into folderID: UUID?) async {
-        guard !isBusy, isLoaded, !items.isEmpty else { return }
+    func importItems<Item: MediaImportSource>(_ items: [Item], into folderID: UUID?) async {
+        guard canAccess, !isBusy, isLoaded, !items.isEmpty else { return }
+        dismissImportSummary()
+        let generation = importGeneration
         isBusy = true
         var failed = 0
+        var importedCount = 0
+        var unidentifiedCount = 0
+        var originals: [String: UUID] = [:]
         for (index, item) in items.enumerated() {
+            guard canAccess else { break }
             progress = "Importing \(index + 1) of \(items.count)…"
             do {
-                guard let imported = try await item.loadTransferable(type: ImportedMedia.self) else { throw LibraryError.unsupportedMedia }
+                guard let imported = try await item.loadImportedMedia() else { throw LibraryError.unsupportedMedia }
                 defer { try? FileManager.default.removeItem(at: imported.url.deletingLastPathComponent()) }
-                snapshot = try await repository.importFile(at: imported.url, originalName: imported.name, kind: imported.kind, folderID: folderID)
+                guard canAccess else { break }
+                let value = try await repository.importFile(at: imported.url, originalName: imported.name, kind: imported.kind, folderID: folderID)
+                guard canAccess else { break }
+                snapshot = value
+                importedCount += 1
+                if let identifier = item.itemIdentifier, let savedItem = snapshot.items.last {
+                    originals[identifier] = savedItem.id
+                } else { unidentifiedCount += 1 }
             } catch { failed += 1 }
         }
         isBusy = false
         progress = ""
-        if failed > 0 { errorMessage = "\(failed) of \(items.count) items couldn’t be imported. The others were saved. Try those items again after checking that they’re downloaded in Photos." }
+        guard canAccess, generation == importGeneration else { return }
+        if importedCount > 0 {
+            importSummary = MediaImportSummary(importedCount: importedCount, failedCount: failed, unidentifiedCount: unidentifiedCount, originals: originals)
+        } else {
+            errorMessage = "None of the \(items.count) items could be imported. Originals were kept in Photos. Try again after checking that they’re downloaded in Photos."
+        }
+    }
+
+    func dismissImportSummary() {
+        importGeneration += 1
+        importSummary = nil
+    }
+
+    func deleteImportedOriginals(summaryID: UUID) async {
+        guard canAccess, !isBusy, let summary = importSummary, summary.id == summaryID, !summary.originals.isEmpty else { return }
+        let generation = importGeneration
+        importSummary = nil
+        isBusy = true
+        progress = "Deleting originals from Photos…"
+        defer { isBusy = false; progress = "" }
+        do {
+            try await originalDeleter.requestAuthorization()
+            // Locking, switching vaults, or backgrounding invalidates a pending request.
+            guard canAccess, generation == importGeneration, !Task.isCancelled else { return }
+            let copies = summary.originals.values.compactMap { id in snapshot.items.first { $0.id == id } }
+            guard copies.count == summary.originals.count,
+                  copies.allSatisfy({ FileManager.default.fileExists(atPath: repository.mediaURL($0).path) }) else {
+                throw OriginalMediaDeletionError.missingCopies
+            }
+            try await originalDeleter.deleteOriginals(identifiers: summary.originals.keys.sorted())
+        } catch {
+            guard canAccess, generation == importGeneration else { return }
+            let photoError = error as NSError
+            // Cancelling the system confirmation is a normal choice to keep the originals.
+            if photoError.domain == PHPhotosErrorDomain && photoError.code == PHPhotosError.Code.userCancelled.rawValue { return }
+            errorMessage = "Couldn’t delete originals. \(error.localizedDescription) Your vault copies were kept."
+        }
     }
 
     func export(_ ids: Set<UUID>) async {
-        guard !isBusy, !ids.isEmpty else { return }
+        guard canAccess, !isBusy, !ids.isEmpty else { return }
         isBusy = true
         progress = "Preparing export…"
         let generation = exportGeneration
         do {
+            let lease = try repository.security.lease(for: repository.root.lastPathComponent)
             let directory = try await repository.export(ids: ids)
             let urls = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil).sorted { $0.lastPathComponent < $1.lastPathComponent }
-            guard generation == exportGeneration else {
+            guard canAccess, generation == exportGeneration, (try? repository.security.check(lease)) != nil else {
                 try? FileManager.default.removeItem(at: directory)
                 isBusy = false
                 progress = ""
@@ -125,11 +198,30 @@ final class LibraryStore {
         exportSession = nil
     }
 
+    func withExclusiveAccess<T>(_ operation: () async throws -> T) async throws -> T {
+        guard canAccess, !isBusy, isLoaded else { throw VaultSettingsError.busy }
+        isBusy = true
+        defer { isBusy = false; progress = "" }
+        return try await operation()
+    }
+
+    func invalidateDeletedVault() {
+        accessRevoked = true
+        dismissImportSummary()
+        finishExport()
+        isLoaded = false
+        snapshot = LibrarySnapshot()
+    }
+
     private func perform(_ operation: () async throws -> LibrarySnapshot) async -> Bool {
-        guard !isBusy, isLoaded else { return false }
+        guard canAccess, !isBusy, isLoaded else { return false }
         isBusy = true
         defer { isBusy = false }
-        do { snapshot = try await operation(); return true }
+        do {
+            let value = try await operation()
+            guard canAccess else { return false }
+            snapshot = value; return true
+        }
         catch { errorMessage = error.localizedDescription; return false }
     }
 }

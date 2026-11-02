@@ -3,7 +3,10 @@ import SwiftUI
 struct PatternLockView: View {
     @Bindable var lock: PatternLockStore
     @State private var isDrawing = false
+    @State private var showingRecovery = false
+    @State private var showingRestore = false
     @FocusState private var nameFocused: Bool
+    @Environment(\.scenePhase) private var scenePhase
 
     private var title: String {
         switch lock.stage {
@@ -134,6 +137,14 @@ struct PatternLockView: View {
                             .padding(.vertical, 18)
                     }
                     Spacer(minLength: 20)
+                    if !lock.isCreatingVault && [.locked, .create, .unavailable].contains(lock.stage) {
+                        HStack(spacing: 24) {
+                            if lock.stage != .create {
+                                Button("Recover vault") { showingRecovery = true }
+                            }
+                            Button("Restore backup") { showingRestore = true }
+                        }.font(.caption).padding(.bottom, 20).disabled(lock.isBusy)
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .frame(minHeight: geometry.size.height)
@@ -145,6 +156,21 @@ struct PatternLockView: View {
         .tint(AlbumTheme.accent)
         .preferredColorScheme(.light)
         .sensoryFeedback(.error, trigger: lock.failureRevision)
+        .sheet(isPresented: $showingRecovery) {
+            NavigationStack {
+                RecoverPatternView { showingRecovery = false; lock.lock(); Task { await lock.activate() } }
+                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { showingRecovery = false } } }
+            }.tint(AlbumTheme.accent)
+        }
+        .sheet(isPresented: $showingRestore) {
+            NavigationStack {
+                RestoreVaultView(onRestored: { showingRestore = false; lock.lock(); Task { await lock.activate() } })
+                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { showingRestore = false } } }
+            }.tint(AlbumTheme.accent)
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .background { showingRecovery = false; showingRestore = false }
+        }
     }
 
     private func step(_ number: String, title: String, active: Bool, complete: Bool) -> some View {

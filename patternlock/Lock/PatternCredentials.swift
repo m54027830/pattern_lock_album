@@ -85,16 +85,32 @@ nonisolated protocol PatternAuthenticating: Sendable {
     func status() async throws -> PatternLockStatus
     func register(_ nodes: [Int]) async throws -> Vault
     func createVault(name: String, pattern: [Int]) async throws -> Vault
+    func createVault(name: String, pattern: [Int], from vaultID: String) async throws -> Vault
     func verify(_ nodes: [Int], now: Date) async throws -> PatternVerification
+    nonisolated func accessIsAllowed(to vaultID: String) -> Bool
+}
+
+extension PatternAuthenticating {
+    func createVault(name: String, pattern: [Int], from vaultID: String) async throws -> Vault {
+        try await createVault(name: name, pattern: pattern)
+    }
+    nonisolated func accessIsAllowed(to vaultID: String) -> Bool { true }
 }
 
 nonisolated struct VaultCredential: Codable, Sendable {
-    let vault: Vault
-    let pattern: PatternCredential
+    var vault: Vault
+    var pattern: PatternCredential
+    var recovery: RecoveryCredential?
+    var duressVaultID: String? // Read compatibility with the earlier decoy configuration.
+    var isDuressVault: Bool?
+    var pendingRecoveryPhrase: String? // Keychain-only, removed after the user saves it.
 }
 
 nonisolated struct VaultRegistry: Codable, Sendable {
     var version = 2
+    var revokedVaultIDs: [String]?
+    var backupsDisabled: Bool?
+    var sharingEpoch: UUID?
     var vaults: [VaultCredential] = []
     var failedAttempts = 0
     var retryAfter: Date?
@@ -103,25 +119,43 @@ nonisolated struct VaultRegistry: Codable, Sendable {
 /// All vault credentials share one atomic Keychain record. The shared actor
 /// serializes registration across windows without caching stale credentials.
 actor PatternAuthenticator: PatternAuthenticating {
-    static let shared = PatternAuthenticator()
+    static let shared = PatternAuthenticator(security: .shared)
     static let rounds: UInt32 = 600_000
     private let storage: any PatternCredentialStorage
+    nonisolated let security: VaultSecurityState
+    private let directory: URL
 
-    init(storage: any PatternCredentialStorage = KeychainPatternStorage()) { self.storage = storage }
+    init(storage: any PatternCredentialStorage = KeychainPatternStorage(),
+         security: VaultSecurityState = VaultSecurityState(),
+         directory: URL = URL.applicationSupportDirectory.appending(path: "Vaults")) {
+        self.storage = storage; self.security = security; self.directory = directory
+    }
+
+    nonisolated func accessIsAllowed(to vaultID: String) -> Bool { security.allowsAccess(to: vaultID) }
 
     func status() throws -> PatternLockStatus {
         let registry = try read()
-        return PatternLockStatus(isRegistered: registry != nil, retryAfter: registry?.retryAfter)
+        return PatternLockStatus(isRegistered: !(registry?.vaults.isEmpty ?? true), retryAfter: registry?.retryAfter)
     }
 
     @discardableResult
     func register(_ nodes: [Int]) throws -> Vault {
         guard PatternRules.isValid(nodes) else { throw PatternCredentialError.invalidPattern }
-        guard try read() == nil else { throw PatternCredentialError.alreadyRegistered }
+        let existing = try read()
+        guard existing?.vaults.isEmpty ?? true else { throw PatternCredentialError.alreadyRegistered }
         let credential = try makeCredential(nodes)
-        let registry = VaultRegistry(vaults: [VaultCredential(vault: .personal, pattern: credential)])
-        try storage.create(JSONEncoder().encode(registry))
-        return .personal
+        // Never reuse a deleted vault's directory if cleanup was interrupted.
+        let vault = existing == nil ? Vault.personal : Vault(id: UUID().uuidString, name: "Personal")
+        var registry = existing ?? VaultRegistry()
+        registry.vaults = [VaultCredential(vault: vault, pattern: credential)]
+        if existing == nil { try storage.create(JSONEncoder().encode(registry)) }
+        else { try storage.update(JSONEncoder().encode(registry)) }
+        return vault
+    }
+
+    func createVault(name: String, pattern: [Int], from vaultID: String) async throws -> Vault {
+        _ = try settings(for: vaultID)
+        return try createVault(name: name, pattern: pattern)
     }
 
     func createVault(name: String, pattern: [Int]) throws -> Vault {
@@ -146,7 +180,11 @@ actor PatternAuthenticator: PatternAuthenticating {
         if let vault = try matchingVault(nodes, in: registry) {
             registry.failedAttempts = 0
             registry.retryAfter = nil
-            try storage.update(JSONEncoder().encode(registry))
+            if registry.vaults.contains(where: { $0.vault.id == vault.id && $0.isDuressVault == true }) {
+                try activateDuress(vault, registry: &registry)
+            } else {
+                try storage.update(JSONEncoder().encode(registry))
+            }
             return .accepted(vault)
         }
         registry.failedAttempts = min(registry.failedAttempts + 1, 20)
@@ -175,15 +213,26 @@ actor PatternAuthenticator: PatternAuthenticating {
     private func read() throws -> VaultRegistry? {
         guard let data = try storage.read() else { return nil }
         let decoder = JSONDecoder()
-        if let registry = try? decoder.decode(VaultRegistry.self, from: data) {
-            guard registry.version == 2, !registry.vaults.isEmpty,
+        if var registry = try? decoder.decode(VaultRegistry.self, from: data) {
+            guard registry.version == 2,
                   (0...20).contains(registry.failedAttempts),
+                  (registry.revokedVaultIDs ?? []).allSatisfy({ $0 == Vault.personal.id || UUID(uuidString: $0) != nil }),
+                  Set(registry.revokedVaultIDs ?? []).isDisjoint(with: registry.vaults.map { $0.vault.id }),
                   Set(registry.vaults.map { $0.vault.id }).count == registry.vaults.count,
                   registry.vaults.allSatisfy({ entry in
                       (entry.vault.id == Vault.personal.id || UUID(uuidString: entry.vault.id) != nil)
                           && !entry.vault.name.isEmpty && entry.vault.name.count <= 40
                           && valid(entry.pattern)
+                          && (entry.recovery == nil || (entry.recovery?.rounds == RecoveryPhrase.rounds && entry.recovery?.salt.count == 32 && entry.recovery?.verifier.count == 32))
+                          && (entry.duressVaultID == nil || (entry.duressVaultID != entry.vault.id && registry.vaults.contains { $0.vault.id == entry.duressVaultID }))
                   }) else { throw PatternCredentialError.invalid }
+            // A former decoy must not silently become destructive on upgrade.
+            // Keep it as a normal vault until explicitly armed in settings.
+            if registry.vaults.contains(where: { $0.duressVaultID != nil }) {
+                for index in registry.vaults.indices { registry.vaults[index].duressVaultID = nil }
+                try storage.update(JSONEncoder().encode(registry))
+            }
+            security.update(from: registry)
             return registry
         }
         // Upgrade the original single-pattern record atomically, retaining its
@@ -219,5 +268,220 @@ actor PatternAuthenticator: PatternAuthenticating {
         var difference: UInt8 = 0
         for (a, b) in zip(lhs, rhs) { difference |= a ^ b }
         return difference == 0
+    }
+
+    func settings(for vaultID: String) throws -> VaultCredential {
+        guard let entry = try read()?.vaults.first(where: { $0.vault.id == vaultID }) else { throw VaultSettingsError.missingVault }
+        return entry
+    }
+
+    func renameVault(_ vaultID: String, name: String) throws -> Vault {
+        guard var registry = try read(), let index = registry.vaults.firstIndex(where: { $0.vault.id == vaultID }) else { throw VaultSettingsError.missingVault }
+        let name = try validatedName(name, in: registry, excluding: vaultID)
+        let vault = Vault(id: vaultID, name: name)
+        registry.vaults[index].vault = vault
+        try storage.update(JSONEncoder().encode(registry))
+        return vault
+    }
+
+    func changePattern(vaultID: String, current: [Int], replacement: [Int]) throws {
+        var registry = try authorizedRegistry(vaultID: vaultID, pattern: current)
+        guard PatternRules.isValid(replacement) else { throw PatternCredentialError.invalidPattern }
+        if let match = try matchingVault(replacement, in: registry), match.id != vaultID { throw PatternCredentialError.duplicatePattern }
+        let index = registry.vaults.firstIndex { $0.vault.id == vaultID }!
+        registry.vaults[index].pattern = try makeCredential(replacement)
+        try Task.checkCancellation()
+        try storage.update(JSONEncoder().encode(registry))
+        NotificationCenter.default.post(name: VaultEvents.accessRevoked, object: vaultID)
+    }
+
+    func setRecoveryPhrase(vaultID: String, phrase: String, currentPattern: [Int]) throws {
+        var registry = try authorizedRegistry(vaultID: vaultID, pattern: currentPattern)
+        let credential = try RecoveryPhrase.credential(for: phrase)
+        for entry in registry.vaults where entry.vault.id != vaultID {
+            if let recovery = entry.recovery, try RecoveryPhrase.matches(phrase, credential: recovery) { throw VaultSettingsError.duplicatePhrase }
+        }
+        let index = registry.vaults.firstIndex { $0.vault.id == vaultID }!
+        registry.vaults[index].recovery = credential
+        registry.vaults[index].pendingRecoveryPhrase = nil
+        try Task.checkCancellation()
+        try storage.update(JSONEncoder().encode(registry))
+    }
+
+    func validateRecoveryPhrase(vaultID: String, phrase: String) throws {
+        guard var registry = try read(), let entry = registry.vaults.first(where: { $0.vault.id == vaultID }) else { throw VaultSettingsError.missingVault }
+        try checkCooldown(registry)
+        guard let recovery = entry.recovery else { throw VaultSettingsError.noRecovery }
+        guard try RecoveryPhrase.matches(phrase, credential: recovery) else { try recordFailure(&registry); throw VaultSettingsError.wrongPhrase }
+        registry.failedAttempts = 0; registry.retryAfter = nil
+        try storage.update(JSONEncoder().encode(registry))
+    }
+
+    func recover(phrase: String, newPattern: [Int]) throws -> Vault {
+        guard var registry = try read() else { throw VaultSettingsError.wrongPhrase }
+        try checkCooldown(registry)
+        guard PatternRules.isValid(newPattern) else { throw PatternCredentialError.invalidPattern }
+        var match: Int?
+        for (index, entry) in registry.vaults.enumerated() {
+            if let credential = entry.recovery, try RecoveryPhrase.matches(phrase, credential: credential) { match = index }
+        }
+        guard let index = match else { try recordFailure(&registry); throw VaultSettingsError.wrongPhrase }
+        let vault = registry.vaults[index].vault
+        if let other = try matchingVault(newPattern, in: registry), other.id != vault.id { throw PatternCredentialError.duplicatePattern }
+        registry.vaults[index].pattern = try makeCredential(newPattern)
+        registry.failedAttempts = 0; registry.retryAfter = nil
+        try Task.checkCancellation()
+        try storage.update(JSONEncoder().encode(registry))
+        NotificationCenter.default.post(name: VaultEvents.accessRevoked, object: vault.id)
+        return vault
+    }
+
+    func setDuressVault(vaultID: String, enabled: Bool, currentPattern: [Int]) throws {
+        var registry = try authorizedRegistry(vaultID: vaultID, pattern: currentPattern)
+        let index = registry.vaults.firstIndex { $0.vault.id == vaultID }!
+        registry.vaults[index].isDuressVault = enabled
+        try Task.checkCancellation()
+        try storage.update(JSONEncoder().encode(registry))
+    }
+
+    func backupsAreDisabled() throws -> Bool { try read()?.backupsDisabled == true }
+
+    func pendingRecoveryPhrase(vaultID: String, currentPattern: [Int]) throws -> String {
+        let registry = try authorizedRegistry(vaultID: vaultID, pattern: currentPattern)
+        guard let phrase = registry.vaults.first(where: { $0.vault.id == vaultID })?.pendingRecoveryPhrase else { throw VaultSettingsError.noRecovery }
+        try storage.update(JSONEncoder().encode(registry))
+        return phrase
+    }
+
+    func acknowledgeRecoveryPhrase(vaultID: String, phrase: String) throws {
+        guard var registry = try read(), let index = registry.vaults.firstIndex(where: { $0.vault.id == vaultID }) else { throw VaultSettingsError.missingVault }
+        guard registry.vaults[index].pendingRecoveryPhrase == phrase else { throw VaultSettingsError.wrongPhrase }
+        registry.vaults[index].pendingRecoveryPhrase = nil
+        try storage.update(JSONEncoder().encode(registry))
+    }
+
+    private func activateDuress(_ vault: Vault, registry: inout VaultRegistry) throws {
+        let revoked = Set(registry.vaults.filter { $0.vault.id != vault.id }.map { $0.vault.id })
+        var survivor = registry.vaults.first { $0.vault.id == vault.id }!
+        let phrase = try RecoveryPhrase.generate()
+        survivor.recovery = try RecoveryPhrase.credential(for: phrase)
+        survivor.pendingRecoveryPhrase = phrase
+        survivor.duressVaultID = nil
+        registry.vaults = [survivor]
+        registry.revokedVaultIDs = Set((registry.revokedVaultIDs ?? []) + Array(revoked)).sorted()
+        registry.backupsDisabled = true
+        registry.sharingEpoch = UUID()
+
+        // Exclude the whole local vault tree before committing. If the Keychain
+        // fails, credentials remain intact and backup exclusion fails closed.
+        let files = FileManager.default
+        try files.createDirectory(at: directory, withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.complete])
+        var values = URLResourceValues(); values.isExcludedFromBackup = true
+        var root = directory
+        try root.setResourceValues(values)
+        for var child in try files.contentsOfDirectory(at: directory, includingPropertiesForKeys: [.isDirectoryKey]) {
+            if try child.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true { try child.setResourceValues(values) }
+        }
+        try Task.checkCancellation()
+        // Credential removal, phrase rotation, cloud policy, and export
+        // revocation have a single durable commit point.
+        try storage.update(JSONEncoder().encode(registry))
+        security.update(from: registry)
+        NotificationCenter.default.post(name: VaultEvents.duressActivated, object: DuressActivation(revokedVaultIDs: revoked))
+    }
+
+    /// The directory is staged before the credential is removed. If the app stops
+    /// before the Keychain commit, LibraryRepository restores it on the next unlock.
+    func deleteVault(vaultID: String, currentPattern: [Int], directory: URL) throws {
+        var registry = try authorizedRegistry(vaultID: vaultID, pattern: currentPattern)
+        try Task.checkCancellation()
+        let root = directory.appending(path: vaultID)
+        let staged = directory.appending(path: "DeletingVault-" + vaultID)
+        let files = FileManager.default
+        let exists = files.fileExists(atPath: root.path)
+        if exists { try files.moveItem(at: root, to: staged) }
+        registry.vaults.removeAll { $0.vault.id == vaultID }
+        for index in registry.vaults.indices where registry.vaults[index].duressVaultID == vaultID { registry.vaults[index].duressVaultID = nil }
+        do { try storage.update(JSONEncoder().encode(registry)) }
+        catch {
+            if exists { try? files.moveItem(at: staged, to: root) }
+            throw error
+        }
+        // A failed cleanup is retried at launch; removed credentials cannot expose it.
+        try? files.removeItem(at: staged)
+        NotificationCenter.default.post(name: VaultEvents.accessRevoked, object: vaultID)
+    }
+
+    func cleanDeletedVaults(in directory: URL) throws {
+        let activeIDs = Set(try read()?.vaults.map { $0.vault.id } ?? [])
+        let files = FileManager.default
+        guard files.fileExists(atPath: directory.path) else { return }
+        for url in try files.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil) {
+            for prefix in ["DeletingVault-", "InstallingVault-"] where url.lastPathComponent.hasPrefix(prefix) {
+                let id = String(url.lastPathComponent.dropFirst(prefix.count))
+                if !activeIDs.contains(id) { try files.removeItem(at: url) }
+            }
+        }
+    }
+
+    /// Serialize the filesystem and Keychain transaction with launch cleanup.
+    func installRestoredVault(_ vault: Vault, pattern: [Int], preparedDirectory: URL, directory: URL, lease: VaultSecurityState.Lease) throws {
+        _ = try read()
+        try security.check(lease)
+        let files = FileManager.default
+        try files.createDirectory(at: directory, withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.complete])
+        let staging = directory.appending(path: "InstallingVault-" + vault.id)
+        do {
+            try Task.checkCancellation()
+            try files.copyItem(at: preparedDirectory, to: staging)
+            try registerRestoredVault(vault, pattern: pattern)
+        } catch {
+            try? files.removeItem(at: staging)
+            throw error
+        }
+        // After the credential commits, the next unlock can finish this move.
+        try? files.moveItem(at: staging, to: vault.root(in: directory))
+    }
+
+    /// Restore always creates a new vault. Existing libraries are never replaced.
+    private func registerRestoredVault(_ vault: Vault, pattern: [Int]) throws {
+        let previous = try read()
+        var registry = previous ?? VaultRegistry()
+        guard UUID(uuidString: vault.id) != nil, !(registry.revokedVaultIDs ?? []).contains(vault.id), !registry.vaults.contains(where: { $0.vault.id == vault.id }) else { throw PatternCredentialError.invalid }
+        _ = try validatedName(vault.name, in: registry)
+        guard PatternRules.isValid(pattern) else { throw PatternCredentialError.invalidPattern }
+        guard try matchingVault(pattern, in: registry) == nil else { throw PatternCredentialError.duplicatePattern }
+        registry.vaults.append(VaultCredential(vault: vault, pattern: try makeCredential(pattern)))
+        let data = try JSONEncoder().encode(registry)
+        try Task.checkCancellation()
+        if previous == nil { try storage.create(data) } else { try storage.update(data) }
+    }
+
+    private func validatedName(_ name: String, in registry: VaultRegistry, excluding id: String? = nil) throws -> String {
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty, name.count <= 40,
+              !registry.vaults.contains(where: { $0.vault.id != id && $0.vault.name.localizedCaseInsensitiveCompare(name) == .orderedSame }) else { throw VaultSettingsError.invalidName }
+        return name
+    }
+
+    private func checkCooldown(_ registry: VaultRegistry) throws {
+        if let until = registry.retryAfter, until > Date() { throw VaultSettingsError.cooldown(until) }
+    }
+
+    private func recordFailure(_ registry: inout VaultRegistry) throws {
+        registry.failedAttempts = min(registry.failedAttempts + 1, 20)
+        registry.retryAfter = registry.failedAttempts < 5 ? nil : Date().addingTimeInterval(min(300, 30 * pow(2, Double(registry.failedAttempts - 5))))
+        try storage.update(JSONEncoder().encode(registry))
+    }
+
+    private func authorizedRegistry(vaultID: String, pattern: [Int]) throws -> VaultRegistry {
+        guard var registry = try read(), let entry = registry.vaults.first(where: { $0.vault.id == vaultID }) else { throw VaultSettingsError.missingVault }
+        try checkCooldown(registry)
+        guard PatternRules.isValid(pattern), constantTimeEqual(try derive(pattern, salt: entry.pattern.salt, rounds: entry.pattern.rounds), entry.pattern.verifier) else {
+            try recordFailure(&registry)
+            throw VaultSettingsError.wrongPattern
+        }
+        registry.failedAttempts = 0; registry.retryAfter = nil
+        return registry
     }
 }

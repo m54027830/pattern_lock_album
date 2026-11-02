@@ -7,10 +7,11 @@ import UniformTypeIdentifiers
 /// Each future pattern vault can use its own root without changing the album model.
 actor LibraryRepository {
     nonisolated let root: URL
+    nonisolated let security: VaultSecurityState
     private var snapshot: LibrarySnapshot?
     private let files = FileManager.default
 
-    init(root: URL) { self.root = root }
+    init(root: URL, security: VaultSecurityState = .shared) { self.root = root; self.security = security }
 
     nonisolated func mediaURL(_ item: MediaItem) -> URL {
         root.appending(path: "Originals").appending(path: item.filename)
@@ -21,12 +22,19 @@ actor LibraryRepository {
     }
 
     func load() throws -> LibrarySnapshot {
+        try security.checkAccess(to: root.lastPathComponent)
         if let snapshot { return snapshot }
+        for prefix in ["DeletingVault-", "InstallingVault-"] {
+            let staged = root.deletingLastPathComponent().appending(path: prefix + root.lastPathComponent)
+            if !files.fileExists(atPath: root.path), files.fileExists(atPath: staged.path) {
+                try files.moveItem(at: staged, to: root)
+            }
+        }
         try files.createDirectory(at: root.appending(path: "Originals"), withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.complete])
         try files.createDirectory(at: root.appending(path: "Thumbnails"), withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.complete])
         var backedUpRoot = root
         var values = URLResourceValues()
-        values.isExcludedFromBackup = false
+        values.isExcludedFromBackup = try security.backupsDisabled || (root.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == true)
         try backedUpRoot.setResourceValues(values)
         let manifest = root.appending(path: "library.json")
         let loaded: LibrarySnapshot
@@ -54,7 +62,19 @@ actor LibraryRepository {
         return loaded
     }
 
+    func storageUsed() throws -> Int64 {
+        _ = try load()
+        guard let enumerator = files.enumerator(at: root, includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey]) else { return 0 }
+        var total: Int64 = 0
+        for case let url as URL in enumerator {
+            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey])
+            if values.isRegularFile == true { total += Int64(values.fileSize ?? 0) }
+        }
+        return total
+    }
+
     private func commit(_ updated: LibrarySnapshot) throws -> LibrarySnapshot {
+        try security.checkAccess(to: root.lastPathComponent)
         let data = try JSONEncoder().encode(updated)
         try data.write(to: root.appending(path: "library.json"), options: [.atomic, .completeFileProtection])
         snapshot = updated
@@ -177,11 +197,13 @@ actor LibraryRepository {
     }
 
     func export(ids: Set<UUID>) throws -> URL {
+        let lease = try security.lease(for: root.lastPathComponent)
         let current = try load()
         let directory = files.temporaryDirectory.appending(path: "Export-" + UUID().uuidString)
         try files.createDirectory(at: directory, withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.complete])
         do {
             for item in current.items where ids.contains(item.id) {
+                try security.check(lease)
                 let name = URL(fileURLWithPath: item.originalName).deletingPathExtension().lastPathComponent
                 let ext = URL(fileURLWithPath: item.filename).pathExtension
                 var target = directory.appending(path: name + "." + ext)
@@ -192,6 +214,7 @@ actor LibraryRepository {
                 }
                 try files.copyItem(at: mediaURL(item), to: target)
             }
+            try security.check(lease)
             return directory
         } catch {
             try? files.removeItem(at: directory)
