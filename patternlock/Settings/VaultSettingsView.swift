@@ -6,7 +6,10 @@ struct VaultSettingsView: View {
     let onVaultChanged: (Vault) -> Void
     let onDeleted: () -> Void
     var authenticator = PatternAuthenticator.shared
+    @Environment(\.patternGridSize) private var gridSize
     @Environment(\.dismiss) private var dismiss
+    @State private var purchases = PurchaseStore.shared
+    @State private var showingPurchase = false
     @State private var storageBytes: Int64?
     @State private var hasRecovery = false
     @State private var isDuressVault = false
@@ -33,6 +36,11 @@ struct VaultSettingsView: View {
                     NavigationLink { PatternSetupView(title: "Change pattern", needsCurrentPattern: true) { current, replacement in
                         try await authenticator.changePattern(vaultID: vault.id, current: current, replacement: replacement)
                     } } label: { Label("Change pattern", systemImage: "hand.draw") }
+                    NavigationLink {
+                        GridSizeSettingsView(authenticator: authenticator)
+                    } label: {
+                        valueRow("Pattern grid", value: "\(gridSize) × \(gridSize)", icon: "circle.grid.3x3")
+                    }
                 } header: { Text("Pattern") }
 
                 Section {
@@ -85,7 +93,14 @@ struct VaultSettingsView: View {
                 } header: { Text("Duress vault") }
 
                 Section {
-                    valueRow("App settings", value: "Coming later", icon: "gearshape")
+                    Button { showingPurchase = true } label: {
+                        valueRow("Pattern Unlimited", value: purchases.isUnlimited ? "Purchased" : "Unlock once", icon: "sparkles")
+                    }
+                    if !purchases.isUnlimited {
+                        valueRow("Free album usage", value: "\(store.snapshot.items.count) / 5 photos/videos")
+                    }
+                } header: { Text("Purchase") } footer: {
+                    Text("Free: 3 albums with 5 photos or videos each. One purchase removes both limits. No subscription.")
                 }
 
                 Section {
@@ -98,6 +113,7 @@ struct VaultSettingsView: View {
             .scrollContentBackground(.hidden).background(AlbumTheme.background)
             .navigationTitle("Vault settings").navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+            .sheet(isPresented: $showingPurchase) { PurchaseView() }
             .task(id: revision) { await load() }
             .alert("Rename vault", isPresented: $renaming) {
                 TextField("Vault name", text: $name)

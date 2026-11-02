@@ -158,6 +158,7 @@ struct PatternLockView: View {
         .tint(AlbumTheme.accent)
         .preferredColorScheme(.light)
         .sensoryFeedback(.error, trigger: lock.failureRevision)
+        .sheet(item: $lock.purchaseLimit) { PurchaseView(reason: $0) }
         .sheet(isPresented: $showingRecovery) {
             NavigationStack {
                 RecoverPatternView { showingRecovery = false; lock.lock(); Task { await lock.activate() } }
@@ -209,8 +210,20 @@ struct PatternLockView: View {
     }
 }
 
+private struct PatternGridSizeKey: EnvironmentKey { static let defaultValue = 5 }
+
+extension EnvironmentValues {
+    var patternGridSize: Int {
+        get { self[PatternGridSizeKey.self] }
+        set { self[PatternGridSizeKey.self] = newValue }
+    }
+}
+
 struct PatternGridView: View {
     let side: CGFloat
+    var gridSize: Int? = nil
+    @Environment(\.patternGridSize) private var inheritedGridSize
+    private var size: Int { gridSize ?? inheritedGridSize }
     let isEnabled: Bool
     let revision: Int
     @Binding var isDrawing: Bool
@@ -220,7 +233,7 @@ struct PatternGridView: View {
     @State private var previousPoint: CGPoint?
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
 
-    private var geometry: PatternGridGeometry { PatternGridGeometry(side: side) }
+    private var geometry: PatternGridGeometry { PatternGridGeometry(side: side, gridSize: size) }
 
     var body: some View {
         VStack(spacing: 12) {
@@ -232,7 +245,7 @@ struct PatternGridView: View {
                     if let finger { line.addLine(to: finger) }
                 }
                 .stroke(AlbumTheme.accent.opacity(0.55), style: StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
-                ForEach(0..<PatternRules.dotCount, id: \.self) { node in
+                ForEach(0..<(size * size), id: \.self) { node in
                     let selected = path.nodes.contains(node)
                     ZStack {
                         Circle().fill(selected ? AlbumTheme.accent.opacity(0.10) : .clear).frame(width: 33, height: 33)
@@ -259,10 +272,10 @@ struct PatternGridView: View {
                 })
             .accessibilityRepresentation {
                 VStack {
-                    ForEach(0..<5) { row in
+                    ForEach(0..<size, id: \.self) { row in
                         HStack {
-                            ForEach(0..<5) { column in
-                                let node = row * 5 + column
+                            ForEach(0..<size, id: \.self) { column in
+                                let node = row * size + column
                                 Button("Row \(row + 1), column \(column + 1)") {
                                     guard isEnabled else { return }
                                     path.append(node)
@@ -273,7 +286,7 @@ struct PatternGridView: View {
                             }
                         }
                     }
-                }.accessibilityLabel("5 by 5 pattern grid")
+                }.accessibilityLabel("\(size) by \(size) pattern grid")
             }
             if voiceOver {
                 HStack(spacing: 30) {
@@ -287,6 +300,8 @@ struct PatternGridView: View {
         .onChange(of: revision) { _, _ in clear() }
         .onChange(of: isEnabled) { _, enabled in if !enabled { clear() } }
         .onChange(of: side) { _, _ in clear() }
+        .onChange(of: size) { _, _ in clear() }
+        .onAppear { clear() }
         .onDisappear { clear() }
         .accessibilityIdentifier("patternGrid")
     }
@@ -298,7 +313,7 @@ struct PatternGridView: View {
         completed(nodes)
     }
     private func clear() {
-        path.reset()
+        path = PatternPath(gridSize: size)
         finger = nil
         previousPoint = nil
         isDrawing = false

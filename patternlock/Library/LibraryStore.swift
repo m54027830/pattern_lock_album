@@ -54,6 +54,7 @@ final class LibraryStore {
     private(set) var isBusy = false
     private(set) var progress = ""
     var errorMessage: String?
+    var purchaseLimit: FreeTierLimit?
     var exportSession: ExportSession?
     private(set) var importSummary: MediaImportSummary?
     private var importGeneration = 0
@@ -63,8 +64,8 @@ final class LibraryStore {
     private var exportGeneration = 0
     let repository: LibraryRepository
 
-    init(root: URL = URL.applicationSupportDirectory.appending(path: "Vaults/Personal"), originalDeleter: any OriginalMediaDeleting = PhotoLibraryOriginalDeleter(), security: VaultSecurityState = .shared) {
-        repository = LibraryRepository(root: root, security: security)
+    init(root: URL = URL.applicationSupportDirectory.appending(path: "Vaults/Personal"), originalDeleter: any OriginalMediaDeleting = PhotoLibraryOriginalDeleter(), security: VaultSecurityState = .shared, purchaseAccess: PurchaseAccess = .shared) {
+        repository = LibraryRepository(root: root, security: security, purchaseAccess: purchaseAccess)
         self.originalDeleter = originalDeleter
     }
 
@@ -106,9 +107,11 @@ final class LibraryStore {
     func importItems<Item: MediaImportSource>(_ items: [Item], into folderID: UUID?) async {
         guard canAccess, !isBusy, isLoaded, !items.isEmpty else { return }
         dismissImportSummary()
+        errorMessage = nil
         let generation = importGeneration
         isBusy = true
         var failed = 0
+        var limitSkipped = 0
         var importedCount = 0
         var unidentifiedCount = 0
         var originals: [String: UUID] = [:]
@@ -116,6 +119,7 @@ final class LibraryStore {
             guard canAccess else { break }
             progress = "Importing \(index + 1) of \(items.count)…"
             do {
+                try repository.purchaseAccess.checkMediaAddition(currentCount: snapshot.items.count)
                 guard let imported = try await item.loadImportedMedia() else { throw LibraryError.unsupportedMedia }
                 defer { try? FileManager.default.removeItem(at: imported.url.deletingLastPathComponent()) }
                 guard canAccess else { break }
@@ -126,13 +130,18 @@ final class LibraryStore {
                 if let identifier = item.itemIdentifier, let savedItem = snapshot.items.last {
                     originals[identifier] = savedItem.id
                 } else { unidentifiedCount += 1 }
+            } catch is FreeTierLimit {
+                limitSkipped = items.count - index
+                break
             } catch { failed += 1 }
         }
         isBusy = false
         progress = ""
         guard canAccess, generation == importGeneration else { return }
         if importedCount > 0 {
-            importSummary = MediaImportSummary(importedCount: importedCount, failedCount: failed, unidentifiedCount: unidentifiedCount, originals: originals)
+            importSummary = MediaImportSummary(importedCount: importedCount, failedCount: failed, unidentifiedCount: unidentifiedCount, originals: originals, limitSkippedCount: limitSkipped)
+        } else if limitSkipped > 0 {
+            purchaseLimit = .media
         } else {
             errorMessage = "None of the \(items.count) items could be imported. Originals were kept in Photos. Try again after checking that they’re downloaded in Photos."
         }
@@ -141,6 +150,7 @@ final class LibraryStore {
     func dismissImportSummary() {
         importGeneration += 1
         importSummary = nil
+        purchaseLimit = nil
     }
 
     func deleteImportedOriginals(summaryID: UUID) async {

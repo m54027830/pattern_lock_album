@@ -28,6 +28,7 @@ struct ContentView: View {
     @State private var selected: Set<UUID> = []
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var showingPicker = false
+    @State private var showingUpgrade = false
     @State private var showingImportResult = false
     @State private var showingSettings = false
     @State private var folderEditor: FolderEditorDestination?
@@ -66,6 +67,8 @@ struct ContentView: View {
                 let destination = currentFolderID
                 Task { await store.importItems(items, into: destination); pickerItems = [] }
             }
+            .sheet(isPresented: $showingUpgrade) { PurchaseView(reason: .media) }
+            .sheet(item: $store.purchaseLimit) { PurchaseView(reason: $0) }
             .sheet(item: $folderEditor) { destination in
                 FolderEditor(folder: destination.folder, store: store)
             }
@@ -91,6 +94,9 @@ struct ContentView: View {
             }
             .alert("Import complete", isPresented: $showingImportResult, presenting: store.importSummary) { summary in
                 Button("Keep originals", role: .cancel) { store.dismissImportSummary() }
+                if summary.limitSkippedCount > 0 {
+                    Button("Unlock Unlimited") { store.dismissImportSummary(); showingUpgrade = true }
+                }
                 if !summary.originals.isEmpty {
                     Button("Delete originals from Photos", role: .destructive) {
                         Task { await store.deleteImportedOriginals(summaryID: summary.id) }
@@ -116,6 +122,13 @@ struct ContentView: View {
         }
         .tint(AlbumTheme.accent)
         .preferredColorScheme(.light)
+    }
+
+    private func requestImport() {
+        do {
+            try store.repository.purchaseAccess.checkMediaAddition(currentCount: store.snapshot.items.count)
+            showingPicker = true
+        } catch { showingUpgrade = true }
     }
 
     private var header: some View {
@@ -305,7 +318,7 @@ struct ContentView: View {
                     Button("Try again") { Task { await store.load() } }
                 }.frame(maxWidth: .infinity).padding(.vertical, 60)
             } else if visibleItems.isEmpty {
-                EmptyLibraryView(filter: filter, isFolder: currentFolderID != nil) { showingPicker = true }
+                EmptyLibraryView(filter: filter, isFolder: currentFolderID != nil) { requestImport() }
                     .padding(.vertical, 8)
             } else {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 5)], spacing: 5) {
@@ -352,7 +365,7 @@ struct ContentView: View {
                         Text("ON THIS DEVICE").font(.system(size: 9, weight: .medium, design: .monospaced)).tracking(1.2)
                     }.foregroundStyle(AlbumTheme.secondary)
                     Spacer()
-                    Button { showingPicker = true } label: {
+                    Button { requestImport() } label: {
                         HStack(spacing: 10) { Image(systemName: "plus").font(.system(size: 17, weight: .medium)); Text("Add media").font(.subheadline.weight(.semibold)) }
                             .foregroundStyle(.white).padding(.horizontal, 22).padding(.vertical, 16)
                             .background(AlbumTheme.accent, in: Capsule())

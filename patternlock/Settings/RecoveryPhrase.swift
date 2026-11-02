@@ -24,7 +24,7 @@ nonisolated enum VaultSettingsError: LocalizedError {
     }
 }
 
-nonisolated struct RecoveryCredential: Codable, Sendable {
+nonisolated struct RecoveryCredential: Codable, Equatable, Sendable {
     let salt: Data
     let verifier: Data
     let rounds: UInt32

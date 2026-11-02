@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+        B20000000000000000000002 /* Pattern.storekit in Resources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* Pattern.storekit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		A10000000000000000000006 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -17,6 +21,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+        B20000000000000000000001 /* Pattern.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = StoreKit/Pattern.storekit; sourceTree = SOURCE_ROOT; };
 		375C793A30918C8500A5C58A /* patternlock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = patternlock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000001 /* patternlockTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = patternlockTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -51,6 +56,7 @@
 		375C793130918C8500A5C58A = {
 			isa = PBXGroup;
 			children = (
+				B20000000000000000000001 /* Pattern.storekit */,
 				375C793C30918C8500A5C58A /* patternlock */,
 				A10000000000000000000002 /* patternlockTests */,
 				375C793B30918C8500A5C58A /* Products */,
@@ -120,6 +126,7 @@
 				TargetAttributes = {
 					375C793930918C8500A5C58A = {
 						CreatedOnToolsVersion = 27.0;
+                        SystemCapabilities = { com.apple.InAppPurchase = { enabled = 1; }; };
 					};
 				};
 			};
@@ -152,6 +159,7 @@
 		A10000000000000000000005 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
+                B20000000000000000000002 /* Pattern.storekit in Resources */,
 			);
 		};
 /* End PBXResourcesBuildPhase section */

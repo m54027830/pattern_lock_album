@@ -18,6 +18,7 @@
     <BuildableProductRunnable runnableDebuggingMode="0">
       <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="375C793930918C8500A5C58A" BuildableName="patternlock.app" BlueprintName="patternlock" ReferencedContainer="container:patternlock.xcodeproj"/>
     </BuildableProductRunnable>
+    <StoreKitConfigurationFileReference identifier="../../StoreKit/Pattern.storekit"/>
   </LaunchAction>
   <ProfileAction buildConfiguration="Release" shouldUseLaunchSchemeArgsEnv="YES" savedToolIdentifier="" useCustomWorkingDirectory="NO" debugDocumentVersioning="YES">
     <BuildableProductRunnable runnableDebuggingMode="0">

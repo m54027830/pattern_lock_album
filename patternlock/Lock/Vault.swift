@@ -2,6 +2,7 @@ import Foundation
 import Observation
 
 nonisolated enum VaultEvents {
+    static let gridChanged = Notification.Name("PatternGridChanged")
     static let duressActivated = Notification.Name("PatternDuressActivated")
     static let accessRevoked = Notification.Name("PatternVaultAccessRevoked")
 }

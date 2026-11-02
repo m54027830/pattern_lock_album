@@ -8,10 +8,11 @@ import UniformTypeIdentifiers
 actor LibraryRepository {
     nonisolated let root: URL
     nonisolated let security: VaultSecurityState
+    nonisolated let purchaseAccess: PurchaseAccess
     private var snapshot: LibrarySnapshot?
     private let files = FileManager.default
 
-    init(root: URL, security: VaultSecurityState = .shared) { self.root = root; self.security = security }
+    init(root: URL, security: VaultSecurityState = .shared, purchaseAccess: PurchaseAccess = .shared) { self.root = root; self.security = security; self.purchaseAccess = purchaseAccess }
 
     nonisolated func mediaURL(_ item: MediaItem) -> URL {
         root.appending(path: "Originals").appending(path: item.filename)
@@ -117,7 +118,7 @@ actor LibraryRepository {
     }
 
     func importFile(at source: URL, originalName: String, kind: MediaKind, folderID: UUID?) async throws -> LibrarySnapshot {
-        _ = try load()
+        try purchaseAccess.checkMediaAddition(currentCount: try load().items.count)
         let id = UUID()
         let ext = source.pathExtension.isEmpty ? (kind == .photo ? "jpg" : "mov") : source.pathExtension
         let filename = id.uuidString + "." + ext
@@ -152,6 +153,9 @@ actor LibraryRepository {
             try files.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: thumb.path)
             // Reload after AVFoundation awaits so concurrent folder edits cannot be lost.
             var updated = try load()
+            // Check again after video processing: concurrent imports and a
+            // purchase revocation must not let this commit exceed the limit.
+            try purchaseAccess.checkMediaAddition(currentCount: updated.items.count)
             let destinationFolder = updated.folders.contains { $0.id == folderID } ? folderID : nil
             updated.items.append(MediaItem(id: id, filename: filename, originalName: originalName, kind: kind, importedAt: Date(), duration: duration, folderID: destinationFolder))
             return try commit(updated)

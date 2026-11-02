@@ -163,6 +163,9 @@ private actor TestAuthenticator: PatternAuthenticating {
         registrations += 1
         return .personal
     }
+    func registerFirstVault(name: String, pattern: [Int], gridSize: Int, recoveryPhrase: String) async throws -> Vault {
+        try await register(pattern)
+    }
     func createVault(name: String, pattern: [Int]) async throws -> Vault {
         if failsWrite { throw PatternCredentialError.inaccessible }
         return Vault(id: UUID().uuidString, name: name)
@@ -191,39 +194,46 @@ private actor TestAuthenticator: PatternAuthenticating {
     func testRegistrationRequiresMatchingConfirmationBeforeSaving() async {
         let auth = TestAuthenticator()
         let lock = PatternLockStore(authenticator: auth)
-        XCTAssertEqual(lock.stage, .loading)
         await lock.activate()
-        XCTAssertEqual(lock.stage, .create)
-        await lock.submit(pattern)
-        XCTAssertEqual(lock.stage, .confirm)
-        let before = await auth.registrations
-        XCTAssertEqual(before, 0)
-        await lock.submit(wrong)
-        XCTAssertEqual(lock.stage, .confirm)
-        XCTAssertNotNil(lock.message)
-        let afterMismatch = await auth.registrations
-        XCTAssertEqual(afterMismatch, 0)
-        await lock.submit(pattern)
+        XCTAssertEqual(lock.stage, .onboarding)
+        let setup = OnboardingStore()
+        setup.startSetup(); setup.chooseGrid(); setup.submit(pattern)
+        XCTAssertEqual(setup.step, .confirm)
+        setup.submit(wrong)
+        XCTAssertEqual(setup.step, .confirm)
+        XCTAssertNotNil(setup.error)
+        var registrations = await auth.registrations
+        XCTAssertEqual(registrations, 0)
+        setup.submit(pattern)
+        XCTAssertEqual(setup.step, .recovery)
+        setup.confirmRecovery()
+        await setup.finish { name, pattern, size, phrase in
+            try await lock.finishOnboarding(name: name, pattern: pattern, gridSize: size, recoveryPhrase: phrase)
+        }
+        registrations = await auth.registrations
+        XCTAssertEqual(registrations, 0, "A saved phrase must be confirmed first")
+        setup.confirmation = setup.phrase; setup.savedPhrase = true
+        await setup.finish { name, pattern, size, phrase in
+            try await lock.finishOnboarding(name: name, pattern: pattern, gridSize: size, recoveryPhrase: phrase)
+        }
         XCTAssertEqual(lock.stage, .unlocked)
-        let afterMatch = await auth.registrations
-        XCTAssertEqual(afterMatch, 1)
+        registrations = await auth.registrations
+        XCTAssertEqual(registrations, 1)
+        XCTAssertTrue(setup.pattern.isEmpty)
+        XCTAssertTrue(setup.phrase.isEmpty)
     }
 
     func testShortPatternsAndStartOverDoNotSaveCredentials() async {
-        let auth = TestAuthenticator()
-        let lock = PatternLockStore(authenticator: auth)
-        await lock.activate()
-        await lock.submit([0, 1, 2])
-        XCTAssertEqual(lock.stage, .create)
-        XCTAssertNotNil(lock.message)
-        await lock.submit(pattern)
-        lock.startOver()
-        XCTAssertEqual(lock.stage, .create)
-        await lock.submit(wrong)
-        await lock.submit(pattern)
-        XCTAssertEqual(lock.stage, .confirm)
-        let count = await auth.registrations
-        XCTAssertEqual(count, 0)
+        let setup = OnboardingStore()
+        setup.startSetup(); setup.chooseGrid(); setup.submit([0, 1, 2])
+        XCTAssertEqual(setup.step, .pattern)
+        XCTAssertNotNil(setup.error)
+        setup.submit(pattern); setup.back()
+        XCTAssertEqual(setup.step, .pattern)
+        XCTAssertTrue(setup.pattern.isEmpty)
+        setup.submit(wrong); setup.submit(pattern)
+        XCTAssertEqual(setup.step, .confirm)
+        XCTAssertTrue(setup.phrase.isEmpty)
     }
 
     func testColdLaunchAndBackgroundAlwaysRequirePattern() async {
@@ -258,16 +268,16 @@ private actor TestAuthenticator: PatternAuthenticating {
     }
 
     func testBackgroundClearsUnconfirmedRegistration() async {
-        let lock = PatternLockStore(authenticator: TestAuthenticator())
+        let auth = TestAuthenticator()
+        let lock = PatternLockStore(authenticator: auth)
         await lock.activate()
-        await lock.submit(pattern)
-        XCTAssertEqual(lock.stage, .confirm)
+        XCTAssertEqual(lock.stage, .onboarding)
         lock.enteredBackground()
+        XCTAssertNil(lock.unlockedVault)
         await lock.activate()
-        XCTAssertEqual(lock.stage, .create)
-        await lock.submit(wrong)
-        await lock.submit(pattern)
-        XCTAssertEqual(lock.stage, .confirm)
+        XCTAssertEqual(lock.stage, .onboarding)
+        let registrations = await auth.registrations
+        XCTAssertEqual(registrations, 0)
     }
 
     func testLateVerificationCannotUnlockAfterBackgrounding() async {
@@ -288,8 +298,7 @@ private actor TestAuthenticator: PatternAuthenticating {
         let auth = TestAuthenticator(deferred: true)
         let lock = PatternLockStore(authenticator: auth)
         await lock.activate()
-        await lock.submit(pattern)
-        let registration = Task { await lock.submit(pattern) }
+        let registration = Task { try? await lock.finishOnboarding(name: "Personal", pattern: pattern, gridSize: 5, recoveryPhrase: "test recovery phrase") }
         await auth.waitUntilStarted()
         lock.enteredBackground()
         await auth.completeOperation()
@@ -307,10 +316,12 @@ private actor TestAuthenticator: PatternAuthenticating {
         XCTAssertEqual(unreadable.stage, .unavailable)
         let unwritable = PatternLockStore(authenticator: TestAuthenticator(failsWrite: true))
         await unwritable.activate()
-        await unwritable.submit(pattern)
-        await unwritable.submit(pattern)
-        XCTAssertEqual(unwritable.stage, .unavailable)
-        XCTAssertNotNil(unwritable.message)
+        do {
+            try await unwritable.finishOnboarding(name: "Personal", pattern: pattern, gridSize: 5, recoveryPhrase: "test recovery phrase")
+            XCTFail("Failed save exposed the library")
+        } catch {}
+        XCTAssertEqual(unwritable.stage, .onboarding)
+        XCTAssertNil(unwritable.unlockedVault)
     }
 }
 

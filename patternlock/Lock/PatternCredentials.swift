@@ -2,7 +2,7 @@ import CommonCrypto
 import Foundation
 import Security
 
-nonisolated struct PatternCredential: Codable, Sendable {
+nonisolated struct PatternCredential: Codable, Equatable, Sendable {
     var version = 1
     let salt: Data
     let verifier: Data
@@ -74,6 +74,7 @@ nonisolated struct KeychainPatternStorage: PatternCredentialStorage {
 nonisolated struct PatternLockStatus: Sendable {
     let isRegistered: Bool
     let retryAfter: Date?
+    var gridSize: Int = 5
 }
 
 nonisolated enum PatternVerification: Equatable, Sendable {
@@ -86,6 +87,7 @@ nonisolated enum PatternVerification: Equatable, Sendable {
 nonisolated protocol PatternAuthenticating: Sendable {
     func status() async throws -> PatternLockStatus
     func register(_ nodes: [Int]) async throws -> Vault
+    func registerFirstVault(name: String, pattern: [Int], gridSize: Int, recoveryPhrase: String) async throws -> Vault
     func createVault(name: String, pattern: [Int]) async throws -> Vault
     func createVault(name: String, pattern: [Int], from vaultID: String) async throws -> Vault
     func verify(_ nodes: [Int], now: Date) async throws -> PatternVerification
@@ -95,6 +97,7 @@ nonisolated protocol PatternAuthenticating: Sendable {
 }
 
 extension PatternAuthenticating {
+    func registerFirstVault(name: String, pattern: [Int], gridSize: Int, recoveryPhrase: String) async throws -> Vault { throw PatternCredentialError.noPattern }
     func completeFaceID(_ challenge: FaceIDChallenge, result: FaceIDResult) async throws -> PatternVerification { throw VaultAccessError.changed }
     func cancelFaceID(_ challenge: FaceIDChallenge) async {}
 
@@ -104,7 +107,7 @@ extension PatternAuthenticating {
     nonisolated func accessIsAllowed(to vaultID: String) -> Bool { true }
 }
 
-nonisolated struct VaultCredential: Codable, Sendable {
+nonisolated struct VaultCredential: Codable, Equatable, Sendable {
     var vault: Vault
     var pattern: PatternCredential
     var recovery: RecoveryCredential?
@@ -115,8 +118,10 @@ nonisolated struct VaultCredential: Codable, Sendable {
     var pendingRecoveryPhrase: String? // Keychain-only, removed after the user saves it.
 }
 
-nonisolated struct VaultRegistry: Codable, Sendable {
+nonisolated struct VaultRegistry: Codable, Equatable, Sendable {
     var version = 2
+    var gridSize: Int?
+    var effectiveGridSize: Int { gridSize ?? 5 }
     var revokedVaultIDs: [String]?
     var backupsDisabled: Bool?
     var sharingEpoch: UUID?
@@ -132,6 +137,7 @@ actor PatternAuthenticator: PatternAuthenticating {
     static let rounds: UInt32 = 600_000
     private let storage: any PatternCredentialStorage
     nonisolated let security: VaultSecurityState
+    nonisolated let purchaseAccess: PurchaseAccess
     private let directory: URL
     private struct PendingFaceID {
         let vaultID: String
@@ -145,21 +151,22 @@ actor PatternAuthenticator: PatternAuthenticating {
 
     init(storage: any PatternCredentialStorage = KeychainPatternStorage(),
          security: VaultSecurityState = VaultSecurityState(),
+         purchaseAccess: PurchaseAccess = .shared,
          directory: URL = URL.applicationSupportDirectory.appending(path: "Vaults")) {
-        self.storage = storage; self.security = security; self.directory = directory
+        self.storage = storage; self.security = security; self.purchaseAccess = purchaseAccess; self.directory = directory
     }
 
     nonisolated func accessIsAllowed(to vaultID: String) -> Bool { security.allowsAccess(to: vaultID) }
 
     func status() throws -> PatternLockStatus {
         let registry = try read()
-        return PatternLockStatus(isRegistered: !(registry?.vaults.isEmpty ?? true), retryAfter: registry?.retryAfter)
+        return PatternLockStatus(isRegistered: !(registry?.vaults.isEmpty ?? true), retryAfter: registry?.retryAfter, gridSize: registry?.effectiveGridSize ?? 5)
     }
 
     @discardableResult
     func register(_ nodes: [Int]) throws -> Vault {
-        guard PatternRules.isValid(nodes) else { throw PatternCredentialError.invalidPattern }
         let existing = try read()
+        guard PatternRules.isValid(nodes, gridSize: existing?.effectiveGridSize ?? 5) else { throw PatternCredentialError.invalidPattern }
         guard existing?.vaults.isEmpty ?? true else { throw PatternCredentialError.alreadyRegistered }
         let credential = try makeCredential(nodes)
         // Never reuse a deleted vault's directory if cleanup was interrupted.
@@ -177,14 +184,15 @@ actor PatternAuthenticator: PatternAuthenticating {
     }
 
     func createVault(name: String, pattern: [Int]) throws -> Vault {
-        guard PatternRules.isValid(pattern) else { throw PatternCredentialError.invalidPattern }
         guard var registry = try read() else { throw PatternCredentialError.noPattern }
+        guard PatternRules.isValid(pattern, gridSize: registry.effectiveGridSize) else { throw PatternCredentialError.invalidPattern }
         let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty, name.count <= 40 else { throw PatternCredentialError.invalidVaultName }
         guard !registry.vaults.contains(where: { $0.vault.name.localizedCaseInsensitiveCompare(name) == .orderedSame }) else {
             throw PatternCredentialError.duplicateVaultName
         }
         guard try matchingVault(pattern, in: registry) == nil else { throw PatternCredentialError.duplicatePattern }
+        try purchaseAccess.checkAlbumCreation(currentCount: registry.vaults.count)
         let vault = Vault(id: UUID().uuidString, name: name)
         registry.vaults.append(VaultCredential(vault: vault, pattern: try makeCredential(pattern)))
         try storage.update(JSONEncoder().encode(registry))
@@ -194,7 +202,7 @@ actor PatternAuthenticator: PatternAuthenticating {
     func verify(_ nodes: [Int], now: Date = Date()) throws -> PatternVerification {
         guard var registry = try read() else { throw PatternCredentialError.noPattern }
         if let retryAfter = registry.retryAfter, retryAfter > now { return .rejected(retryAfter: retryAfter) }
-        guard PatternRules.isValid(nodes) else { throw PatternCredentialError.invalidPattern }
+        guard PatternRules.isValid(nodes, gridSize: registry.effectiveGridSize) else { throw PatternCredentialError.invalidPattern }
         if let vault = try matchingVault(nodes, in: registry) {
             registry.failedAttempts = 0
             registry.retryAfter = nil
@@ -307,7 +315,7 @@ actor PatternAuthenticator: PatternAuthenticating {
         guard let data = try storage.read() else { return nil }
         let decoder = JSONDecoder()
         if var registry = try? decoder.decode(VaultRegistry.self, from: data) {
-            guard registry.version == 2,
+            guard registry.version == 2, PatternRules.supportedSizes.contains(registry.effectiveGridSize),
                   (0...20).contains(registry.failedAttempts),
                   (registry.revokedVaultIDs ?? []).allSatisfy({ $0 == Vault.personal.id || UUID(uuidString: $0) != nil }),
                   Set(registry.revokedVaultIDs ?? []).isDisjoint(with: registry.vaults.map { $0.vault.id }),
@@ -380,7 +388,7 @@ actor PatternAuthenticator: PatternAuthenticating {
 
     func changePattern(vaultID: String, current: [Int], replacement: [Int]) throws {
         var registry = try authorizedRegistry(vaultID: vaultID, pattern: current)
-        guard PatternRules.isValid(replacement) else { throw PatternCredentialError.invalidPattern }
+        guard PatternRules.isValid(replacement, gridSize: registry.effectiveGridSize) else { throw PatternCredentialError.invalidPattern }
         if let match = try matchingVault(replacement, in: registry), match.id != vaultID { throw PatternCredentialError.duplicatePattern }
         let index = registry.vaults.firstIndex { $0.vault.id == vaultID }!
         registry.vaults[index].pattern = try makeCredential(replacement)
@@ -414,7 +422,7 @@ actor PatternAuthenticator: PatternAuthenticating {
     func recover(phrase: String, newPattern: [Int]) throws -> Vault {
         guard var registry = try read() else { throw VaultSettingsError.wrongPhrase }
         try checkCooldown(registry)
-        guard PatternRules.isValid(newPattern) else { throw PatternCredentialError.invalidPattern }
+        guard PatternRules.isValid(newPattern, gridSize: registry.effectiveGridSize) else { throw PatternCredentialError.invalidPattern }
         var match: Int?
         for (index, entry) in registry.vaults.enumerated() {
             if let credential = entry.recovery, try RecoveryPhrase.matches(phrase, credential: credential) { match = index }
@@ -528,14 +536,18 @@ actor PatternAuthenticator: PatternAuthenticating {
 
     /// Serialize the filesystem and Keychain transaction with launch cleanup.
     func installRestoredVault(_ vault: Vault, pattern: [Int], preparedDirectory: URL, directory: URL, lease: VaultSecurityState.Lease) throws {
-        _ = try read()
+        let current = try read()
         try security.check(lease)
+        try purchaseAccess.checkAlbumCreation(currentCount: current?.vaults.count ?? 0)
+        let restored = try JSONDecoder().decode(LibrarySnapshot.self, from: Data(contentsOf: preparedDirectory.appending(path: "library.json")))
+        try purchaseAccess.checkMediaAddition(currentCount: 0, adding: restored.items.count)
         let files = FileManager.default
         try files.createDirectory(at: directory, withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.complete])
         let staging = directory.appending(path: "InstallingVault-" + vault.id)
         do {
             try Task.checkCancellation()
             try files.copyItem(at: preparedDirectory, to: staging)
+            try purchaseAccess.checkMediaAddition(currentCount: 0, adding: restored.items.count)
             try registerRestoredVault(vault, pattern: pattern)
         } catch {
             try? files.removeItem(at: staging)
@@ -551,8 +563,9 @@ actor PatternAuthenticator: PatternAuthenticating {
         var registry = previous ?? VaultRegistry()
         guard UUID(uuidString: vault.id) != nil, !(registry.revokedVaultIDs ?? []).contains(vault.id), !registry.vaults.contains(where: { $0.vault.id == vault.id }) else { throw PatternCredentialError.invalid }
         _ = try validatedName(vault.name, in: registry)
-        guard PatternRules.isValid(pattern) else { throw PatternCredentialError.invalidPattern }
+        guard PatternRules.isValid(pattern, gridSize: registry.effectiveGridSize) else { throw PatternCredentialError.invalidPattern }
         guard try matchingVault(pattern, in: registry) == nil else { throw PatternCredentialError.duplicatePattern }
+        try purchaseAccess.checkAlbumCreation(currentCount: registry.vaults.count)
         registry.vaults.append(VaultCredential(vault: vault, pattern: try makeCredential(pattern)))
         let data = try JSONEncoder().encode(registry)
         try Task.checkCancellation()
@@ -579,11 +592,107 @@ actor PatternAuthenticator: PatternAuthenticating {
     private func authorizedRegistry(vaultID: String, pattern: [Int]) throws -> VaultRegistry {
         guard var registry = try read(), let entry = registry.vaults.first(where: { $0.vault.id == vaultID }) else { throw VaultSettingsError.missingVault }
         try checkCooldown(registry)
-        guard PatternRules.isValid(pattern), constantTimeEqual(try derive(pattern, salt: entry.pattern.salt, rounds: entry.pattern.rounds), entry.pattern.verifier) else {
+        guard PatternRules.isValid(pattern, gridSize: registry.effectiveGridSize), constantTimeEqual(try derive(pattern, salt: entry.pattern.salt, rounds: entry.pattern.rounds), entry.pattern.verifier) else {
             try recordFailure(&registry)
             throw VaultSettingsError.wrongPattern
         }
         registry.failedAttempts = 0; registry.retryAfter = nil
         return registry
+    }
+}
+
+nonisolated struct PatternGridConfiguration: Sendable {
+    fileprivate let registry: VaultRegistry
+    var gridSize: Int { registry.effectiveGridSize }
+    var vaults: [Vault] { registry.vaults.map(\.vault).sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending } }
+}
+
+nonisolated struct VaultPatternReplacement: Sendable {
+    let vaultID: String
+    let current: [Int]
+    let replacement: [Int]
+    let confirmation: [Int]
+}
+
+nonisolated enum PatternConfigurationError: LocalizedError {
+    case unsupportedSize, incomplete, mismatch, changed
+    var errorDescription: String? {
+        switch self {
+        case .unsupportedSize: "Choose a 3 × 3, 4 × 4, or 5 × 5 grid."
+        case .incomplete: "Confirm a new pattern for every vault before changing the grid."
+        case .mismatch: "The new patterns didn’t match. Try again."
+        case .changed: "Your vaults changed during setup. Start again to use the latest settings."
+        }
+    }
+}
+
+extension PatternAuthenticator {
+    func registerFirstVault(name: String, pattern: [Int], gridSize: Int, recoveryPhrase: String) async throws -> Vault {
+        guard PatternRules.supportedSizes.contains(gridSize) else { throw PatternConfigurationError.unsupportedSize }
+        guard PatternRules.isValid(pattern, gridSize: gridSize) else { throw PatternCredentialError.invalidPattern }
+        let previous = try read()
+        guard previous?.vaults.isEmpty ?? true else { throw PatternCredentialError.alreadyRegistered }
+        var registry = previous ?? VaultRegistry()
+        let name = try validatedName(name, in: registry)
+        let vault = Vault(id: previous == nil ? Vault.personal.id : UUID().uuidString, name: name)
+        registry.gridSize = gridSize
+        registry.vaults = [VaultCredential(vault: vault, pattern: try makeCredential(pattern), recovery: try RecoveryPhrase.credential(for: recoveryPhrase))]
+        registry.failedAttempts = 0; registry.retryAfter = nil
+        try Task.checkCancellation()
+        let data = try JSONEncoder().encode(registry)
+        if previous == nil { try storage.create(data) } else { try storage.update(data) }
+        return vault
+    }
+
+    func checkCanCreateVault() throws {
+        try purchaseAccess.checkAlbumCreation(currentCount: try read()?.vaults.count ?? 0)
+    }
+
+    func gridConfiguration() throws -> PatternGridConfiguration {
+        guard let registry = try read(), !registry.vaults.isEmpty else { throw PatternCredentialError.noPattern }
+        return PatternGridConfiguration(registry: registry)
+    }
+
+    /// Authorizes without invoking the duress unlock route.
+    func authorizeGridReplacement(vaultID: String, pattern: [Int]) throws {
+        let registry = try authorizedRegistry(vaultID: vaultID, pattern: pattern)
+        try storage.update(JSONEncoder().encode(registry))
+    }
+
+    func replaceAllPatterns(configuration: PatternGridConfiguration, gridSize: Int,
+                            replacements: [VaultPatternReplacement], faceID: any FaceIDAuthenticating) async throws {
+        guard PatternRules.supportedSizes.contains(gridSize), gridSize != configuration.gridSize else { throw PatternConfigurationError.unsupportedSize }
+        guard let original = try read(), sameConfiguration(original, configuration.registry) else { throw PatternConfigurationError.changed }
+        guard replacements.count == original.vaults.count,
+              Set(replacements.map(\.vaultID)) == Set(original.vaults.map { $0.vault.id }) else { throw PatternConfigurationError.incomplete }
+        var seen = Set<[Int]>()
+        var updated = original
+        for replacement in replacements {
+            _ = try authorizedRegistry(vaultID: replacement.vaultID, pattern: replacement.current)
+            guard replacement.replacement == replacement.confirmation else { throw PatternConfigurationError.mismatch }
+            guard PatternRules.isValid(replacement.replacement, gridSize: gridSize) else { throw PatternCredentialError.invalidPattern }
+            guard seen.insert(replacement.replacement).inserted else { throw PatternCredentialError.duplicatePattern }
+            let index = updated.vaults.firstIndex { $0.vault.id == replacement.vaultID }!
+            updated.vaults[index].pattern = try makeCredential(replacement.replacement)
+        }
+        if original.vaults.contains(where: { $0.requiresFaceID == true }) {
+            guard await faceID.authenticate(reason: "Confirm Face ID to replace all vault patterns.") == .authenticated else { throw VaultAccessError.faceIDRequired }
+        }
+        try Task.checkCancellation()
+        guard let latest = try read(), sameConfiguration(latest, original) else { throw PatternConfigurationError.changed }
+        try checkCooldown(latest)
+        updated.gridSize = gridSize
+        updated.failedAttempts = 0; updated.retryAfter = nil
+        // One Keychain update changes every verifier and the grid together.
+        try storage.update(JSONEncoder().encode(updated))
+        faceIDChallenges.removeAll()
+        NotificationCenter.default.post(name: VaultEvents.gridChanged, object: nil)
+    }
+
+    private func sameConfiguration(_ lhs: VaultRegistry, _ rhs: VaultRegistry) -> Bool {
+        var lhs = lhs, rhs = rhs
+        lhs.failedAttempts = 0; lhs.retryAfter = nil
+        rhs.failedAttempts = 0; rhs.retryAfter = nil
+        return lhs == rhs
     }
 }

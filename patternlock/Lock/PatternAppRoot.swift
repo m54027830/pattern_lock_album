@@ -4,6 +4,8 @@ import UIKit
 
 struct PatternAppRoot: View {
     @State private var presentationRevision = 0
+    @State private var purchases = PurchaseStore.shared
+    @State private var purchaseLimit: FreeTierLimit?
     @State private var lock = PatternLockStore()
     @State private var libraries = VaultLibraries.shared
     @Environment(\.scenePhase) private var scenePhase
@@ -12,18 +14,23 @@ struct PatternAppRoot: View {
         ZStack {
             if lock.stage == .unlocked, let vault = lock.unlockedVault {
                 ContentView(store: libraries.store(for: vault), vaultName: vault.name,
-                            createVault: lock.isDummySession ? nil : { libraries.dismissPresentations(); lock.beginNewVault() },
+                            createVault: lock.isDummySession ? nil : { beginNewVault(from: vault) },
                             lockVault: { libraries.dismissPresentations(); lock.lock(); Task { await lock.activate() } },
                             vault: lock.isDummySession ? nil : vault,
                             onVaultChanged: { lock.updateUnlockedVault($0) },
                             onVaultDeleted: { libraries.forget(vault); lock.lock(); Task { await lock.activate() } })
                     .id(vault.id + "-" + String(presentationRevision))
+            } else if lock.stage == .onboarding {
+                OnboardingView(onRestored: { lock.lock(); Task { await lock.activate() } }) { name, pattern, size, phrase in
+                    try await lock.finishOnboarding(name: name, pattern: pattern, gridSize: size, recoveryPhrase: phrase)
+                }
             } else {
                 PatternLockView(lock: lock)
             }
         }
+        .environment(\.patternGridSize, lock.gridSize)
         .transaction { transaction in
-            if lock.stage != .unlocked { transaction.disablesAnimations = true }
+            if lock.stage != .unlocked && lock.stage != .onboarding { transaction.disablesAnimations = true }
         }
         // A separate window covers presented photos, pickers, and share sheets as
         // well as the root view before iOS takes its app-switcher snapshot.
@@ -34,18 +41,27 @@ struct PatternAppRoot: View {
         ))
         .onChange(of: scenePhase, initial: true) { _, phase in
             switch phase {
-            case .active: Task { await lock.activate() }
+            case .active: Task { await lock.activate(); await purchases.refreshEntitlements() }
             case .inactive: lock.becameInactive()
-            case .background: lock.enteredBackground(); libraries.dismissPresentations()
+            case .background: purchaseLimit = nil; lock.enteredBackground(); libraries.dismissPresentations()
             @unknown default: lock.becameInactive()
             }
         }
+        .sheet(item: $purchaseLimit) { PurchaseView(reason: $0) }
+        .task { await purchases.start() }
         .task {
             await VaultBackup.shared.cleanTemporaryFilesOnce()
             try? await PatternAuthenticator.shared.cleanDeletedVaults(in: URL.applicationSupportDirectory.appending(path: "Vaults"))
         }
+        .onReceive(NotificationCenter.default.publisher(for: VaultEvents.gridChanged).receive(on: RunLoop.main)) { _ in
+            purchaseLimit = nil
+            libraries.dismissPresentations()
+            lock.lock()
+            Task { await lock.activate() }
+        }
         .onReceive(NotificationCenter.default.publisher(for: VaultEvents.duressActivated).receive(on: RunLoop.main)) { notification in
             guard let activation = notification.object as? DuressActivation else { return }
+            purchaseLimit = nil
             libraries.applyDuress(activation)
             presentationRevision += 1 // Dismiss sheets, previews, and pickers in every window.
             for id in activation.revokedVaultIDs {
@@ -55,8 +71,24 @@ struct PatternAppRoot: View {
         .onReceive(NotificationCenter.default.publisher(for: VaultEvents.accessRevoked).receive(on: RunLoop.main)) { notification in
             guard let vaultID = notification.object as? String else { return }
             if lock.revokeAccess(to: vaultID) {
+                purchaseLimit = nil
                 libraries.dismissPresentations()
                 Task { await lock.activate() }
+            }
+        }
+    }
+
+    private func beginNewVault(from vault: Vault) {
+        Task {
+            do {
+                try await PatternAuthenticator.shared.checkCanCreateVault()
+                guard lock.isActive, lock.unlockedVault?.id == vault.id, !lock.isDummySession else { return }
+                libraries.dismissPresentations(); lock.beginNewVault()
+            } catch let limit as FreeTierLimit {
+                guard lock.isActive, lock.unlockedVault?.id == vault.id, !lock.isDummySession else { return }
+                purchaseLimit = limit
+            } catch {
+                libraries.dismissPresentations(); lock.lock(); await lock.activate()
             }
         }
     }

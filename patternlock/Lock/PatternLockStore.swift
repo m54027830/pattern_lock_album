@@ -2,17 +2,19 @@ import Foundation
 import Observation
 
 nonisolated enum PatternLockStage: Equatable {
-    case loading, nameVault, create, confirm, locked, faceID, unlocked, unavailable
+    case loading, onboarding, nameVault, create, confirm, locked, faceID, unlocked, unavailable
 }
 
 @MainActor @Observable final class PatternLockStore {
     private(set) var stage = PatternLockStage.loading
+    private(set) var gridSize = 5
     private(set) var unlockedVault: Vault?
     private(set) var isDummySession = false
     private(set) var isCreatingVault = false
     var vaultName = ""
     private(set) var isBusy = false
     private(set) var isActive = false
+    var purchaseLimit: FreeTierLimit?
     private(set) var message: String?
     private(set) var retryAfter: Date?
     private(set) var inputRevision = 0
@@ -41,7 +43,8 @@ nonisolated enum PatternLockStage: Equatable {
         do {
             let status = try await authenticator.status()
             guard operation == generation, isActive else { return }
-            stage = status.isRegistered ? .locked : .create
+            gridSize = status.gridSize
+            stage = status.isRegistered ? .locked : .onboarding
             retryAfter = status.retryAfter
             message = nil
         } catch {
@@ -49,6 +52,17 @@ nonisolated enum PatternLockStage: Equatable {
             stage = .unavailable
             message = error.localizedDescription
         }
+    }
+
+    func finishOnboarding(name: String, pattern: [Int], gridSize: Int, recoveryPhrase: String) async throws {
+        guard stage == .onboarding, isActive, !isBusy else { throw CancellationError() }
+        let operation = generation
+        isBusy = true
+        defer { if operation == generation { isBusy = false } }
+        let vault = try await authenticator.registerFirstVault(name: name, pattern: pattern, gridSize: gridSize, recoveryPhrase: recoveryPhrase)
+        guard operation == generation, isActive, !Task.isCancelled else { throw CancellationError() }
+        self.gridSize = gridSize
+        try open(vault, dummy: false)
     }
 
     func becameInactive() {
@@ -140,7 +154,7 @@ nonisolated enum PatternLockStage: Equatable {
     func submit(_ nodes: [Int], now: Date = Date()) async {
         guard isActive, !isBusy, [.create, .confirm, .locked].contains(stage) else { return }
         if let retryAfter, retryAfter > now { return }
-        guard PatternRules.isValid(nodes) else { reject("Connect at least 4 different dots."); return }
+        guard PatternRules.isValid(nodes, gridSize: gridSize) else { reject("Connect at least 4 different dots."); return }
         message = nil
         switch stage {
         case .create:
@@ -206,6 +220,12 @@ nonisolated enum PatternLockStage: Equatable {
             pendingPattern = nil
             stage = error == .duplicatePattern ? .create : .nameVault
             reject(error.localizedDescription)
+        } catch let limit as FreeTierLimit {
+            guard operation == generation, isActive else { return }
+            pendingPattern = nil
+            stage = .create
+            purchaseLimit = limit
+            reject(limit.localizedDescription)
         } catch is VaultAccessError {
             guard operation == generation else { return }
             resetSession()
@@ -239,6 +259,7 @@ nonisolated enum PatternLockStage: Equatable {
     }
 
     private func resetSession() {
+        purchaseLimit = nil
         faceID.cancel()
         activeWaiter?.resume(returning: false)
         activeWaiter = nil

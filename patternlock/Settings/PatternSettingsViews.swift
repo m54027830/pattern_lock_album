@@ -5,9 +5,11 @@ struct PatternSetupView: View {
     let needsCurrentPattern: Bool
     let completion: ([Int], [Int]) async throws -> Void
     @Environment(\.dismiss) private var dismiss
+    @State private var purchaseLimit: FreeTierLimit?
     @State private var current: [Int] = []
     @State private var proposed: [Int] = []
     @State private var revision = 0
+    @Environment(\.patternGridSize) private var gridSize
     @State private var isDrawing = false
     @State private var busy = false
     @State private var error: String?
@@ -36,13 +38,14 @@ struct PatternSetupView: View {
         .background(AlbumTheme.background)
         .navigationTitle(title).navigationBarTitleDisplayMode(.inline)
         .interactiveDismissDisabled(busy)
+        .sheet(item: $purchaseLimit) { PurchaseView(reason: $0) }
         .onDisappear { operation?.cancel(); current = []; proposed = [] }
     }
 
     private func submit(_ pattern: [Int]) {
         guard !busy else { return }
         revision += 1
-        guard PatternRules.isValid(pattern) else { error = "Connect at least 4 different dots."; return }
+        guard PatternRules.isValid(pattern, gridSize: gridSize) else { error = "Connect at least 4 different dots."; return }
         error = nil
         if needsCurrent { current = pattern; return }
         if proposed.isEmpty { proposed = pattern; return }
@@ -53,7 +56,10 @@ struct PatternSetupView: View {
                 try await completion(current, pattern)
                 if !Task.isCancelled { dismiss() }
             } catch {
-                if !Task.isCancelled { self.error = error.localizedDescription; current = []; proposed = [] }
+                if !Task.isCancelled {
+                    self.error = error.localizedDescription; current = []; proposed = []
+                    if let limit = error as? FreeTierLimit { purchaseLimit = limit }
+                }
             }
             busy = false
         }
@@ -66,6 +72,7 @@ struct PatternAuthorizationView: View {
     let completion: ([Int]) async throws -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var revision = 0
+    @Environment(\.patternGridSize) private var gridSize
     @State private var isDrawing = false
     @State private var busy = false
     @State private var error: String?
@@ -79,7 +86,7 @@ struct PatternAuthorizationView: View {
                 PatternGridView(side: 300, isEnabled: !busy, revision: revision, isDrawing: $isDrawing) { pattern in
                     guard !busy else { return }
                     revision += 1
-                    guard PatternRules.isValid(pattern) else { error = "Connect at least 4 different dots."; return }
+                    guard PatternRules.isValid(pattern, gridSize: gridSize) else { error = "Connect at least 4 different dots."; return }
                     busy = true; error = nil
                     operation = Task {
                         do { try await completion(pattern); if !Task.isCancelled { dismiss() } }

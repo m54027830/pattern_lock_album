@@ -84,6 +84,7 @@ private struct FaceIDSettingsConfirmationView: View {
     let completion: () -> Void
     @State private var faceID = FaceIDAuthenticator()
     @State private var currentPattern: [Int] = []
+    @Environment(\.patternGridSize) private var gridSize
     @State private var isDrawing = false
     @State private var revision = 0
     @State private var busy = false
@@ -116,7 +117,7 @@ private struct FaceIDSettingsConfirmationView: View {
     private func submit(_ pattern: [Int]) {
         guard !busy else { return }
         revision += 1
-        guard PatternRules.isValid(pattern) else { error = "Connect at least 4 different dots."; return }
+        guard PatternRules.isValid(pattern, gridSize: gridSize) else { error = "Connect at least 4 different dots."; return }
         error = nil
         if needsDummyPattern && currentPattern.isEmpty { currentPattern = pattern; return }
         let sourcePattern = needsDummyPattern ? currentPattern : pattern

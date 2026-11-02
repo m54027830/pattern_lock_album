@@ -1,0 +1,33 @@
+{
+  "identifier" : "D8C70461-99B5-470C-AB2B-D3763BFD034C",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "891AB779-879E-4239-B882-370A5C65BEA1",
+      "localizations" : [
+        {
+          "description" : "Unlimited albums, photos, and videos with one purchase. No subscription.",
+          "displayName" : "Pattern Unlimited",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "jp.gm.patternlock.unlimited",
+      "referenceName" : "Pattern Unlimited — One-Time Unlock",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_disableDialogs" : false,
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : []
+  },
+  "subscriptionGroups" : [],
+  "version" : { "major" : 3, "minor" : 0 }
+}

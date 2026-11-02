@@ -58,11 +58,15 @@ struct MediaImportSummary: Identifiable {
     let unidentifiedCount: Int
     /// Photos identifiers are recorded only after their vault copies have committed.
     let originals: [String: UUID]
+    var limitSkippedCount = 0
 
     var message: String {
         var text = "\(importedCount) \(importedCount == 1 ? "item was" : "items were") saved in this vault."
         if failedCount > 0 {
             text += " \(failedCount) couldn’t be imported; those originals will be kept."
+        }
+        if limitSkippedCount > 0 {
+            text += " \(limitSkippedCount) weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock Pattern Unlimited to add them."
         }
         if unidentifiedCount > 0 {
             text += " \(unidentifiedCount) saved \(unidentifiedCount == 1 ? "item couldn’t" : "items couldn’t") be linked to Photos; those originals will be kept."
