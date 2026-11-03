@@ -143,7 +143,7 @@ struct ContentView: View {
                 if currentFolderID == nil {
                     if let createVault {
                         Button(action: createVault) {
-                            Image(systemName: "plus.rectangle.on.folder")
+                            Image(systemName: "rectangle.stack.badge.plus")
                                 .font(.system(size: 18)).frame(width: 44, height: 44).background(.white, in: Circle())
                         }
                         .disabled(store.isBusy)
