@@ -155,6 +155,11 @@ import XCTest
         let root = try workspace()
         let video = root.appending(path: "clip.mov")
         let writer = try AVAssetWriter(outputURL: video, fileType: .mov)
+        let creationDate = AVMutableMetadataItem()
+        creationDate.identifier = .quickTimeMetadataCreationDate
+        creationDate.value = "2019-08-07T06:05:04+09:00" as NSString
+        creationDate.dataType = kCMMetadataBaseDataType_UTF8 as String
+        writer.metadata = [creationDate]
         let input = AVAssetWriterInput(mediaType: .video, outputSettings: [AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: 80, AVVideoHeightKey: 80])
         let adapter = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32ARGB, kCVPixelBufferWidthKey as String: 80, kCVPixelBufferHeightKey as String: 80])
         writer.add(input)
@@ -178,7 +183,17 @@ import XCTest
         let item = try XCTUnwrap(imported.items.first)
         XCTAssertEqual(item.kind, .video)
         XCTAssertGreaterThan(item.duration ?? 0, 0)
+        let expectedDate = ISO8601DateFormatter().date(from: "2019-08-06T21:05:04Z")
+        XCTAssertEqual(item.fileDate, expectedDate)
+        XCTAssertEqual(item.byteCount, Int64(try Data(contentsOf: video).count))
         XCTAssertNotNil(UIImage(contentsOfFile: repository.thumbnailURL(item).path))
         XCTAssertEqual(try Data(contentsOf: video), try Data(contentsOf: repository.mediaURL(item)))
+        var legacy = imported
+        legacy.items[0].fileDate = nil
+        legacy.items[0].byteCount = nil
+        try JSONEncoder().encode(legacy).write(to: repository.root.appending(path: "library.json"))
+        let upgraded = try await LibraryRepository(root: repository.root).loadForDisplay()
+        XCTAssertEqual(upgraded.items[0].fileDate, expectedDate)
+        XCTAssertEqual(upgraded.items[0].byteCount, item.byteCount)
     }
 }

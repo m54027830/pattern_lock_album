@@ -132,45 +132,53 @@ struct ContentView: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 23) {
-            HStack {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 6) {
                 if currentFolderID != nil {
                     Button { withAnimation { currentFolderID = nil; finishSelection(); filter = .all } } label: {
                         Label(String(localized: "Library"), systemImage: "arrow.left").font(.subheadline.weight(.medium))
                     }
-                } else {
+                } else { vaultLabel }
+                Spacer(minLength: 8)
+                if currentFolderID == nil {
+                    if let createVault {
+                        Button(action: createVault) {
+                            Image(systemName: "plus.rectangle.on.folder")
+                                .font(.system(size: 18)).frame(width: 44, height: 44).background(.white, in: Circle())
+                        }
+                        .disabled(store.isBusy)
+                        .accessibilityLabel(String(localized: "New vault")).accessibilityIdentifier("newVault")
+                    }
                     if let lockVault {
-                        Menu {
-                            Text(vaultName)
-                            if vault != nil {
-                                Button(String(localized: "Vault settings"), systemImage: "gearshape") { showingSettings = true }
-                                    .disabled(store.isBusy)
-                            }
-                            if let createVault { Button(String(localized: "New vault"), systemImage: "plus.rectangle.on.folder", action: createVault) }
-                            Button(String(localized: "Switch vault"), systemImage: "arrow.triangle.2.circlepath", action: lockVault)
-                            Button(String(localized: "Lock vault"), systemImage: "lock", action: lockVault)
-                        } label: { vaultLabel }
-                        .accessibilityLabel(String(localized: "Vault options, \(vaultName)"))
-                        .accessibilityIdentifier("vaultOptions")
-                    } else { vaultLabel }
+                        Button(action: lockVault) {
+                            Image(systemName: "lock")
+                                .font(.system(size: 18)).frame(width: 44, height: 44).background(.white, in: Circle())
+                        }
+                        .accessibilityLabel(String(localized: "Lock vault")).accessibilityIdentifier("lockVault")
+                    }
                 }
-                Spacer()
                 if vault != nil {
                     Button { showingSettings = true } label: {
-                        Image(systemName: "gearshape").font(.system(size: 18)).padding(11).background(.white, in: Circle())
+                        Image(systemName: "gearshape").font(.system(size: 18)).frame(width: 44, height: 44).background(.white, in: Circle())
                     }
                     .disabled(store.isBusy)
                     .accessibilityLabel(String(localized: "Vault settings")).accessibilityIdentifier("vaultSettings")
                 }
-                Button(isSelecting ? String(localized: "Done") : String(localized: "Select")) {
+                Button {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         if isSelecting { finishSelection() } else { isSelecting = true }
                     }
+                } label: {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(isSelecting ? .white : AlbumTheme.accent)
+                        .frame(width: 44, height: 44)
+                        .background(isSelecting ? AlbumTheme.accent : .white, in: Circle())
                 }
-                .font(.subheadline.weight(.semibold))
-                .padding(.horizontal, 18).padding(.vertical, 10)
-                .background(.white, in: Capsule())
                 .disabled((visibleItems.isEmpty && !isSelecting) || store.isBusy)
+                .accessibilityLabel(isSelecting ? String(localized: "Done") : String(localized: "Select"))
+                .accessibilityAddTraits(isSelecting ? [.isSelected] : [])
+                .accessibilityRemoveTraits(isSelecting ? [] : [.isSelected])
                 .accessibilityIdentifier("selectMedia")
             }
             if let currentFolder {
@@ -197,15 +205,17 @@ struct ContentView: View {
     }
 
     private var vaultLabel: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 8) {
             PatternMark().frame(width: 26, height: 26)
             Text(vaultName.uppercased())
-                .font(.system(size: 10, weight: .semibold, design: .monospaced)).tracking(2)
-                .lineLimit(1)
-            if lockVault != nil { Image(systemName: "chevron.down").font(.system(size: 9, weight: .semibold)) }
+                .font(.system(size: 14, weight: .semibold, design: .monospaced)).tracking(2)
+                .lineLimit(1).minimumScaleFactor(0.8)
+                .accessibilityLabel(vaultName)
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("vaultName")
         }
         .foregroundStyle(AlbumTheme.ink)
-        .frame(minHeight: 44)
+        .frame(minHeight: 44, alignment: .leading)
     }
 
     private var filterBar: some View {
@@ -356,10 +366,6 @@ struct ContentView: View {
                     Spacer()
                     selectionAction(String(localized: "Delete"), icon: "trash", destructive: true) { showingDelete = true }
                 } else {
-                    HStack(spacing: 7) {
-                        Circle().fill(AlbumTheme.accent).frame(width: 5, height: 5)
-                        Text(String(localized: "ON THIS DEVICE")).font(.system(size: 9, weight: .medium, design: .monospaced)).tracking(1.2)
-                    }.foregroundStyle(AlbumTheme.secondary)
                     Spacer()
                     Button { requestImport() } label: {
                         HStack(spacing: 10) { Image(systemName: "plus").font(.system(size: 17, weight: .medium)); Text(String(localized: "Add media")).font(.subheadline.weight(.semibold)) }

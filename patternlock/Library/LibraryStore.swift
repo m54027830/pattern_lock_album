@@ -74,7 +74,7 @@ final class LibraryStore {
     func load() async {
         guard !isLoaded, canAccess else { return }
         do {
-            let value = try await repository.load()
+            let value = try await repository.loadForDisplay()
             guard canAccess else { return }
             snapshot = value; isLoaded = true
         }

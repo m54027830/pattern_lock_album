@@ -60,6 +60,34 @@ actor LibraryRepository {
         return loaded
     }
 
+    /// Enrich older libraries without changing identifiers, ordering, or media.
+    func loadForDisplay() async throws -> LibrarySnapshot {
+        let pending = try load().items.filter { $0.fileDate == nil || $0.byteCount == nil }
+        var metadata: [UUID: MediaFileMetadata] = [:]
+        for item in pending {
+            try Task.checkCancellation()
+            try security.checkAccess(to: root.lastPathComponent)
+            metadata[item.id] = await MediaFileMetadata.read(at: mediaURL(item), kind: item.kind)
+        }
+        try Task.checkCancellation()
+        // Another operation may have changed the library during video metadata reads.
+        let current = try load()
+        var updated = current
+        for index in updated.items.indices {
+            guard let value = metadata[updated.items[index].id] else { continue }
+            if updated.items[index].fileDate == nil { updated.items[index].fileDate = value.date }
+            if updated.items[index].byteCount == nil { updated.items[index].byteCount = value.byteCount }
+        }
+        guard updated != current else { return current }
+        do { return try commit(updated) }
+        catch {
+            // Optional sorting metadata must not prevent opening an intact library.
+            try security.checkAccess(to: root.lastPathComponent)
+            snapshot = updated
+            return updated
+        }
+    }
+
     func storageUsed() throws -> Int64 {
         _ = try load()
         guard let enumerator = files.enumerator(at: root, includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey]) else { return 0 }
@@ -122,6 +150,10 @@ actor LibraryRepository {
         let destination = root.appending(path: "Originals").appending(path: filename)
         let thumb = root.appending(path: "Thumbnails").appending(path: id.uuidString + ".jpg")
         do {
+            // Read the source before copying so its fallback file timestamp survives.
+            let metadata = await MediaFileMetadata.read(at: source, kind: kind)
+            try Task.checkCancellation()
+            try security.checkAccess(to: root.lastPathComponent)
             try files.copyItem(at: source, to: destination)
             try files.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: destination.path)
             let duration: Double?
@@ -154,7 +186,8 @@ actor LibraryRepository {
             // purchase revocation must not let this commit exceed the limit.
             try purchaseAccess.checkMediaAddition(currentCount: updated.items.count)
             let destinationFolder = updated.folders.contains { $0.id == folderID } ? folderID : nil
-            updated.items.append(MediaItem(id: id, filename: filename, originalName: originalName, kind: kind, importedAt: Date(), duration: duration, folderID: destinationFolder))
+            updated.items.append(MediaItem(id: id, filename: filename, originalName: originalName, kind: kind, importedAt: Date(), duration: duration, folderID: destinationFolder,
+                                          fileDate: metadata.date, byteCount: metadata.byteCount))
             return try commit(updated)
         } catch {
             try? files.removeItem(at: destination)

@@ -12,6 +12,9 @@ nonisolated struct MediaItem: Identifiable, Codable, Equatable, Sendable {
     let importedAt: Date
     let duration: Double?
     var folderID: UUID?
+    // Optional so existing libraries and older encrypted backups still decode.
+    var fileDate: Date? = nil
+    var byteCount: Int64? = nil
 
     var durationLabel: String {
         let seconds = Int(max(0, duration ?? 0))
@@ -36,6 +39,9 @@ nonisolated enum LibrarySort: String, CaseIterable, Identifiable, Sendable {
     case newest = "Newest first"
     case oldest = "Oldest first"
     case name = "Name"
+    case fileDate = "File date"
+    case largest = "Largest first"
+    case smallest = "Smallest first"
     var id: String { rawValue }
     // Keep persisted raw values stable; only the displayed title is localized.
     var title: String {
@@ -43,6 +49,9 @@ nonisolated enum LibrarySort: String, CaseIterable, Identifiable, Sendable {
         case .newest: String(localized: "Newest first")
         case .oldest: String(localized: "Oldest first")
         case .name: String(localized: "Name")
+        case .fileDate: String(localized: "File date")
+        case .largest: String(localized: "Largest first")
+        case .smallest: String(localized: "Smallest first")
         }
     }
 
@@ -54,6 +63,15 @@ nonisolated enum LibrarySort: String, CaseIterable, Identifiable, Sendable {
             case .name:
                 let result = lhs.originalName.localizedStandardCompare(rhs.originalName)
                 return result == .orderedSame ? lhs.id.uuidString < rhs.id.uuidString : result == .orderedAscending
+            case .fileDate:
+                let left = lhs.fileDate ?? lhs.importedAt, right = rhs.fileDate ?? rhs.importedAt
+                return left == right ? lhs.id.uuidString < rhs.id.uuidString : left > right
+            case .largest, .smallest:
+                // Unreadable/missing files go last in either direction.
+                guard let left = lhs.byteCount else { return rhs.byteCount == nil && lhs.id.uuidString < rhs.id.uuidString }
+                guard let right = rhs.byteCount else { return true }
+                if left == right { return lhs.id.uuidString < rhs.id.uuidString }
+                return self == .largest ? left > right : left < right
             }
         }
     }

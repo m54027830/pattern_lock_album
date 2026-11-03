@@ -1,150 +1,174 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "NSFaceIDUsageDescription": {
-      "comment": "System permission prompt. Explain the purpose without implying automatic access or deletion.",
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Face ID wird nach deinem Muster benötigt, um geschützte Tresore zu öffnen."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Require Face ID after your pattern to open protected vaults."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Face ID est requis après votre schéma pour ouvrir les coffres protégés."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Richiedi Face ID dopo il segno per aprire le casseforti protette."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "保護された保管庫を開くため、パターン入力後にFace IDで認証します。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "보호된 보관함을 열려면 패턴 입력 후 Face ID 인증을 사용합니다."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在图案之后使用 Face ID 验证，以打开受保护的保险库。"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "comment" : "Bundle display name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Pattern"
           }
         }
       }
     },
-    "NSPhotoLibraryAddUsageDescription": {
-      "comment": "System permission prompt. Explain the purpose without implying automatic access or deletion.",
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Speichere die ausgewählten Fotos und Videos in deiner Fotomediathek."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save the photos and videos you choose to your Photos library."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enregistrez les photos et vidéos choisies dans votre photothèque."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Salva le foto e i video scelti nella libreria di Foto."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "選んだ写真や動画を写真ライブラリに保存します。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "선택한 사진과 동영상을 사진 보관함에 저장합니다."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "将你选择的照片和视频保存到照片图库。"
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "patternlock"
           }
         }
       }
     },
-    "NSPhotoLibraryUsageDescription": {
-      "comment": "System permission prompt. Explain the purpose without implying automatic access or deletion.",
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Originale Fotos und Videos werden nur auf deinen Wunsch aus Fotos gelöscht, nachdem Kopien im Tresor gespeichert wurden."
+    "NSFaceIDUsageDescription" : {
+      "comment" : "System permission prompt. Explain the purpose without implying automatic access or deletion.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Face ID wird nach deinem Muster benötigt, um geschützte Tresore zu öffnen."
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete original photos and videos from Photos only when you choose, after copies are saved in your vault."
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Require Face ID after your pattern to open protected vaults."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimez les photos et vidéos originales de Photos uniquement à votre demande, après avoir enregistré les copies dans votre coffre."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Face ID est requis après votre schéma pour ouvrir les coffres protégés."
           }
         },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Elimina foto e video originali da Foto solo quando lo scegli, dopo averne salvato copie nella cassaforte."
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Richiedi Face ID dopo il segno per aprire le casseforti protette."
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "保管庫にコピーを保存した後、ご自身で選んだ場合にのみ写真アプリからオリジナルの写真や動画を削除します。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保護された保管庫を開くため、パターン入力後にFace IDで認証します。"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "보관함에 사본을 저장한 후 사용자가 선택한 경우에만 사진 앱에서 원본 사진과 동영상을 삭제합니다."
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보호된 보관함을 열려면 패턴 입력 후 Face ID 인증을 사용합니다."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "仅在副本已保存到保险库且你主动选择时，才从“照片”中删除原始照片和视频。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在图案之后使用 Face ID 验证，以打开受保护的保险库。"
+          }
+        }
+      }
+    },
+    "NSPhotoLibraryAddUsageDescription" : {
+      "comment" : "System permission prompt. Explain the purpose without implying automatic access or deletion.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichere die ausgewählten Fotos und Videos in deiner Fotomediathek."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save the photos and videos you choose to your Photos library."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrez les photos et vidéos choisies dans votre photothèque."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salva le foto e i video scelti nella libreria di Foto."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選んだ写真や動画を写真ライブラリに保存します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택한 사진과 동영상을 사진 보관함에 저장합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将你选择的照片和视频保存到照片图库。"
+          }
+        }
+      }
+    },
+    "NSPhotoLibraryUsageDescription" : {
+      "comment" : "System permission prompt. Explain the purpose without implying automatic access or deletion.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Originale Fotos und Videos werden nur auf deinen Wunsch aus Fotos gelöscht, nachdem Kopien im Tresor gespeichert wurden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete original photos and videos from Photos only when you choose, after copies are saved in your vault."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimez les photos et vidéos originales de Photos uniquement à votre demande, après avoir enregistré les copies dans votre coffre."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina foto e video originali da Foto solo quando lo scegli, dopo averne salvato copie nella cassaforte."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保管庫にコピーを保存した後、ご自身で選んだ場合にのみ写真アプリからオリジナルの写真や動画を削除します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보관함에 사본을 저장한 후 사용자가 선택한 경우에만 사진 앱에서 원본 사진과 동영상을 삭제합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅在副本已保存到保险库且你主动选择时，才从“照片”中删除原始照片和视频。"
           }
         }
       }
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }
