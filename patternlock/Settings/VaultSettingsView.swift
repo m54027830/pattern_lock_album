@@ -27,111 +27,111 @@ struct VaultSettingsView: View {
         NavigationStack {
             Form {
                 Section {
-                    Button { name = vault.name; renaming = true } label: { valueRow("Vault name", value: vault.name) }
-                    valueRow("Files", value: "\(store.snapshot.items.count)")
-                    valueRow("Storage used", value: storageBytes.map { ByteCountFormatter.string(fromByteCount: $0, countStyle: .file) } ?? "Calculating…")
-                } header: { Text("Details") }
+                    Button { name = vault.name; renaming = true } label: { valueRow(String(localized: "Vault name"), value: vault.name) }
+                    valueRow(String(localized: "Files"), value: String(localized: "\(store.snapshot.items.count)"))
+                    valueRow(String(localized: "Storage used"), value: storageBytes.map { ByteCountFormatter.string(fromByteCount: $0, countStyle: .file) } ?? String(localized: "Calculating…"))
+                } header: { Text(String(localized: "Details")) }
 
                 Section {
-                    NavigationLink { PatternSetupView(title: "Change pattern", needsCurrentPattern: true) { current, replacement in
+                    NavigationLink { PatternSetupView(title: String(localized: "Change pattern"), needsCurrentPattern: true) { current, replacement in
                         try await authenticator.changePattern(vaultID: vault.id, current: current, replacement: replacement)
-                    } } label: { Label("Change pattern", systemImage: "hand.draw") }
+                    } } label: { Label(String(localized: "Change pattern"), systemImage: "hand.draw") }
                     NavigationLink {
                         GridSizeSettingsView(authenticator: authenticator)
                     } label: {
-                        valueRow("Pattern grid", value: "\(gridSize) × \(gridSize)", icon: "circle.grid.3x3")
+                        valueRow(String(localized: "Pattern grid"), value: String(localized: "\(gridSize) × \(gridSize)"), icon: "circle.grid.3x3")
                     }
-                } header: { Text("Pattern") }
+                } header: { Text(String(localized: "Pattern")) }
 
                 Section {
                     NavigationLink {
                         FaceIDSettingsView(vault: vault, authenticator: authenticator) { revision += 1 }
                     } label: {
-                        valueRow("Face ID & dummy vault", value: requiresFaceID ? "On" : "Off", icon: "faceid")
+                        valueRow(String(localized: "Face ID & dummy vault"), value: requiresFaceID ? String(localized: "On") : String(localized: "Off"), icon: "faceid")
                     }
-                } header: { Text("Access") } footer: {
-                    Text("Add Face ID after your pattern and choose which vault to show if it fails. Failed Face ID never activates duress.")
+                } header: { Text(String(localized: "Access")) } footer: {
+                    Text(String(localized: "Add Face ID after your pattern and choose which vault to show if it fails. Failed Face ID never activates duress."))
                 }
 
                 Section {
-                    valueRow("Backups on this device", value: backupsDisabled ? "Off" : "Available", icon: "icloud")
-                    valueRow("Encrypt backup", value: "Always on", icon: "lock.shield")
+                    valueRow(String(localized: "Backups on this device"), value: backupsDisabled ? String(localized: "Off") : String(localized: "Available"), icon: "icloud")
+                    valueRow(String(localized: "Encrypt backup"), value: String(localized: "Always on"), icon: "lock.shield")
                     NavigationLink { BackupExportView(store: store, vault: vault, authenticator: authenticator) } label: {
-                        Label("Back up to iCloud Drive", systemImage: "icloud.and.arrow.up")
+                        Label(String(localized: "Back up to iCloud Drive"), systemImage: "icloud.and.arrow.up")
                     }.disabled(!hasRecovery || backupsDisabled)
                     NavigationLink { RestoreVaultView(authenticator: authenticator) } label: {
-                        Label("Restore from iCloud", systemImage: "icloud.and.arrow.down")
+                        Label(String(localized: "Restore from iCloud"), systemImage: "icloud.and.arrow.down")
                     }
-                } header: { Text("Backup") } footer: {
-                    Text(backupsDisabled ? "Duress unlock turned off new backups from Pattern on this device. Previously saved iCloud Drive backups remain available for restoration." : hasRecovery ? "Save an encrypted backup through Files and choose iCloud Drive. Deleting the app removes local vaults; restoring requires this backup and its recovery phrase. Backups are manual." : "Set up a recovery phrase below, then save an encrypted backup to iCloud Drive. Local vaults are removed when you delete the app and aren’t included in device backups.")
+                } header: { Text(String(localized: "Backup")) } footer: {
+                    Text(backupsDisabled ? String(localized: "Duress unlock turned off new backups from Pattern on this device. Previously saved iCloud Drive backups remain available for restoration.") : hasRecovery ? String(localized: "Save an encrypted backup through Files and choose iCloud Drive. Deleting the app removes local vaults; restoring requires this backup and its recovery phrase. Backups are manual.") : String(localized: "Set up a recovery phrase below, then save an encrypted backup to iCloud Drive. Local vaults are removed when you delete the app and aren’t included in device backups."))
                 }
 
                 Section {
-                    valueRow("Recovery phrase", value: hasPendingRecovery ? "New phrase ready" : hasRecovery ? "Set up" : "Not set up")
+                    valueRow(String(localized: "Recovery phrase"), value: hasPendingRecovery ? String(localized: "New phrase ready") : hasRecovery ? String(localized: "Set up") : String(localized: "Not set up"))
                     if hasPendingRecovery {
                         NavigationLink {
                             PendingRecoveryPhraseView(vault: vault, authenticator: authenticator) { revision += 1 }
-                        } label: { Label("Save new recovery phrase", systemImage: "key") }
+                        } label: { Label(String(localized: "Save new recovery phrase"), systemImage: "key") }
                     }
                     NavigationLink {
                         RecoveryPhraseSettingsView(vault: vault, generated: true, authenticator: authenticator) { revision += 1 }
-                    } label: { Label(hasRecovery ? "Regenerate recovery phrase" : "Generate recovery phrase", systemImage: "arrow.trianglehead.2.clockwise.rotate.90") }
+                    } label: { Label(hasRecovery ? String(localized: "Regenerate recovery phrase") : String(localized: "Generate recovery phrase"), systemImage: "arrow.trianglehead.2.clockwise.rotate.90") }
                     NavigationLink {
                         RecoveryPhraseSettingsView(vault: vault, generated: false, authenticator: authenticator) { revision += 1 }
-                    } label: { Label("Set custom recovery phrase", systemImage: "text.word.spacing") }
-                } header: { Text("Recovery") } footer: {
-                    Text("A recovery phrase can reset a forgotten pattern. Keep it outside the app. After a duress unlock, save the new phrase here. Your previous phrase no longer opens this vault.")
+                    } label: { Label(String(localized: "Set custom recovery phrase"), systemImage: "text.word.spacing") }
+                } header: { Text(String(localized: "Recovery")) } footer: {
+                    Text(String(localized: "A recovery phrase can reset a forgotten pattern. Keep it outside the app. After a duress unlock, save the new phrase here. Your previous phrase no longer opens this vault."))
                 }
 
                 Section {
                     NavigationLink {
                         DuressSetupView(vault: vault, enabled: isDuressVault, authenticator: authenticator) { revision += 1 }
                     } label: {
-                        valueRow("Use a duress vault", value: isDuressVault ? "On" : "Off", icon: "person.crop.rectangle")
+                        valueRow(String(localized: "Use a duress vault"), value: isDuressVault ? String(localized: "On") : String(localized: "Off"), icon: "person.crop.rectangle")
                     }
-                    Button("What’s this?", systemImage: "questionmark.circle") { showDuressInfo = true }
-                } header: { Text("Duress vault") }
+                    Button(String(localized: "What’s this?"), systemImage: "questionmark.circle") { showDuressInfo = true }
+                } header: { Text(String(localized: "Duress vault")) }
 
                 Section {
                     Button { showingPurchase = true } label: {
-                        valueRow("Pattern Unlimited", value: purchases.isUnlimited ? "Purchased" : "Unlock once", icon: "sparkles")
+                        valueRow("Pattern Unlimited", value: purchases.isUnlimited ? String(localized: "Purchased") : String(localized: "Unlock once"), icon: "sparkles")
                     }
                     if !purchases.isUnlimited {
-                        valueRow("Free album usage", value: "\(store.snapshot.items.count) / 5 photos/videos")
+                        valueRow(String(localized: "Free album usage"), value: String(localized: "\(store.snapshot.items.count) / 5 photos/videos"))
                     }
-                } header: { Text("Purchase") } footer: {
-                    Text("Free: 3 albums with 5 photos or videos each. One purchase removes both limits. No subscription.")
+                } header: { Text(String(localized: "Purchase")) } footer: {
+                    Text(String(localized: "Free: 3 albums with 5 photos or videos each. One purchase removes both limits. No subscription."))
                 }
 
                 Section {
                     NavigationLink {
                         DeleteVaultView(vault: vault, store: store, authenticator: authenticator) { onDeleted(); dismiss() }
-                    } label: { Label("Delete this vault", systemImage: "trash").foregroundStyle(.red) }
-                } footer: { Text("Deletes this vault’s local files and access credentials. Other vaults, Photos originals, and saved backup files remain.") }
+                    } label: { Label(String(localized: "Delete this vault"), systemImage: "trash").foregroundStyle(.red) }
+                } footer: { Text(String(localized: "Deletes this vault’s local files and access credentials. Other vaults, Photos originals, and saved backup files remain.")) }
             }
             .disabled(!isLoaded || store.isBusy)
             .scrollContentBackground(.hidden).background(AlbumTheme.background)
-            .navigationTitle("Vault settings").navigationBarTitleDisplayMode(.inline)
-            .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+            .navigationTitle(String(localized: "Vault settings")).navigationBarTitleDisplayMode(.inline)
+            .toolbar { ToolbarItem(placement: .confirmationAction) { Button(String(localized: "Done")) { dismiss() } } }
             .sheet(isPresented: $showingPurchase) { PurchaseView() }
             .task(id: revision) { await load() }
-            .alert("Rename vault", isPresented: $renaming) {
-                TextField("Vault name", text: $name)
-                Button("Cancel", role: .cancel) {}
-                Button("Save") {
+            .alert(String(localized: "Rename vault"), isPresented: $renaming) {
+                TextField(String(localized: "Vault name"), text: $name)
+                Button(String(localized: "Cancel"), role: .cancel) {}
+                Button(String(localized: "Save")) {
                     Task {
                         do { vault = try await authenticator.renameVault(vault.id, name: name); onVaultChanged(vault) }
                         catch { self.error = error.localizedDescription }
                     }
                 }
             }
-            .alert("Duress vault", isPresented: $showDuressInfo) {
-                Button("OK", role: .cancel) {}
+            .alert(String(localized: "Duress vault"), isPresented: $showDuressInfo) {
+                Button(String(localized: "OK"), role: .cancel) {}
             } message: {
                 Text(DuressExplanation.summary + "\n\n" + DuressExplanation.limits)
             }
-            .alert("Couldn’t update settings", isPresented: Binding(get: { error != nil }, set: { if !$0 { error = nil } })) {
-                Button("OK", role: .cancel) { error = nil }
+            .alert(String(localized: "Couldn’t update settings"), isPresented: Binding(get: { error != nil }, set: { if !$0 { error = nil } })) {
+                Button(String(localized: "OK"), role: .cancel) { error = nil }
             } message: { Text(error ?? "") }
         }.tint(AlbumTheme.accent)
     }
@@ -160,8 +160,8 @@ struct VaultSettingsView: View {
 }
 
 private enum DuressExplanation {
-    static let summary = "Drawing this vault’s pattern removes access to every vault except the one displayed and stops backups here. Your selected dummy vault opens, or this vault if no dummy is set. The surviving vault gets a new recovery phrase and active sharing closes."
-    static let limits = "Other vaults’ patterns and recovery phrases are removed from this device, including this vault’s if a different dummy vault is selected. Their local files are kept, but you’ll need a saved backup to restore access in Pattern. Already saved iCloud backups and copies sent to others can’t be recalled. Automatic iCloud sync and revocable share links aren’t available in this version."
+    static let summary = String(localized: "Drawing this vault’s pattern removes access to every vault except the one displayed and stops backups here. Your selected dummy vault opens, or this vault if no dummy is set. The surviving vault gets a new recovery phrase and active sharing closes.")
+    static let limits = String(localized: "Other vaults’ patterns and recovery phrases are removed from this device, including this vault’s if a different dummy vault is selected. Their local files are kept, but you’ll need a saved backup to restore access in Pattern. Already saved iCloud backups and copies sent to others can’t be recalled. Automatic iCloud sync and revocable share links aren’t available in this version.")
 }
 
 private struct DuressSetupView: View {
@@ -180,20 +180,20 @@ private struct DuressSetupView: View {
             } footer: { Text(DuressExplanation.limits) }
             Section {
                 if !enabled {
-                    Toggle("I understand that other vault access will be removed", isOn: $understood)
+                    Toggle(String(localized: "I understand that other vault access will be removed"), isOn: $understood)
                 }
-                NavigationLink(enabled ? "Turn off duress vault" : "Use this vault for duress") {
-                    PatternAuthorizationView(title: enabled ? "Turn off duress vault" : "Use as duress vault", detail: enabled ? "This stops future duress actions. It won’t restore access already removed or turn backups back on." : "Confirm this vault’s pattern to enable duress. The next time you use it to unlock Pattern, the actions above will happen.") { pattern in
+                NavigationLink(enabled ? String(localized: "Turn off duress vault") : String(localized: "Use this vault for duress")) {
+                    PatternAuthorizationView(title: enabled ? String(localized: "Turn off duress vault") : String(localized: "Use as duress vault"), detail: enabled ? String(localized: "This stops future duress actions. It won’t restore access already removed or turn backups back on.") : String(localized: "Confirm this vault’s pattern to enable duress. The next time you use it to unlock Pattern, the actions above will happen.")) { pattern in
                         try await authenticator.setDuressVault(vaultID: vault.id, enabled: !enabled, currentPattern: pattern)
                         completion(); dismiss()
                     }
                 }.disabled(!enabled && !understood)
             } footer: {
-                Text(enabled ? "If this vault survives, each unlock with its duress pattern repeats the action. If a different dummy is selected, only the dummy vault survives." : "Enabling this setting doesn’t activate it immediately. You can keep adding everyday photos here before locking the app.")
+                Text(enabled ? String(localized: "If this vault survives, each unlock with its duress pattern repeats the action. If a different dummy is selected, only the dummy vault survives.") : String(localized: "Enabling this setting doesn’t activate it immediately. You can keep adding everyday photos here before locking the app."))
             }
         }
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
-        .navigationTitle("Duress vault").navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(String(localized: "Duress vault")).navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -207,24 +207,24 @@ private struct DeleteVaultView: View {
     var body: some View {
         Form {
             Section {
-                Label("This cannot be undone", systemImage: "exclamationmark.triangle").foregroundStyle(.red)
-                Text("Delete “\(vault.name)”, its \(store.snapshot.items.count) files, its pattern, and its recovery phrase from this device. Other vaults and originals in Photos stay. Backups saved in Files must be deleted separately.")
-                TextField("Type \(vault.name) to confirm", text: $confirmation).autocorrectionDisabled()
+                Label(String(localized: "This cannot be undone"), systemImage: "exclamationmark.triangle").foregroundStyle(.red)
+                Text(String(localized: "Delete “\(vault.name)” and all its files (\(store.snapshot.items.count)), its pattern, and its recovery phrase from this device. Other vaults and originals in Photos stay. Backups saved in Files must be deleted separately."))
+                TextField(String(localized: "Type \(vault.name) to confirm"), text: $confirmation).autocorrectionDisabled()
             }
             Section {
                 NavigationLink {
-                    PatternAuthorizationView(title: "Delete this vault", detail: "Drawing this vault’s current pattern will permanently delete it.") { pattern in
+                    PatternAuthorizationView(title: String(localized: "Delete this vault"), detail: String(localized: "Drawing this vault’s current pattern will permanently delete it.")) { pattern in
                         try await store.withExclusiveAccess {
                             try await authenticator.deleteVault(vaultID: vault.id, currentPattern: pattern, directory: store.repository.root.deletingLastPathComponent())
                             store.invalidateDeletedVault()
                         }
                         completion()
                     }
-                } label: { Text("Confirm pattern and delete").foregroundStyle(.red) }
+                } label: { Text(String(localized: "Confirm pattern and delete")).foregroundStyle(.red) }
                 .disabled(confirmation != vault.name || store.isBusy)
             }
         }
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
-        .navigationTitle("Delete this vault").navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(String(localized: "Delete this vault")).navigationBarTitleDisplayMode(.inline)
     }
 }

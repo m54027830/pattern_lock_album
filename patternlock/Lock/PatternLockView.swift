@@ -10,25 +10,25 @@ struct PatternLockView: View {
 
     private var title: String {
         switch lock.stage {
-        case .nameVault: "A space of its own."
-        case .create: lock.isCreatingVault ? "A new pattern." : "Make it yours."
-        case .confirm: "Once more."
-        case .locked: "Welcome back."
-        case .faceID: "One more step."
-        case .unavailable: "Your library is locked."
-        default: "Your space, protected."
+        case .nameVault: String(localized: "A space of its own.")
+        case .create: lock.isCreatingVault ? String(localized: "A new pattern.") : String(localized: "Make it yours.")
+        case .confirm: String(localized: "Once more.")
+        case .locked: String(localized: "Welcome back.")
+        case .faceID: String(localized: "One more step.")
+        case .unavailable: String(localized: "Your library is locked.")
+        default: String(localized: "Your space, protected.")
         }
     }
 
     private var subtitle: String {
         switch lock.stage {
-        case .nameVault: "Give your new vault a name.\nIts photos and folders stay separate."
-        case .create: lock.isCreatingVault ? "Choose a unique pattern for \(lock.vaultName).\nConnect at least 4 dots." : "Draw a pattern to lock your library.\nConnect at least 4 dots."
-        case .confirm: "Draw the same pattern again\nto make sure you remember it."
-        case .locked: "Draw a pattern to open its vault."
-        case .faceID: "Use Face ID to open your vault."
-        case .unavailable: "We couldn’t access your saved pattern."
-        default: "Getting your lock ready…"
+        case .nameVault: String(localized: "Give your new vault a name.\nIts photos and folders stay separate.")
+        case .create: lock.isCreatingVault ? String(localized: "Choose a unique pattern for \(lock.vaultName).\nConnect at least 4 dots.") : String(localized: "Draw a pattern to lock your library.\nConnect at least 4 dots.")
+        case .confirm: String(localized: "Draw the same pattern again\nto make sure you remember it.")
+        case .locked: String(localized: "Draw a pattern to open its vault.")
+        case .faceID: String(localized: "Use Face ID to open your vault.")
+        case .unavailable: String(localized: "We couldn’t access your saved pattern.")
+        default: String(localized: "Getting your lock ready…")
         }
     }
 
@@ -44,7 +44,7 @@ struct PatternLockView: View {
                     .frame(maxWidth: .infinity)
                     .overlay(alignment: .leading) {
                         if lock.isCreatingVault {
-                            Button("Cancel") { nameFocused = false; lock.cancelNewVault() }
+                            Button(String(localized: "Cancel")) { nameFocused = false; lock.cancelNewVault() }
                                 .font(.subheadline).padding(.leading, 24).disabled(lock.isBusy)
                                 .accessibilityIdentifier("cancelNewVault")
                         }
@@ -72,9 +72,9 @@ struct PatternLockView: View {
 
                     if lock.stage == .create || lock.stage == .confirm {
                         HStack(spacing: 8) {
-                            step("1", title: "Create", active: lock.stage == .create, complete: lock.stage == .confirm)
+                            step("1", title: String(localized: "Create"), active: lock.stage == .create, complete: lock.stage == .confirm)
                             Rectangle().fill(AlbumTheme.track).frame(width: 20, height: 1)
-                            step("2", title: "Confirm", active: lock.stage == .confirm, complete: false)
+                            step("2", title: String(localized: "Confirm"), active: lock.stage == .confirm, complete: false)
                         }.padding(.top, 25)
                     }
 
@@ -91,8 +91,8 @@ struct PatternLockView: View {
                                 .padding(.top, lock.stage == .locked ? 30 : 20)
                             } else if lock.stage == .nameVault {
                                 VStack(alignment: .leading, spacing: 16) {
-                                    Text("Vault name").font(.subheadline.weight(.semibold)).foregroundStyle(AlbumTheme.ink)
-                                    TextField("e.g. Travel, Family, Personal", text: $lock.vaultName)
+                                    Text(String(localized: "Vault name")).font(.subheadline.weight(.semibold)).foregroundStyle(AlbumTheme.ink)
+                                    TextField(String(localized: "e.g. Travel, Family, Personal"), text: $lock.vaultName)
                                         .focused($nameFocused)
                                         .textInputAutocapitalization(.words)
                                         .submitLabel(.continue)
@@ -103,7 +103,7 @@ struct PatternLockView: View {
                                         nameFocused = false
                                         lock.continueWithVaultName()
                                     } label: {
-                                        HStack { Text("Choose pattern"); Image(systemName: "arrow.right") }
+                                        HStack { Text(String(localized: "Choose pattern")); Image(systemName: "arrow.right") }
                                             .font(.subheadline.weight(.semibold))
                                             .frame(maxWidth: .infinity).padding(17)
                                             .foregroundStyle(.white).background(AlbumTheme.accent, in: Capsule())
@@ -115,7 +115,7 @@ struct PatternLockView: View {
                                 VStack(spacing: 20) {
                                     if lock.stage == .unavailable {
                                         Image(systemName: "lock.trianglebadge.exclamation").font(.system(size: 42, weight: .light))
-                                        Button("Try again") { Task { await lock.activate() } }
+                                        Button(String(localized: "Try again")) { Task { await lock.activate() } }
                                             .font(.subheadline.weight(.semibold)).buttonStyle(.borderedProminent).buttonBorderShape(.capsule)
                                     } else { ProgressView().tint(AlbumTheme.accent) }
                                 }.frame(height: 220)
@@ -127,14 +127,14 @@ struct PatternLockView: View {
                     }
 
                     if lock.stage == .confirm {
-                        Button("Choose a different pattern") { lock.startOver() }
+                        Button(String(localized: "Choose a different pattern")) { lock.startOver() }
                             .font(.subheadline.weight(.medium)).padding(.vertical, 15)
                             .disabled(lock.isBusy).accessibilityIdentifier("restartPatternSetup")
                     } else if lock.stage == .create && lock.isCreatingVault {
-                        Button("Edit vault name") { lock.editVaultName() }
+                        Button(String(localized: "Edit vault name")) { lock.editVaultName() }
                             .font(.subheadline.weight(.medium)).padding(.vertical, 15)
                     } else {
-                        Text(lock.stage == .create ? "Choose a pattern you’ll remember." : "A little space that’s only yours.")
+                        Text(lock.stage == .create ? String(localized: "Choose a pattern you’ll remember.") : String(localized: "A little space that’s only yours."))
                             .font(.caption).foregroundStyle(AlbumTheme.secondary.opacity(0.8))
                             .padding(.vertical, 18)
                     }
@@ -142,9 +142,9 @@ struct PatternLockView: View {
                     if !lock.isCreatingVault && [.locked, .create, .unavailable].contains(lock.stage) {
                         HStack(spacing: 24) {
                             if lock.stage != .create {
-                                Button("Recover vault") { showingRecovery = true }
+                                Button(String(localized: "Recover vault")) { showingRecovery = true }
                             }
-                            Button("Restore from iCloud") { showingRestore = true }
+                            Button(String(localized: "Restore from iCloud")) { showingRestore = true }
                         }.font(.caption).padding(.bottom, 20).disabled(lock.isBusy)
                     }
                 }
@@ -162,13 +162,13 @@ struct PatternLockView: View {
         .sheet(isPresented: $showingRecovery) {
             NavigationStack {
                 RecoverPatternView { showingRecovery = false; lock.lock(); Task { await lock.activate() } }
-                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { showingRecovery = false } } }
+                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { showingRecovery = false } } }
             }.tint(AlbumTheme.accent)
         }
         .sheet(isPresented: $showingRestore) {
             NavigationStack {
                 RestoreVaultView(onRestored: { showingRestore = false; lock.lock(); Task { await lock.activate() } })
-                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { showingRestore = false } } }
+                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { showingRestore = false } } }
             }.tint(AlbumTheme.accent)
         }
         .onChange(of: scenePhase) { _, phase in
@@ -190,21 +190,21 @@ struct PatternLockView: View {
 
     @ViewBuilder private func status(remaining: Int) -> some View {
         if lock.isBusy {
-            HStack(spacing: 9) { ProgressView(); Text(lock.stage == .faceID ? "Waiting for Face ID…" : lock.stage == .confirm ? "Saving your pattern…" : "Checking your pattern…").font(.caption) }
+            HStack(spacing: 9) { ProgressView(); Text(lock.stage == .faceID ? String(localized: "Waiting for Face ID…") : lock.stage == .confirm ? String(localized: "Saving your pattern…") : String(localized: "Checking your pattern…")).font(.caption) }
                 .foregroundStyle(AlbumTheme.secondary)
         } else if remaining > 0 {
             VStack(spacing: 5) {
-                Text("Too many attempts").font(.subheadline.weight(.medium))
-                Text("Try again in \(remaining)s").font(.caption.monospacedDigit())
+                Text(String(localized: "Too many attempts")).font(.subheadline.weight(.medium))
+                Text(String(localized: "Try again in \(remaining)s")).font(.caption.monospacedDigit())
             }.foregroundStyle(AlbumTheme.secondary)
         } else if let message = lock.message {
             Text(message).font(.subheadline).multilineTextAlignment(.center)
                 .foregroundStyle(.red.opacity(0.85)).accessibilityIdentifier("patternError")
         } else if lock.stage == .nameVault {
-            Text("Next, create and confirm its pattern.")
+            Text(String(localized: "Next, create and confirm its pattern."))
                 .font(.caption).foregroundStyle(AlbumTheme.secondary)
         } else {
-            Text("Lift your finger when you’re done.")
+            Text(String(localized: "Lift your finger when you’re done."))
                 .font(.caption).foregroundStyle(AlbumTheme.secondary)
         }
     }
@@ -276,22 +276,22 @@ struct PatternGridView: View {
                         HStack {
                             ForEach(0..<size, id: \.self) { column in
                                 let node = row * size + column
-                                Button("Row \(row + 1), column \(column + 1)") {
+                                Button(String(localized: "Row \(row + 1), column \(column + 1)")) {
                                     guard isEnabled else { return }
                                     path.append(node)
                                 }
-                                .accessibilityValue(path.nodes.contains(node) ? "Selected" : "Not selected")
+                                .accessibilityValue(path.nodes.contains(node) ? String(localized: "Selected") : String(localized: "Not selected"))
                                 .accessibilityIdentifier("patternDot\(node)")
                                 .disabled(!isEnabled || path.nodes.contains(node))
                             }
                         }
                     }
-                }.accessibilityLabel("\(size) by \(size) pattern grid")
+                }.accessibilityLabel(String(localized: "\(size) by \(size) pattern grid"))
             }
             if voiceOver {
                 HStack(spacing: 30) {
-                    Button("Clear pattern") { clear() }
-                    Button("Use pattern") { finish() }.disabled(path.nodes.isEmpty)
+                    Button(String(localized: "Clear pattern")) { clear() }
+                    Button(String(localized: "Use pattern")) { finish() }.disabled(path.nodes.isEmpty)
                 }.font(.subheadline).disabled(!isEnabled)
             }
         }

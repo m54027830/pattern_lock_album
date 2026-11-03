@@ -2,6 +2,12 @@
 
 A native SwiftUI photo and video library. Open `patternlock.xcodeproj` in Xcode 26.2 or later, select the `patternlock` scheme, and run on an iPhone or iPad with iOS 26.2 or later. The app and tests use the selected Xcode's iOS SDK. Keep the shared project in its current compatible format (`objectVersion = 77`) when saving it from newer Xcode versions.
 
+## Languages
+
+Pattern supports English, Korean, Japanese, French, German, Italian, and Simplified Chinese. It follows the device’s preferred app language, including the per-app language selection in iOS Settings. English is the fallback. `patternlock/Localizable.xcstrings` contains app text, accessibility labels, errors, and plural variations; `patternlock/InfoPlist.xcstrings` contains system permission explanations. StoreKit supplies localized prices. Vault/folder names, filenames, existing stored preferences, and recovery-phrase words are never translated. Only the suggested name for a new vault is localized.
+
+Use `String(localized:)` for user-facing strings built outside SwiftUI’s localized literal APIs, and translate whole interpolated messages rather than joining translated words. Keep persisted identifiers and enum raw values stable. Add translations for all six languages when adding a message, and use catalog plural variations for counts. In Xcode, update the catalogs from source before translating. Run `python3 scripts/check-localizations.py` to check coverage and format arguments, or add `--stringsdata /path/to/DerivedData` after building to check compiler-extracted keys too. `LocalizationTests` checks the compiled resources, plural rules, and reordered interpolation in all seven languages.
+
 ## Included
 
 - Welcome screens followed by a choice of 3×3, 4×4, or 5×5 grid, first-vault pattern confirmation, and recovery-phrase setup.

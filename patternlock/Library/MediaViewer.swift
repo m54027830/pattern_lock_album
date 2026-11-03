@@ -20,13 +20,13 @@ struct MediaViewer: View {
         VStack(spacing: 0) {
             HStack {
                 Button { dismiss() } label: { Image(systemName: "xmark").font(.body.weight(.medium)).frame(width: 44, height: 44).background(.white.opacity(0.12), in: Circle()) }
-                    .accessibilityLabel("Close preview")
+                    .accessibilityLabel(String(localized: "Close preview"))
                 Spacer()
-                Text("\((items.firstIndex { $0.id == currentID } ?? 0) + 1) of \(items.count)").font(.subheadline).foregroundStyle(.white.opacity(0.7))
+                Text(String(localized: "\((items.firstIndex { $0.id == currentID } ?? 0) + 1) of \(items.count)")).font(.subheadline).foregroundStyle(.white.opacity(0.7))
                 Spacer()
                 Button { Task { await store.export([currentID]) } } label: {
                     Image(systemName: "square.and.arrow.up").font(.body).frame(width: 44, height: 44).background(.white.opacity(0.12), in: Circle())
-                }.accessibilityLabel("Export media").disabled(store.isBusy)
+                }.accessibilityLabel(String(localized: "Export media")).disabled(store.isBusy)
             }.padding(.horizontal, 20).padding(.vertical, 12)
             TabView(selection: $currentID) {
                 ForEach(items) { item in
@@ -36,7 +36,7 @@ struct MediaViewer: View {
             if let item = currentItem {
                 VStack(spacing: 6) {
                     Text(item.originalName).font(.subheadline.weight(.medium)).lineLimit(1)
-                    Text("Added \(item.importedAt.formatted(date: .abbreviated, time: .shortened))")
+                    Text(String(localized: "Added \(item.importedAt.formatted(date: .abbreviated, time: .shortened))"))
                         .font(.caption).foregroundStyle(.white.opacity(0.5))
                 }.padding(22)
             }
@@ -46,9 +46,9 @@ struct MediaViewer: View {
         .sheet(item: $store.exportSession, onDismiss: { store.finishExport() }) { session in
             ShareSheet(urls: session.urls) { store.finishExport() }
         }
-        .overlay { if store.isBusy { ProgressView("Preparing export…").padding(24).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16)) } }
-        .alert("Couldn’t export", isPresented: Binding(get: { store.errorMessage != nil }, set: { if !$0 { store.errorMessage = nil } })) {
-            Button("OK", role: .cancel) { store.errorMessage = nil }
+        .overlay { if store.isBusy { ProgressView(String(localized: "Preparing export…")).padding(24).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16)) } }
+        .alert(String(localized: "Couldn’t export"), isPresented: Binding(get: { store.errorMessage != nil }, set: { if !$0 { store.errorMessage = nil } })) {
+            Button(String(localized: "OK"), role: .cancel) { store.errorMessage = nil }
         } message: { Text(store.errorMessage ?? "") }
     }
 }
@@ -70,7 +70,7 @@ private struct MediaPage: View {
             } else if let image {
                 ZoomablePhoto(image: image)
             } else if failed {
-                ContentUnavailableView("Photo unavailable", systemImage: "photo", description: Text("This file could not be opened."))
+                ContentUnavailableView(String(localized: "Photo unavailable"), systemImage: "photo", description: Text(String(localized: "This file could not be opened.")))
             } else { ProgressView().tint(.white) }
         }
         .task(id: item.id) {

@@ -15,15 +15,15 @@ nonisolated enum PatternCredentialError: LocalizedError, Equatable {
     case inaccessible, invalid, alreadyRegistered, noPattern, invalidPattern, derivationFailed, duplicatePattern, invalidVaultName, duplicateVaultName
     var errorDescription: String? {
         switch self {
-        case .inaccessible: "Your pattern couldn’t be accessed securely. Unlock your device and try again."
-        case .invalid: "Your saved lock couldn’t be read. Your library remains locked."
-        case .alreadyRegistered: "A pattern is already registered. Use your saved pattern to unlock."
-        case .noPattern: "Set up a pattern before unlocking your library."
-        case .invalidPattern: "Connect at least 4 different dots."
-        case .derivationFailed: "Your pattern couldn’t be secured. Please try again."
-        case .duplicatePattern: "That pattern already opens another vault. Choose a different pattern."
-        case .invalidVaultName: "Give your vault a name between 1 and 40 characters."
-        case .duplicateVaultName: "A vault with that name already exists. Choose a different name."
+        case .inaccessible: String(localized: "Your pattern couldn’t be accessed securely. Unlock your device and try again.")
+        case .invalid: String(localized: "Your saved lock couldn’t be read. Your library remains locked.")
+        case .alreadyRegistered: String(localized: "A pattern is already registered. Use your saved pattern to unlock.")
+        case .noPattern: String(localized: "Set up a pattern before unlocking your library.")
+        case .invalidPattern: String(localized: "Connect at least 4 different dots.")
+        case .derivationFailed: String(localized: "Your pattern couldn’t be secured. Please try again.")
+        case .duplicatePattern: String(localized: "That pattern already opens another vault. Choose a different pattern.")
+        case .invalidVaultName: String(localized: "Give your vault a name between 1 and 40 characters.")
+        case .duplicateVaultName: String(localized: "A vault with that name already exists. Choose a different name.")
         }
     }
 }
@@ -279,7 +279,7 @@ actor PatternAuthenticator: PatternAuthenticating {
             }
         }
         if source.requiresFaceID == true || requireFaceID || (target?.requiresFaceID == true && dummyVaultID != source.dummyVaultID) {
-            guard await faceID.authenticate(reason: "Confirm Face ID to update vault access.") == .authenticated else { throw VaultAccessError.faceIDRequired }
+            guard await faceID.authenticate(reason: String(localized: "Confirm Face ID to update vault access.")) == .authenticated else { throw VaultAccessError.faceIDRequired }
         }
         try Task.checkCancellation()
         guard var registry = try read(), let index = registry.vaults.firstIndex(where: { $0.vault.id == vaultID }) else { throw VaultAccessError.changed }
@@ -624,10 +624,10 @@ nonisolated enum PatternConfigurationError: LocalizedError {
     case unsupportedSize, incomplete, mismatch, changed
     var errorDescription: String? {
         switch self {
-        case .unsupportedSize: "Choose a 3 × 3, 4 × 4, or 5 × 5 grid."
-        case .incomplete: "Confirm a new pattern for every vault before changing the grid."
-        case .mismatch: "The new patterns didn’t match. Try again."
-        case .changed: "Your vaults changed during setup. Start again to use the latest settings."
+        case .unsupportedSize: String(localized: "Choose a 3 × 3, 4 × 4, or 5 × 5 grid.")
+        case .incomplete: String(localized: "Confirm a new pattern for every vault before changing the grid.")
+        case .mismatch: String(localized: "The new patterns didn’t match. Try again.")
+        case .changed: String(localized: "Your vaults changed during setup. Start again to use the latest settings.")
         }
     }
 }
@@ -682,7 +682,7 @@ extension PatternAuthenticator {
             updated.vaults[index].pattern = try makeCredential(replacement.replacement)
         }
         if original.vaults.contains(where: { $0.requiresFaceID == true }) {
-            guard await faceID.authenticate(reason: "Confirm Face ID to replace all vault patterns.") == .authenticated else { throw VaultAccessError.faceIDRequired }
+            guard await faceID.authenticate(reason: String(localized: "Confirm Face ID to replace all vault patterns.")) == .authenticated else { throw VaultAccessError.faceIDRequired }
         }
         try Task.checkCancellation()
         guard let latest = try read(), sameConfiguration(latest, original) else { throw PatternConfigurationError.changed }

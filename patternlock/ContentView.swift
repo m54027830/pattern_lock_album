@@ -12,7 +12,7 @@ struct ContentView: View {
     private let onVaultChanged: ((Vault) -> Void)?
     private let onVaultDeleted: (() -> Void)?
 
-    init(store: LibraryStore? = nil, vaultName: String = "Personal", createVault: (() -> Void)? = nil, lockVault: (() -> Void)? = nil, vault: Vault? = nil, onVaultChanged: ((Vault) -> Void)? = nil, onVaultDeleted: (() -> Void)? = nil) {
+    init(store: LibraryStore? = nil, vaultName: String = String(localized: "Personal"), createVault: (() -> Void)? = nil, lockVault: (() -> Void)? = nil, vault: Vault? = nil, onVaultChanged: ((Vault) -> Void)? = nil, onVaultDeleted: (() -> Void)? = nil) {
         _store = State(initialValue: store ?? LibraryStore())
         self.vaultName = vaultName
         self.createVault = createVault
@@ -86,38 +86,38 @@ struct ContentView: View {
             .fullScreenCover(item: $viewer) { destination in
                 MediaViewer(items: visibleItems, initialID: destination.id, store: store)
             }
-            .alert("Something went wrong", isPresented: Binding(get: { store.errorMessage != nil && viewer == nil && folderEditor == nil && !showingMove }, set: { if !$0 { store.errorMessage = nil } })) {
-                Button("OK", role: .cancel) { store.errorMessage = nil }
+            .alert(String(localized: "Something went wrong"), isPresented: Binding(get: { store.errorMessage != nil && viewer == nil && folderEditor == nil && !showingMove }, set: { if !$0 { store.errorMessage = nil } })) {
+                Button(String(localized: "OK"), role: .cancel) { store.errorMessage = nil }
             } message: { Text(store.errorMessage ?? "") }
             .onChange(of: store.importSummary?.id, initial: true) { _, id in
                 showingImportResult = id != nil
             }
-            .alert("Import complete", isPresented: $showingImportResult, presenting: store.importSummary) { summary in
-                Button("Keep originals", role: .cancel) { store.dismissImportSummary() }
+            .alert(String(localized: "Import complete"), isPresented: $showingImportResult, presenting: store.importSummary) { summary in
+                Button(String(localized: "Keep originals"), role: .cancel) { store.dismissImportSummary() }
                 if summary.limitSkippedCount > 0 {
-                    Button("Unlock Unlimited") { store.dismissImportSummary(); showingUpgrade = true }
+                    Button(String(localized: "Unlock Unlimited")) { store.dismissImportSummary(); showingUpgrade = true }
                 }
                 if !summary.originals.isEmpty {
-                    Button("Delete originals from Photos", role: .destructive) {
+                    Button(String(localized: "Delete originals from Photos"), role: .destructive) {
                         Task { await store.deleteImportedOriginals(summaryID: summary.id) }
                     }
                 }
             } message: { summary in Text(summary.message) }
-            .confirmationDialog("Delete \(selected.count) \(selected.count == 1 ? "item" : "items")?", isPresented: $showingDelete, titleVisibility: .visible) {
-                Button("Delete \(selected.count) \(selected.count == 1 ? "item" : "items")", role: .destructive) {
+            .confirmationDialog(String(localized: "Delete \(selected.count) items?"), isPresented: $showingDelete, titleVisibility: .visible) {
+                Button(String(localized: "Delete \(selected.count) items"), role: .destructive) {
                     Task { if await store.delete(selected) { finishSelection() } }
                 }
-            } message: { Text("This permanently deletes the selected items from this app. Originals in Photos are unaffected.") }
-            .confirmationDialog("Delete folder?", isPresented: Binding(get: { folderToDelete != nil }, set: { if !$0 { folderToDelete = nil } }), titleVisibility: .visible) {
+            } message: { Text(String(localized: "This permanently deletes the selected items from this app. Originals in Photos are unaffected.")) }
+            .confirmationDialog(String(localized: "Delete folder?"), isPresented: Binding(get: { folderToDelete != nil }, set: { if !$0 { folderToDelete = nil } }), titleVisibility: .visible) {
                 if let folder = folderToDelete {
-                    Button("Delete “\(folder.name)”", role: .destructive) {
+                    Button(String(localized: "Delete “\(folder.name)”"), role: .destructive) {
                         Task {
                             if await store.deleteFolder(folder), currentFolderID == folder.id { currentFolderID = nil }
                             folderToDelete = nil
                         }
                     }
                 }
-            } message: { Text("The photos and videos inside will stay in All media.") }
+            } message: { Text(String(localized: "The photos and videos inside will stay in All media.")) }
             .task { await store.load() }
         }
         .tint(AlbumTheme.accent)
@@ -136,21 +136,21 @@ struct ContentView: View {
             HStack {
                 if currentFolderID != nil {
                     Button { withAnimation { currentFolderID = nil; finishSelection(); filter = .all } } label: {
-                        Label("Library", systemImage: "arrow.left").font(.subheadline.weight(.medium))
+                        Label(String(localized: "Library"), systemImage: "arrow.left").font(.subheadline.weight(.medium))
                     }
                 } else {
                     if let lockVault {
                         Menu {
                             Text(vaultName)
                             if vault != nil {
-                                Button("Vault settings", systemImage: "gearshape") { showingSettings = true }
+                                Button(String(localized: "Vault settings"), systemImage: "gearshape") { showingSettings = true }
                                     .disabled(store.isBusy)
                             }
-                            if let createVault { Button("New vault", systemImage: "plus.rectangle.on.folder", action: createVault) }
-                            Button("Switch vault", systemImage: "arrow.triangle.2.circlepath", action: lockVault)
-                            Button("Lock vault", systemImage: "lock", action: lockVault)
+                            if let createVault { Button(String(localized: "New vault"), systemImage: "plus.rectangle.on.folder", action: createVault) }
+                            Button(String(localized: "Switch vault"), systemImage: "arrow.triangle.2.circlepath", action: lockVault)
+                            Button(String(localized: "Lock vault"), systemImage: "lock", action: lockVault)
                         } label: { vaultLabel }
-                        .accessibilityLabel("Vault options, \(vaultName)")
+                        .accessibilityLabel(String(localized: "Vault options, \(vaultName)"))
                         .accessibilityIdentifier("vaultOptions")
                     } else { vaultLabel }
                 }
@@ -160,9 +160,9 @@ struct ContentView: View {
                         Image(systemName: "gearshape").font(.system(size: 18)).padding(11).background(.white, in: Circle())
                     }
                     .disabled(store.isBusy)
-                    .accessibilityLabel("Vault settings").accessibilityIdentifier("vaultSettings")
+                    .accessibilityLabel(String(localized: "Vault settings")).accessibilityIdentifier("vaultSettings")
                 }
-                Button(isSelecting ? "Done" : "Select") {
+                Button(isSelecting ? String(localized: "Done") : String(localized: "Select")) {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         if isSelecting { finishSelection() } else { isSelecting = true }
                     }
@@ -186,11 +186,11 @@ struct ContentView: View {
                     }
                     Spacer()
                     Menu {
-                        Button("Edit folder", systemImage: "pencil") { folderEditor = .init(folder: currentFolder) }
-                        Button("Delete folder", systemImage: "trash", role: .destructive) { folderToDelete = currentFolder }
+                        Button(String(localized: "Edit folder"), systemImage: "pencil") { folderEditor = .init(folder: currentFolder) }
+                        Button(String(localized: "Delete folder"), systemImage: "trash", role: .destructive) { folderToDelete = currentFolder }
                     } label: { Image(systemName: "ellipsis").font(.title3).padding(12).background(.white, in: Circle()) }
                     .disabled(store.isBusy)
-                    .accessibilityLabel("Folder options")
+                    .accessibilityLabel(String(localized: "Folder options"))
                 }
             }
         }
@@ -215,9 +215,9 @@ struct ContentView: View {
                     withAnimation(.easeInOut(duration: 0.18)) { filter = choice; selected.removeAll() }
                 } label: {
                     HStack(spacing: 7) {
-                        Text(choice.rawValue).font(.subheadline.weight(.medium))
+                        Text(choice.title).font(.subheadline.weight(.medium))
                         if choice == filter {
-                            Text("\(scopedItems.filter { choice.includes($0) }.count)")
+                            Text(String(localized: "\(scopedItems.filter { choice.includes($0) }.count)"))
                                 .font(.system(size: 10, weight: .semibold, design: .rounded))
                                 .padding(.horizontal, 6).padding(.vertical, 3)
                                 .background(.white.opacity(0.17), in: Capsule())
@@ -238,11 +238,11 @@ struct ContentView: View {
     private var foldersSection: some View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
-                Text("Folders").font(.headline).foregroundStyle(AlbumTheme.ink)
-                Text("\(store.snapshot.folders.count)").font(.caption).foregroundStyle(AlbumTheme.secondary)
+                Text(String(localized: "Folders")).font(.headline).foregroundStyle(AlbumTheme.ink)
+                Text(String(localized: "\(store.snapshot.folders.count)")).font(.caption).foregroundStyle(AlbumTheme.secondary)
                 Spacer()
                 Button { folderEditor = .init(folder: nil) } label: {
-                    Label("New folder", systemImage: "plus").font(.system(size: 12, weight: .semibold))
+                    Label(String(localized: "New folder"), systemImage: "plus").font(.system(size: 12, weight: .semibold))
                 }
                 .disabled(store.isBusy || !store.isLoaded)
                 .accessibilityIdentifier("newFolder")
@@ -253,8 +253,8 @@ struct ContentView: View {
                         Image(systemName: "folder.badge.plus").font(.system(size: 25, weight: .light))
                             .frame(width: 52, height: 52).background(AlbumTheme.accent.opacity(0.08), in: RoundedRectangle(cornerRadius: 15))
                         VStack(alignment: .leading, spacing: 5) {
-                            Text("A place for every memory").font(.subheadline.weight(.medium)).foregroundStyle(AlbumTheme.ink)
-                            Text("Create a folder to keep things together.").font(.caption).foregroundStyle(AlbumTheme.secondary)
+                            Text(String(localized: "A place for every memory")).font(.subheadline.weight(.medium)).foregroundStyle(AlbumTheme.ink)
+                            Text(String(localized: "Create a folder to keep things together.")).font(.caption).foregroundStyle(AlbumTheme.secondary)
                         }
                         Spacer(minLength: 0)
                         Image(systemName: "chevron.right").font(.caption.weight(.semibold))
@@ -272,8 +272,8 @@ struct ContentView: View {
                             }
                             .buttonStyle(.plain)
                             .contextMenu {
-                                Button("Edit folder", systemImage: "pencil") { folderEditor = .init(folder: folder) }
-                                Button("Delete folder", systemImage: "trash", role: .destructive) { folderToDelete = folder }
+                                Button(String(localized: "Edit folder"), systemImage: "pencil") { folderEditor = .init(folder: folder) }
+                                Button(String(localized: "Delete folder"), systemImage: "trash", role: .destructive) { folderToDelete = folder }
                             }
                             .disabled(store.isBusy)
                         }
@@ -287,29 +287,29 @@ struct ContentView: View {
     private var mediaSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Text(isSelecting ? "\(selected.count) selected" : currentFolderID == nil ? "All media" : "In this folder")
+                Text(isSelecting ? String(localized: "\(selected.count) selected") : currentFolderID == nil ? String(localized: "All media") : String(localized: "In this folder"))
                     .font(.headline).foregroundStyle(AlbumTheme.ink)
                 Spacer()
                 if isSelecting {
-                    Button(selected.count == visibleItems.count ? "Deselect all" : "Select all") {
+                    Button(selected.count == visibleItems.count ? String(localized: "Deselect all") : String(localized: "Select all")) {
                         selected = selected.count == visibleItems.count ? [] : Set(visibleItems.map(\.id))
                     }.font(.system(size: 12, weight: .medium))
                 } else {
                     Menu {
-                        Picker("Sort by", selection: $sort) {
-                            ForEach(LibrarySort.allCases) { option in Text(option.rawValue).tag(option) }
+                        Picker(String(localized: "Sort by"), selection: $sort) {
+                            ForEach(LibrarySort.allCases) { option in Text(option.title).tag(option) }
                         }
                     } label: {
-                        HStack(spacing: 5) { Text(sort.rawValue); Image(systemName: "arrow.up.arrow.down") }
+                        HStack(spacing: 5) { Text(sort.title); Image(systemName: "arrow.up.arrow.down") }
                             .font(.system(size: 11, weight: .medium)).foregroundStyle(AlbumTheme.secondary)
                     }
-                    .accessibilityLabel("Sort media, \(sort.rawValue)")
+                    .accessibilityLabel(String(localized: "Sort media, \(sort.title)"))
                 }
             }
             if !store.isLoaded {
                 VStack(spacing: 18) {
-                    Text(store.errorMessage == nil ? "Opening your library…" : "Your library couldn’t be opened")
-                    Button("Try again") { Task { await store.load() } }
+                    Text(store.errorMessage == nil ? String(localized: "Opening your library…") : String(localized: "Your library couldn’t be opened"))
+                    Button(String(localized: "Try again")) { Task { await store.load() } }
                 }.frame(maxWidth: .infinity).padding(.vertical, 60)
             } else if visibleItems.isEmpty {
                 EmptyLibraryView(filter: filter, isFolder: currentFolderID != nil) { requestImport() }
@@ -324,17 +324,18 @@ struct ContentView: View {
                         }
                         .buttonStyle(.plain)
                         .contextMenu {
-                            Button("Select", systemImage: "checkmark.circle") { isSelecting = true; selected = [item.id] }
-                            Button("Export", systemImage: "square.and.arrow.up") { Task { await store.export([item.id]) } }
-                            Button("Move to folder", systemImage: "folder") { selected = [item.id]; isSelecting = true; showingMove = true }
-                            Button("Delete", systemImage: "trash", role: .destructive) { selected = [item.id]; isSelecting = true; showingDelete = true }
+                            Button(String(localized: "Select"), systemImage: "checkmark.circle") { isSelecting = true; selected = [item.id] }
+                            Button(String(localized: "Export"), systemImage: "square.and.arrow.up") { Task { await store.export([item.id]) } }
+                            Button(String(localized: "Move to folder"), systemImage: "folder") { selected = [item.id]; isSelecting = true; showingMove = true }
+                            Button(String(localized: "Delete"), systemImage: "trash", role: .destructive) { selected = [item.id]; isSelecting = true; showingDelete = true }
                         }
-                        .accessibilityLabel("\(item.kind == .video ? "Video" : "Photo"), \(item.originalName)\(selected.contains(item.id) ? ", selected" : "")")
+                        .accessibilityLabel(item.kind == .video ? String(localized: "Video, \(item.originalName)") : String(localized: "Photo, \(item.originalName)"))
+                        .accessibilityAddTraits(selected.contains(item.id) ? .isSelected : [])
                         .accessibilityIdentifier("mediaItem-\(item.id.uuidString)")
                     }
                 }
                 .disabled(store.isBusy)
-                Text("\(scopedItems.filter { $0.kind == .photo }.count) photos · \(scopedItems.filter { $0.kind == .video }.count) videos")
+                Text(String(localized: "Photos: \(scopedItems.filter { $0.kind == .photo }.count) · Videos: \(scopedItems.filter { $0.kind == .video }.count)"))
                     .font(.caption).foregroundStyle(AlbumTheme.secondary)
                     .frame(maxWidth: .infinity).padding(.top, 12)
             }
@@ -344,24 +345,24 @@ struct ContentView: View {
     private var bottomBar: some View {
         VStack(spacing: 0) {
             if store.isBusy {
-                HStack(spacing: 10) { ProgressView(); Text(store.progress.isEmpty ? "Saving changes…" : store.progress).font(.caption) }
+                HStack(spacing: 10) { ProgressView(); Text(store.progress.isEmpty ? String(localized: "Saving changes…") : store.progress).font(.caption) }
                     .padding(12).frame(maxWidth: .infinity).background(.regularMaterial)
             }
             HStack(spacing: 16) {
                 if isSelecting {
-                    selectionAction("Export", icon: "square.and.arrow.up") { Task { await store.export(selected) } }
+                    selectionAction(String(localized: "Export"), icon: "square.and.arrow.up") { Task { await store.export(selected) } }
                     Spacer()
-                    selectionAction("Move", icon: "folder") { showingMove = true }
+                    selectionAction(String(localized: "Move"), icon: "folder") { showingMove = true }
                     Spacer()
-                    selectionAction("Delete", icon: "trash", destructive: true) { showingDelete = true }
+                    selectionAction(String(localized: "Delete"), icon: "trash", destructive: true) { showingDelete = true }
                 } else {
                     HStack(spacing: 7) {
                         Circle().fill(AlbumTheme.accent).frame(width: 5, height: 5)
-                        Text("ON THIS DEVICE").font(.system(size: 9, weight: .medium, design: .monospaced)).tracking(1.2)
+                        Text(String(localized: "ON THIS DEVICE")).font(.system(size: 9, weight: .medium, design: .monospaced)).tracking(1.2)
                     }.foregroundStyle(AlbumTheme.secondary)
                     Spacer()
                     Button { requestImport() } label: {
-                        HStack(spacing: 10) { Image(systemName: "plus").font(.system(size: 17, weight: .medium)); Text("Add media").font(.subheadline.weight(.semibold)) }
+                        HStack(spacing: 10) { Image(systemName: "plus").font(.system(size: 17, weight: .medium)); Text(String(localized: "Add media")).font(.subheadline.weight(.semibold)) }
                             .foregroundStyle(.white).padding(.horizontal, 22).padding(.vertical, 16)
                             .background(AlbumTheme.accent, in: Capsule())
                     }
@@ -388,7 +389,7 @@ struct ContentView: View {
 
     private func toggle(_ id: UUID) { if selected.contains(id) { selected.remove(id) } else { selected.insert(id) } }
     private func finishSelection() { isSelecting = false; selected.removeAll() }
-    private func itemCount(_ count: Int) -> String { "\(count) \(count == 1 ? "item" : "items")" }
+    private func itemCount(_ count: Int) -> String { String(localized: "\(count) items") }
 }
 
 struct FolderEditorDestination: Identifiable { let id = UUID(); let folder: AlbumFolder? }

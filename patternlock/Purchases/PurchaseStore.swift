@@ -55,9 +55,9 @@ nonisolated enum PurchaseError: LocalizedError {
     case unavailable, unverified, noScene
     var errorDescription: String? {
         switch self {
-        case .unavailable: "The purchase is currently unavailable. Try again when the App Store is available."
-        case .unverified: "The App Store purchase couldn’t be verified. Try Restore purchases."
-        case .noScene: "Return to Pattern and try the purchase again."
+        case .unavailable: String(localized: "The purchase is currently unavailable. Try again when the App Store is available.")
+        case .unverified: String(localized: "The App Store purchase couldn’t be verified. Try Restore purchases.")
+        case .noScene: String(localized: "Return to Pattern and try the purchase again.")
         }
     }
 }
@@ -133,13 +133,13 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
             switch try await client.purchase(in: scene) {
             case .cancelled: break
             case .pending:
-                message = "Your purchase is awaiting approval. Unlimited access will unlock when the App Store confirms it."
+                message = String(localized: "Your purchase is awaiting approval. Unlimited access will unlock when the App Store confirms it.")
             case .success(let verification):
                 guard case .verified(let transaction) = verification, transaction.grantsUnlimited else { throw PurchaseError.unverified }
                 // Grant only the signed, verified entitlement, then acknowledge delivery.
                 refreshRevision += 1
                 setAccess(true)
-                message = "Pattern Unlimited is unlocked."
+                message = String(localized: "Pattern Unlimited is unlocked.")
                 await client.finish(transactionID: transaction.id)
             }
         } catch { self.error = error.localizedDescription }
@@ -153,7 +153,7 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
             // This may show an Apple Account prompt; only a user action calls it.
             try await client.synchronize()
             await refreshEntitlements()
-            message = isUnlimited ? "Your one-time purchase has been restored." : "No Pattern Unlimited purchase was found for this Apple Account."
+            message = isUnlimited ? String(localized: "Your one-time purchase has been restored.") : String(localized: "No Pattern Unlimited purchase was found for this Apple Account.")
         } catch { self.error = error.localizedDescription }
     }
 
@@ -170,10 +170,10 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
 
     private func setAccess(_ unlimited: Bool) {
         if unlimited && status != .unlimited {
-            message = "Pattern Unlimited is unlocked."
+            message = String(localized: "Pattern Unlimited is unlocked.")
             error = nil
         } else if !unlimited && status == .unlimited {
-            message = "Unlimited access is no longer available. Your existing albums and media are kept."
+            message = String(localized: "Unlimited access is no longer available. Your existing albums and media are kept.")
         }
         access.update(isUnlimited: unlimited)
         status = unlimited ? .unlimited : .free

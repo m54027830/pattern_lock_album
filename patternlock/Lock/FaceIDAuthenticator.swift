@@ -52,11 +52,11 @@ nonisolated enum VaultAccessError: LocalizedError {
     case chooseDummy, invalidDummy, faceIDRequired, changed, interrupted
     var errorDescription: String? {
         switch self {
-        case .chooseDummy: "Choose a different vault to display when Face ID fails."
-        case .invalidDummy: "The dummy vault is no longer available. Unlock with Face ID and choose another in settings."
-        case .faceIDRequired: "Face ID must succeed to change these access settings. Make sure Face ID is enabled for Pattern on this device."
-        case .changed: "Vault access changed during authentication. Enter your pattern again."
-        case .interrupted: "Authentication was interrupted. Enter your pattern again."
+        case .chooseDummy: String(localized: "Choose a different vault to display when Face ID fails.")
+        case .invalidDummy: String(localized: "The dummy vault is no longer available. Unlock with Face ID and choose another in settings.")
+        case .faceIDRequired: String(localized: "Face ID must succeed to change these access settings. Make sure Face ID is enabled for Pattern on this device.")
+        case .changed: String(localized: "Vault access changed during authentication. Enter your pattern again.")
+        case .interrupted: String(localized: "Authentication was interrupted. Enter your pattern again.")
         }
     }
 }

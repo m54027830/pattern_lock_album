@@ -8,18 +8,18 @@ nonisolated enum VaultSettingsError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .missingVault: "This vault is no longer available."
-        case .wrongPattern: "That isn’t this vault’s current pattern."
-        case .cooldown(let date): "Too many attempts. Try again in \(max(1, Int(ceil(date.timeIntervalSinceNow)))) seconds."
-        case .invalidPhrase: "Use at least 8 words and 40 characters, up to 1,024 characters. A generated phrase is recommended."
-        case .wrongPhrase: "The recovery phrase didn’t match."
-        case .duplicatePhrase: "That recovery phrase is already used by another vault. Choose a different phrase."
-        case .noRecovery: "Set up a recovery phrase first. Keep it somewhere safe outside this app."
-        case .invalidBackup: "The backup couldn’t be opened. Check the phrase and make sure the file is complete and unchanged."
-        case .backupVersion: "This backup format isn’t supported by this version of Pattern."
-        case .invalidName: "Give the vault a unique name between 1 and 40 characters."
-        case .backupsDisabled: "Backups are turned off on this device after a duress unlock."
-        case .busy: "Wait for the current operation to finish."
+        case .missingVault: String(localized: "This vault is no longer available.")
+        case .wrongPattern: String(localized: "That isn’t this vault’s current pattern.")
+        case .cooldown(let date): String(localized: "Too many attempts. Try again in \(max(1, Int(ceil(date.timeIntervalSinceNow)))) seconds.")
+        case .invalidPhrase: String(localized: "Use at least 8 words and 40 characters, up to 1,024 characters. A generated phrase is recommended.")
+        case .wrongPhrase: String(localized: "The recovery phrase didn’t match.")
+        case .duplicatePhrase: String(localized: "That recovery phrase is already used by another vault. Choose a different phrase.")
+        case .noRecovery: String(localized: "Set up a recovery phrase first. Keep it somewhere safe outside this app.")
+        case .invalidBackup: String(localized: "The backup couldn’t be opened. Check the phrase and make sure the file is complete and unchanged.")
+        case .backupVersion: String(localized: "This backup format isn’t supported by this version of Pattern.")
+        case .invalidName: String(localized: "Give the vault a unique name between 1 and 40 characters.")
+        case .backupsDisabled: String(localized: "Backups are turned off on this device after a duress unlock.")
+        case .busy: String(localized: "Wait for the current operation to finish.")
         }
     }
 }

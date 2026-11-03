@@ -15,19 +15,19 @@ struct BackupExportView: View {
     var body: some View {
         Form {
             Section {
-                Label("Encrypted backup", systemImage: "lock.icloud")
-                Text("Your photos, videos, folders, and vault name are encrypted before saving. Choose iCloud Drive in Files to keep the backup in iCloud.")
-                SecureField("This vault’s recovery phrase", text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
-            } footer: { Text("Save the phrase separately and wait for iCloud Drive to finish uploading before deleting Pattern. Deleting the app removes local vaults. Restoration needs both the backup file and its original phrase.") }
+                Label(String(localized: "Encrypted backup"), systemImage: "lock.icloud")
+                Text(String(localized: "Your photos, videos, folders, and vault name are encrypted before saving. Choose iCloud Drive in Files to keep the backup in iCloud."))
+                SecureField(String(localized: "This vault’s recovery phrase"), text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
+            } footer: { Text(String(localized: "Save the phrase separately and wait for iCloud Drive to finish uploading before deleting Pattern. Deleting the app removes local vaults. Restoration needs both the backup file and its original phrase.")) }
             Section {
-                Button("Back up now", systemImage: "icloud.and.arrow.up", action: createBackup).disabled(phrase.isEmpty || busy || store.isBusy)
-                if busy { ProgressView("Encrypting backup…") }
-                if saved { Label("Backup saved through Files", systemImage: "checkmark.circle").foregroundStyle(AlbumTheme.accent) }
+                Button(String(localized: "Back up now"), systemImage: "icloud.and.arrow.up", action: createBackup).disabled(phrase.isEmpty || busy || store.isBusy)
+                if busy { ProgressView(String(localized: "Encrypting backup…")) }
+                if saved { Label(String(localized: "Backup saved through Files"), systemImage: "checkmark.circle").foregroundStyle(AlbumTheme.accent) }
                 if let error { Text(error).foregroundStyle(.red) }
             }
         }
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
-        .navigationTitle("Back up vault").navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(String(localized: "Back up vault")).navigationBarTitleDisplayMode(.inline)
         .sheet(item: $export, onDismiss: cleanup) { backup in
             BackupFileExporter(url: backup.url) { didSave in saved = didSave; export = nil; cleanupURL(backup.url) }
                 .ignoresSafeArea()
@@ -95,13 +95,13 @@ struct RestoreVaultView: View {
         Form {
             if let prepared {
                 Section {
-                    Label("Backup opened", systemImage: "checkmark.shield")
-                    Text("\(prepared.snapshot.items.count) files · \(prepared.snapshot.folders.count) folders")
-                    TextField("New vault name", text: $name)
-                } footer: { Text("Restore creates a separate vault and keeps all existing vaults. Choose a unique name and pattern. After restoring, generate a new recovery phrase in its settings.") }
+                    Label(String(localized: "Backup opened"), systemImage: "checkmark.shield")
+                    Text(String(localized: "Files: \(prepared.snapshot.items.count) · Folders: \(prepared.snapshot.folders.count)"))
+                    TextField(String(localized: "New vault name"), text: $name)
+                } footer: { Text(String(localized: "Restore creates a separate vault and keeps all existing vaults. Choose a unique name and pattern. After restoring, generate a new recovery phrase in its settings.")) }
                 Section {
-                    NavigationLink("Choose a pattern and restore") {
-                        PatternSetupView(title: "Restored vault pattern", needsCurrentPattern: false) { _, pattern in
+                    NavigationLink(String(localized: "Choose a pattern and restore")) {
+                        PatternSetupView(title: String(localized: "Restored vault pattern"), needsCurrentPattern: false) { _, pattern in
                             _ = try await VaultBackup.shared.install(prepared, name: name, pattern: pattern, authenticator: authenticator)
                             self.prepared = nil
                             restored = true
@@ -110,26 +110,26 @@ struct RestoreVaultView: View {
                 }
             } else if restored {
                 Section {
-                    Label("Vault restored", systemImage: "checkmark.circle")
-                    Text("Draw your new pattern on the lock screen to open the restored vault.")
-                    Button("Done") { onRestored?(); dismiss() }
+                    Label(String(localized: "Vault restored"), systemImage: "checkmark.circle")
+                    Text(String(localized: "Draw your new pattern on the lock screen to open the restored vault."))
+                    Button(String(localized: "Done")) { onRestored?(); dismiss() }
                 }
             } else {
                 Section {
-                    Label("Restore from iCloud Drive", systemImage: "lock.icloud")
-                    Text("In Files, open Browse → iCloud Drive and select your saved .patternbackup file. Sign in to the same Apple Account and turn on iCloud Drive if it isn’t listed.")
-                    Button(url == nil ? "Choose iCloud backup" : "Choose another backup", systemImage: "icloud.and.arrow.down") { selectingFile = true }
+                    Label(String(localized: "Restore from iCloud Drive"), systemImage: "lock.icloud")
+                    Text(String(localized: "In Files, open Browse → iCloud Drive and select your saved .patternbackup file. Sign in to the same Apple Account and turn on iCloud Drive if it isn’t listed."))
+                    Button(url == nil ? String(localized: "Choose iCloud backup") : String(localized: "Choose another backup"), systemImage: "icloud.and.arrow.down") { selectingFile = true }
                     if let url { Text(url.lastPathComponent).font(.caption).foregroundStyle(AlbumTheme.secondary) }
-                    SecureField("Phrase used for this backup", text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
-                    Button("Open encrypted backup", action: prepare).disabled(url == nil || phrase.isEmpty || busy)
-                    if busy { ProgressView("Opening backup…") }
+                    SecureField(String(localized: "Phrase used for this backup"), text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
+                    Button(String(localized: "Open encrypted backup"), action: prepare).disabled(url == nil || phrase.isEmpty || busy)
+                    if busy { ProgressView(String(localized: "Opening backup…")) }
                     if let error { Text(error).foregroundStyle(.red) }
-                } footer: { Text("You need a backup saved before the app was deleted and the recovery phrase used to encrypt it. A recovery phrase alone cannot restore deleted photos or videos.") }
+                } footer: { Text(String(localized: "You need a backup saved before the app was deleted and the recovery phrase used to encrypt it. A recovery phrase alone cannot restore deleted photos or videos.")) }
             }
         }
         .disabled(busy)
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
-        .navigationTitle("Restore from iCloud").navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(String(localized: "Restore from iCloud")).navigationBarTitleDisplayMode(.inline)
         .fileImporter(isPresented: $selectingFile, allowedContentTypes: [.data]) { result in
             do { url = try result.get(); error = nil }
             catch { self.error = error.localizedDescription }
@@ -149,7 +149,7 @@ struct RestoreVaultView: View {
             do {
                 let value = try await VaultBackup.shared.prepareRestore(from: url, phrase: phrase, security: authenticator.security)
                 if Task.isCancelled { try? FileManager.default.removeItem(at: value.directory) }
-                else { prepared = value; name = String((value.name + " restored").prefix(40)); phrase = "" }
+                else { prepared = value; name = String(String(localized: "\(value.name) restored").prefix(40)); phrase = "" }
             } catch { if !Task.isCancelled { self.error = error.localizedDescription } }
             busy = false
         }
@@ -164,17 +164,17 @@ struct RecoverPatternView: View {
         Form {
             if recovered {
                 Section {
-                    Label("Pattern changed", systemImage: "checkmark.shield")
-                    Text("Use your new pattern to unlock the vault.")
-                    Button("Return to lock screen", action: completion)
+                    Label(String(localized: "Pattern changed"), systemImage: "checkmark.shield")
+                    Text(String(localized: "Use your new pattern to unlock the vault."))
+                    Button(String(localized: "Return to lock screen"), action: completion)
                 }
             } else {
                 Section {
-                    SecureField("Recovery phrase", text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
-                } footer: { Text("This resets a pattern for a vault still on this device. After deleting and reinstalling Pattern, use Restore from iCloud instead; you’ll need your saved backup file and its phrase.") }
+                    SecureField(String(localized: "Recovery phrase"), text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
+                } footer: { Text(String(localized: "This resets a pattern for a vault still on this device. After deleting and reinstalling Pattern, use Restore from iCloud instead; you’ll need your saved backup file and its phrase.")) }
                 Section {
-                    NavigationLink("Choose a new pattern") {
-                        PatternSetupView(title: "Reset pattern", needsCurrentPattern: false) { _, pattern in
+                    NavigationLink(String(localized: "Choose a new pattern")) {
+                        PatternSetupView(title: String(localized: "Reset pattern"), needsCurrentPattern: false) { _, pattern in
                             _ = try await PatternAuthenticator.shared.recover(phrase: phrase, newPattern: pattern)
                             phrase = ""; recovered = true
                         }
@@ -183,6 +183,6 @@ struct RecoverPatternView: View {
             }
         }
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
-        .navigationTitle("Recover vault").navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(String(localized: "Recover vault")).navigationBarTitleDisplayMode(.inline)
     }
 }

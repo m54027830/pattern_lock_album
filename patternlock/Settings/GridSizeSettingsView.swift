@@ -33,7 +33,7 @@ nonisolated enum GridChangeStep { case choose, current, new, confirm, review }
     func submit(_ pattern: [Int]) async {
         guard !busy, let vault, [.current, .new, .confirm].contains(step) else { return }
         revision += 1; error = nil
-        guard PatternRules.isValid(pattern, gridSize: drawingSize) else { error = "Connect at least 4 different dots."; return }
+        guard PatternRules.isValid(pattern, gridSize: drawingSize) else { error = String(localized: "Connect at least 4 different dots."); return }
         switch step {
         case .current:
             busy = true
@@ -91,10 +91,10 @@ struct GridSizeSettingsView: View {
 
     private var instruction: String {
         switch change.step {
-        case .current: "Confirm the current pattern"
-        case .new: "Draw a new pattern"
-        case .confirm: "Repeat the new pattern"
-        default: "Pattern grid"
+        case .current: String(localized: "Confirm the current pattern")
+        case .new: String(localized: "Draw a new pattern")
+        case .confirm: String(localized: "Repeat the new pattern")
+        default: String(localized: "Pattern grid")
         }
     }
 
@@ -105,48 +105,48 @@ struct GridSizeSettingsView: View {
                     if let configuration = change.configuration {
                         if change.step == .choose {
                             Image(systemName: "circle.grid.3x3").font(.system(size: 36, weight: .light)).foregroundStyle(AlbumTheme.accent)
-                            Text("One grid for every vault.").font(.title2.weight(.semibold))
-                            Text("Current grid: \(configuration.gridSize) × \(configuration.gridSize)").font(.subheadline).foregroundStyle(AlbumTheme.secondary)
+                            Text(String(localized: "One grid for every vault.")).font(.title2.weight(.semibold))
+                            Text(String(localized: "Current grid: \(configuration.gridSize) × \(configuration.gridSize)")).font(.subheadline).foregroundStyle(AlbumTheme.secondary)
                             GridSizePicker(selection: $change.gridSize)
-                            Text("Changing the grid requires a new pattern for all \(configuration.vaults.count) vaults. You’ll confirm each current pattern, then draw its replacement twice. You’ll need Face ID too if any vault uses it.")
-                            Text("Your photos, folders, recovery phrases, and Face ID settings stay in place. Nothing changes until every pattern is ready and you save.")
+                            Text(String(localized: "Changing the grid requires a new pattern for each vault (\(configuration.vaults.count) total). You’ll confirm each current pattern, then draw its replacement twice. You’ll need Face ID too if any vault uses it."))
+                            Text(String(localized: "Your photos, folders, recovery phrases, and Face ID settings stay in place. Nothing changes until every pattern is ready and you save."))
                                 .font(.subheadline).foregroundStyle(AlbumTheme.secondary)
-                            Button("Reset all vault patterns", action: change.begin).buttonStyle(.borderedProminent)
+                            Button(String(localized: "Reset all vault patterns"), action: change.begin).buttonStyle(.borderedProminent)
                                 .disabled(change.gridSize == configuration.gridSize).accessibilityIdentifier("beginGridChange")
                         } else if change.step == .review {
                             Image(systemName: "checkmark.shield").font(.system(size: 42, weight: .light)).foregroundStyle(AlbumTheme.accent)
-                            Text("All patterns are ready.").font(.title2.weight(.semibold))
-                            Text("Switch to \(change.gridSize) × \(change.gridSize) and replace the patterns for these vaults:")
+                            Text(String(localized: "All patterns are ready.")).font(.title2.weight(.semibold))
+                            Text(String(localized: "Switch to \(change.gridSize) × \(change.gridSize) and replace the patterns for these vaults:"))
                             ForEach(configuration.vaults) { vault in Label(vault.name, systemImage: "checkmark.circle").frame(maxWidth: .infinity, alignment: .leading) }
-                            Text("You’ll return to the lock screen. Use the new patterns from now on.").font(.subheadline).foregroundStyle(AlbumTheme.secondary)
-                            Button("Save grid and all patterns") {
+                            Text(String(localized: "You’ll return to the lock screen. Use the new patterns from now on.")).font(.subheadline).foregroundStyle(AlbumTheme.secondary)
+                            Button(String(localized: "Save grid and all patterns")) {
                                 operation = Task { if await change.save(faceID: faceID) { dismiss() } }
                             }.buttonStyle(.borderedProminent).accessibilityIdentifier("saveGridChange")
                         } else if let vault = change.vault {
-                            Text("Vault \(change.index + 1) of \(configuration.vaults.count)").font(.caption).foregroundStyle(AlbumTheme.secondary)
+                            Text(String(localized: "Vault \(change.index + 1) of \(configuration.vaults.count)")).font(.caption).foregroundStyle(AlbumTheme.secondary)
                             Text(vault.name).font(.title2.weight(.semibold))
                             Text(instruction).font(.headline)
-                            Text("\(change.drawingSize) × \(change.drawingSize) grid · at least 4 dots").font(.subheadline).foregroundStyle(AlbumTheme.secondary)
+                            Text(String(localized: "\(change.drawingSize) × \(change.drawingSize) grid · at least 4 dots")).font(.subheadline).foregroundStyle(AlbumTheme.secondary)
                             PatternGridView(side: min(300, geometry.size.width - 48), gridSize: change.drawingSize, isEnabled: !change.busy, revision: change.revision, isDrawing: $drawing) { pattern in
                                 operation = Task { await change.submit(pattern) }
                             }
-                            Text("Confirming a current pattern here does not activate duress.").font(.caption).foregroundStyle(AlbumTheme.secondary)
+                            Text(String(localized: "Confirming a current pattern here does not activate duress.")).font(.caption).foregroundStyle(AlbumTheme.secondary)
                         }
-                        if change.step != .choose { Button("Back", action: change.back) }
+                        if change.step != .choose { Button(String(localized: "Back"), action: change.back) }
                     } else { ProgressView() }
-                    if change.busy { ProgressView("Confirming…") }
+                    if change.busy { ProgressView(String(localized: "Confirming…")) }
                     if let error = change.error {
                         Text(error).foregroundStyle(.red)
-                        Button("Start again") { operation = Task { await change.load() } }
+                        Button(String(localized: "Start again")) { operation = Task { await change.load() } }
                     }
                 }.multilineTextAlignment(.center).padding(24).frame(maxWidth: 540).frame(maxWidth: .infinity)
             }
             .scrollDisabled(drawing).disabled(change.busy)
         }
         .background(AlbumTheme.background).tint(AlbumTheme.accent)
-        .navigationTitle("Pattern grid").navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(String(localized: "Pattern grid")).navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(change.step != .choose)
-        .toolbar { if change.step != .choose { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() }.disabled(change.busy) } } }
+        .toolbar { if change.step != .choose { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { dismiss() }.disabled(change.busy) } } }
         .task { await change.load() }
         .onDisappear { operation?.cancel(); faceID.cancel(); change.clearSecrets() }
     }

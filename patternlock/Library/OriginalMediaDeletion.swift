@@ -12,13 +12,13 @@ nonisolated enum OriginalMediaDeletionError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .permissionDenied:
-            "Photos access is needed to delete originals. Allow access in Settings, or delete them in Photos. Your vault copies are safe."
+            String(localized: "Photos access is needed to delete originals. Allow access in Settings, or delete them in Photos. Your vault copies are safe.")
         case .unavailableOriginals:
-            "Some originals aren’t accessible or can’t be deleted. Allow access to those items in Settings, or delete them in Photos. No originals were deleted."
+            String(localized: "Some originals aren’t accessible or can’t be deleted. Allow access to those items in Settings, or delete them in Photos. No originals were deleted.")
         case .livePhotos:
-            "Live Photos include motion that isn’t saved in the vault. No originals were deleted. Review your copies before deleting Live Photos in Photos."
+            String(localized: "Live Photos include motion that isn’t saved in the vault. No originals were deleted. Review your copies before deleting Live Photos in Photos.")
         case .missingCopies:
-            "Some vault copies are no longer available. The originals were kept in Photos."
+            String(localized: "Some vault copies are no longer available. The originals were kept in Photos.")
         }
     }
 }
@@ -61,18 +61,18 @@ struct MediaImportSummary: Identifiable {
     var limitSkippedCount = 0
 
     var message: String {
-        var text = "\(importedCount) \(importedCount == 1 ? "item was" : "items were") saved in this vault."
+        var text = String(localized: "\(importedCount) items were saved in this vault.")
         if failedCount > 0 {
-            text += " \(failedCount) couldn’t be imported; those originals will be kept."
+            text += String(localized: " \(failedCount) couldn’t be imported; those originals will be kept.")
         }
         if limitSkippedCount > 0 {
-            text += " \(limitSkippedCount) weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock Pattern Unlimited to add them."
+            text += String(localized: " \(limitSkippedCount) weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock Pattern Unlimited to add them.")
         }
         if unidentifiedCount > 0 {
-            text += " \(unidentifiedCount) saved \(unidentifiedCount == 1 ? "item couldn’t" : "items couldn’t") be linked to Photos; those originals will be kept."
+            text += String(localized: " \(unidentifiedCount) saved items couldn’t be linked to Photos; those originals will be kept.")
         }
         if !originals.isEmpty {
-            text += "\n\nKeep the originals, or delete \(originals.count == 1 ? "the original" : "the \(originals.count) originals") from Photos? Your vault copies will stay. Deletion also applies to iCloud Photos and synced devices. Deleted items may remain in Recently Deleted for up to 30 days."
+            text += String(localized: "\n\nKeep the originals, or delete the \(originals.count) originals from Photos? Your vault copies will stay. Deletion also applies to iCloud Photos and synced devices. Deleted items may remain in Recently Deleted for up to 30 days.")
         }
         return text
     }

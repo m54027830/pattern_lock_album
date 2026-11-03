@@ -154,7 +154,7 @@ nonisolated enum PatternLockStage: Equatable {
     func submit(_ nodes: [Int], now: Date = Date()) async {
         guard isActive, !isBusy, [.create, .confirm, .locked].contains(stage) else { return }
         if let retryAfter, retryAfter > now { return }
-        guard PatternRules.isValid(nodes, gridSize: gridSize) else { reject("Connect at least 4 different dots."); return }
+        guard PatternRules.isValid(nodes, gridSize: gridSize) else { reject(String(localized: "Connect at least 4 different dots.")); return }
         message = nil
         switch stage {
         case .create:
@@ -162,7 +162,7 @@ nonisolated enum PatternLockStage: Equatable {
             stage = .confirm
             inputRevision += 1
         case .confirm:
-            guard nodes == pendingPattern else { reject("Those patterns didn’t match. Try again."); return }
+            guard nodes == pendingPattern else { reject(String(localized: "Those patterns didn’t match. Try again.")); return }
             await authenticate(nodes, registering: true, now: now)
         case .locked:
             await authenticate(nodes, registering: false, now: now)
@@ -194,7 +194,7 @@ nonisolated enum PatternLockStage: Equatable {
                 faceIDChallenge = challenge
                 stage = .faceID
                 inputRevision += 1
-                let result = await faceID.authenticate(reason: "Unlock your vault after entering its pattern.")
+                let result = await faceID.authenticate(reason: String(localized: "Unlock your vault after entering its pattern."))
                 guard operation == generation else { return }
                 guard result != .interrupted else {
                     await authenticator.cancelFaceID(challenge)
@@ -213,7 +213,7 @@ nonisolated enum PatternLockStage: Equatable {
                 }
             case .rejected(let retryAfter):
                 self.retryAfter = retryAfter
-                reject(retryAfter == nil ? "That pattern wasn’t right. Try again." : "Too many attempts. Take a moment and try again.")
+                reject(retryAfter == nil ? String(localized: "That pattern wasn’t right. Try again.") : String(localized: "Too many attempts. Take a moment and try again."))
             }
         } catch let error as PatternCredentialError where registering && isCreatingVault && (error == .duplicatePattern || error == .duplicateVaultName || error == .invalidVaultName) {
             guard operation == generation, isActive else { return }
@@ -230,7 +230,7 @@ nonisolated enum PatternLockStage: Equatable {
             guard operation == generation else { return }
             resetSession()
             stage = .locked
-            message = "Couldn’t open the vault. Enter your pattern to try again."
+            message = String(localized: "Couldn’t open the vault. Enter your pattern to try again.")
             inputRevision += 1
         } catch {
             guard operation == generation, isActive || stage == .faceID else { return }

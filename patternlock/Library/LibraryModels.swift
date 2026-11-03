@@ -37,6 +37,14 @@ nonisolated enum LibrarySort: String, CaseIterable, Identifiable, Sendable {
     case oldest = "Oldest first"
     case name = "Name"
     var id: String { rawValue }
+    // Keep persisted raw values stable; only the displayed title is localized.
+    var title: String {
+        switch self {
+        case .newest: String(localized: "Newest first")
+        case .oldest: String(localized: "Oldest first")
+        case .name: String(localized: "Name")
+        }
+    }
 
     func sorted(_ items: [MediaItem]) -> [MediaItem] {
         items.sorted { lhs, rhs in
@@ -54,6 +62,13 @@ nonisolated enum LibrarySort: String, CaseIterable, Identifiable, Sendable {
 nonisolated enum MediaFilter: String, CaseIterable, Identifiable {
     case all = "All", photos = "Photos", videos = "Videos"
     var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .all: String(localized: "All")
+        case .photos: String(localized: "Photos")
+        case .videos: String(localized: "Videos")
+        }
+    }
     func includes(_ item: MediaItem) -> Bool {
         self == .all || (self == .photos && item.kind == .photo) || (self == .videos && item.kind == .video)
     }
@@ -64,12 +79,12 @@ nonisolated enum LibraryError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .invalidName: "Give your folder a name between 1 and 60 characters."
-        case .duplicateFolder: "A folder with that name already exists."
-        case .missingFolder: "That folder is no longer available."
-        case .unsupportedMedia: "This file could not be read as a photo or video."
-        case .unreadableLibrary: "The library could not be opened. Your saved files have been kept. Try reopening the app."
-        case .newerLibrary: "This library was created by a newer version of the app. Update the app to open it."
+        case .invalidName: String(localized: "Give your folder a name between 1 and 60 characters.")
+        case .duplicateFolder: String(localized: "A folder with that name already exists.")
+        case .missingFolder: String(localized: "That folder is no longer available.")
+        case .unsupportedMedia: String(localized: "This file could not be read as a photo or video.")
+        case .unreadableLibrary: String(localized: "The library could not be opened. Your saved files have been kept. Try reopening the app.")
+        case .newerLibrary: String(localized: "This library was created by a newer version of the app. Update the app to open it.")
         }
     }
 }

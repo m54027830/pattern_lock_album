@@ -117,7 +117,7 @@ final class LibraryStore {
         var originals: [String: UUID] = [:]
         for (index, item) in items.enumerated() {
             guard canAccess else { break }
-            progress = "Importing \(index + 1) of \(items.count)…"
+            progress = String(localized: "Importing \(index + 1) of \(items.count)…")
             do {
                 try repository.purchaseAccess.checkMediaAddition(currentCount: snapshot.items.count)
                 guard let imported = try await item.loadImportedMedia() else { throw LibraryError.unsupportedMedia }
@@ -143,7 +143,7 @@ final class LibraryStore {
         } else if limitSkipped > 0 {
             purchaseLimit = .media
         } else {
-            errorMessage = "None of the \(items.count) items could be imported. Originals were kept in Photos. Try again after checking that they’re downloaded in Photos."
+            errorMessage = String(localized: "None of the \(items.count) items could be imported. Originals were kept in Photos. Try again after checking that they’re downloaded in Photos.")
         }
     }
 
@@ -158,7 +158,7 @@ final class LibraryStore {
         let generation = importGeneration
         importSummary = nil
         isBusy = true
-        progress = "Deleting originals from Photos…"
+        progress = String(localized: "Deleting originals from Photos…")
         defer { isBusy = false; progress = "" }
         do {
             try await originalDeleter.requestAuthorization()
@@ -175,14 +175,14 @@ final class LibraryStore {
             let photoError = error as NSError
             // Cancelling the system confirmation is a normal choice to keep the originals.
             if photoError.domain == PHPhotosErrorDomain && photoError.code == PHPhotosError.Code.userCancelled.rawValue { return }
-            errorMessage = "Couldn’t delete originals. \(error.localizedDescription) Your vault copies were kept."
+            errorMessage = String(localized: "Couldn’t delete originals. \(error.localizedDescription) Your vault copies were kept.")
         }
     }
 
     func export(_ ids: Set<UUID>) async {
         guard canAccess, !isBusy, !ids.isEmpty else { return }
         isBusy = true
-        progress = "Preparing export…"
+        progress = String(localized: "Preparing export…")
         let generation = exportGeneration
         do {
             let lease = try repository.security.lease(for: repository.root.lastPathComponent)

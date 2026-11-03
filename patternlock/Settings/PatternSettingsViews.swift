@@ -17,8 +17,8 @@ struct PatternSetupView: View {
 
     private var needsCurrent: Bool { needsCurrentPattern && current.isEmpty }
     private var instruction: String {
-        if needsCurrent { return "Draw this vault’s current pattern." }
-        return proposed.isEmpty ? "Draw a new pattern with at least 4 dots." : "Draw the new pattern again to confirm."
+        if needsCurrent { return String(localized: "Draw this vault’s current pattern.") }
+        return proposed.isEmpty ? String(localized: "Draw a new pattern with at least 4 dots.") : String(localized: "Draw the new pattern again to confirm.")
     }
 
     var body: some View {
@@ -27,10 +27,10 @@ struct PatternSetupView: View {
                 Image(systemName: "hand.draw").font(.system(size: 36, weight: .light)).foregroundStyle(AlbumTheme.accent)
                 Text(instruction).font(.title3.weight(.medium)).multilineTextAlignment(.center)
                 PatternGridView(side: 300, isEnabled: !busy, revision: revision, isDrawing: $isDrawing, completed: submit)
-                if busy { ProgressView("Saving pattern…") }
+                if busy { ProgressView(String(localized: "Saving pattern…")) }
                 if let error { Text(error).font(.subheadline).foregroundStyle(.red).multilineTextAlignment(.center) }
                 if !proposed.isEmpty && !busy {
-                    Button("Start over") { current = []; proposed = []; error = nil; revision += 1 }
+                    Button(String(localized: "Start over")) { current = []; proposed = []; error = nil; revision += 1 }
                 }
             }.padding(24).frame(maxWidth: .infinity)
         }
@@ -45,11 +45,11 @@ struct PatternSetupView: View {
     private func submit(_ pattern: [Int]) {
         guard !busy else { return }
         revision += 1
-        guard PatternRules.isValid(pattern, gridSize: gridSize) else { error = "Connect at least 4 different dots."; return }
+        guard PatternRules.isValid(pattern, gridSize: gridSize) else { error = String(localized: "Connect at least 4 different dots."); return }
         error = nil
         if needsCurrent { current = pattern; return }
         if proposed.isEmpty { proposed = pattern; return }
-        guard proposed == pattern else { error = "Those patterns didn’t match. Try again."; return }
+        guard proposed == pattern else { error = String(localized: "Those patterns didn’t match. Try again."); return }
         busy = true
         operation = Task {
             do {
@@ -82,11 +82,11 @@ struct PatternAuthorizationView: View {
         ScrollView {
             VStack(spacing: 24) {
                 Text(detail).font(.subheadline).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
-                Text("Confirm your current pattern").font(.headline)
+                Text(String(localized: "Confirm your current pattern")).font(.headline)
                 PatternGridView(side: 300, isEnabled: !busy, revision: revision, isDrawing: $isDrawing) { pattern in
                     guard !busy else { return }
                     revision += 1
-                    guard PatternRules.isValid(pattern, gridSize: gridSize) else { error = "Connect at least 4 different dots."; return }
+                    guard PatternRules.isValid(pattern, gridSize: gridSize) else { error = String(localized: "Connect at least 4 different dots."); return }
                     busy = true; error = nil
                     operation = Task {
                         do { try await completion(pattern); if !Task.isCancelled { dismiss() } }
@@ -125,23 +125,23 @@ struct RecoveryPhraseSettingsView: View {
                 if generated {
                     Text(phrase).font(.system(.body, design: .monospaced)).textSelection(.enabled).privacySensitive()
                 } else {
-                    SecureField("At least 8 words and 40 characters", text: $phrase)
+                    SecureField(String(localized: "At least 8 words and 40 characters"), text: $phrase)
                         .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
                 }
-            } header: { Text(generated ? "New recovery phrase" : "Custom recovery phrase") } footer: {
-                Text("Keep this phrase somewhere safe outside Pattern. Anyone with it can reset this vault’s pattern and open backups made with it. Custom phrases are only as strong as the words you choose.")
+            } header: { Text(generated ? String(localized: "New recovery phrase") : String(localized: "Custom recovery phrase")) } footer: {
+                Text(String(localized: "Keep this phrase somewhere safe outside Pattern. Anyone with it can reset this vault’s pattern and open backups made with it. Custom phrases are only as strong as the words you choose."))
             }
             Section {
-                SecureField("Repeat the whole phrase", text: $confirmation)
+                SecureField(String(localized: "Repeat the whole phrase"), text: $confirmation)
                     .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
-                Toggle("I saved it somewhere safe", isOn: $savedPhrase)
+                Toggle(String(localized: "I saved it somewhere safe"), isOn: $savedPhrase)
             } footer: {
-                Text("Replacing the phrase disables the old phrase for this vault. Existing backup files still require the phrase used when they were created. Make a new backup after changing it.")
+                Text(String(localized: "Replacing the phrase disables the old phrase for this vault. Existing backup files still require the phrase used when they were created. Make a new backup after changing it."))
             }
             if let error { Section { Text(error).foregroundStyle(.red) } }
             Section {
-                NavigationLink("Confirm and save phrase") {
-                    PatternAuthorizationView(title: "Save recovery phrase", detail: "This replaces this vault’s previous recovery phrase.") { pattern in
+                NavigationLink(String(localized: "Confirm and save phrase")) {
+                    PatternAuthorizationView(title: String(localized: "Save recovery phrase"), detail: String(localized: "This replaces this vault’s previous recovery phrase.")) { pattern in
                         try await authenticator.setRecoveryPhrase(vaultID: vault.id, phrase: phrase, currentPattern: pattern)
                         completion(); dismiss()
                     }
@@ -150,7 +150,7 @@ struct RecoveryPhraseSettingsView: View {
             }
         }
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
-        .navigationTitle(generated ? "Generate recovery phrase" : "Custom recovery phrase").navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(generated ? String(localized: "Generate recovery phrase") : String(localized: "Custom recovery phrase")).navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if generated && phrase.isEmpty {
                 do { phrase = try RecoveryPhrase.generate() }
@@ -175,8 +175,8 @@ struct PendingRecoveryPhraseView: View {
         Form {
             if phrase.isEmpty {
                 Section {
-                    NavigationLink("Show new recovery phrase") {
-                        PatternAuthorizationView(title: "Recovery phrase", detail: "Confirm your pattern to see the phrase created during the latest duress unlock. This confirmation doesn’t activate duress.") { pattern in
+                    NavigationLink(String(localized: "Show new recovery phrase")) {
+                        PatternAuthorizationView(title: String(localized: "Recovery phrase"), detail: String(localized: "Confirm your pattern to see the phrase created during the latest duress unlock. This confirmation doesn’t activate duress.")) { pattern in
                             let value = try await authenticator.pendingRecoveryPhrase(vaultID: vault.id, currentPattern: pattern)
                             try Task.checkCancellation()
                             phrase = value
@@ -186,12 +186,12 @@ struct PendingRecoveryPhraseView: View {
             } else {
                 Section {
                     Text(phrase).font(.system(.body, design: .monospaced)).textSelection(.enabled).privacySensitive()
-                } footer: { Text("Save this phrase outside Pattern. Your previous phrase no longer recovers this vault. Existing backup files still use their original phrases.") }
+                } footer: { Text(String(localized: "Save this phrase outside Pattern. Your previous phrase no longer recovers this vault. Existing backup files still use their original phrases.")) }
                 Section {
-                    SecureField("Repeat the whole phrase", text: $confirmation)
+                    SecureField(String(localized: "Repeat the whole phrase"), text: $confirmation)
                         .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
-                    Toggle("I saved it somewhere safe", isOn: $saved)
-                    Button("Done") {
+                    Toggle(String(localized: "I saved it somewhere safe"), isOn: $saved)
+                    Button(String(localized: "Done")) {
                         busy = true
                         Task {
                             do {
@@ -201,12 +201,12 @@ struct PendingRecoveryPhraseView: View {
                             busy = false
                         }
                     }.disabled(!saved || RecoveryPhrase.normalized(confirmation) != phrase || busy)
-                } footer: { Text("Once saved, this phrase will no longer be displayed. Every duress unlock creates a new one.") }
+                } footer: { Text(String(localized: "Once saved, this phrase will no longer be displayed. Every duress unlock creates a new one.")) }
             }
             if let error { Section { Text(error).foregroundStyle(.red) } }
         }
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
-        .navigationTitle("New recovery phrase").navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(String(localized: "New recovery phrase")).navigationBarTitleDisplayMode(.inline)
         .onDisappear { phrase = ""; confirmation = "" }
     }
 }

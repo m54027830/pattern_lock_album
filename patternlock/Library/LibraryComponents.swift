@@ -16,7 +16,7 @@ import UIKit
         Color(red: 0.84, green: 0.80, blue: 0.90),
         Color(red: 0.86, green: 0.86, blue: 0.81)
     ]
-    static let colorNames = ["Sage", "Sand", "Sky", "Rose", "Lilac", "Stone"]
+    static let colorNames = [String(localized: "Sage"), String(localized: "Sand"), String(localized: "Sky"), String(localized: "Rose"), String(localized: "Lilac"), String(localized: "Stone")]
     static func folderColor(_ index: Int) -> Color { folderColors[max(0, min(index, folderColors.count - 1))] }
 }
 
@@ -45,7 +45,7 @@ struct FolderCard: View {
                 Image(systemName: "arrow.up.right").font(.system(size: 12, weight: .medium)).opacity(0.5)
             }.padding(.bottom, 23)
             Text(folder.name).font(.subheadline.weight(.semibold)).lineLimit(1)
-            Text("\(count) \(count == 1 ? "item" : "items")").font(.caption).opacity(0.6).padding(.top, 5)
+            Text(String(localized: "\(count) items")).font(.caption).opacity(0.6).padding(.top, 5)
         }
         .foregroundStyle(AlbumTheme.ink)
         .padding(17).frame(width: 150, alignment: .leading)
@@ -131,11 +131,11 @@ struct EmptyLibraryView: View {
                     .foregroundStyle(AlbumTheme.accent).offset(x: 10, y: 2)
             }
             .frame(height: 105).padding(.bottom, 2).accessibilityHidden(true)
-            Text(filter == .all ? (isFolder ? "Make room for memories" : "Your story starts here") : "No \(filter.rawValue.lowercased()) yet")
+            Text(filter == .all ? (isFolder ? String(localized: "Make room for memories") : String(localized: "Your story starts here")) : (filter == .videos ? String(localized: "No videos yet") : String(localized: "No photos yet")))
                 .font(.system(size: 21, weight: .medium, design: .rounded)).foregroundStyle(AlbumTheme.ink)
-            Text(isFolder ? "Add photos and videos to this folder,\nor move some from your library." : "Add the photos and videos you want\nto keep close. Just for you.")
+            Text(isFolder ? String(localized: "Add photos and videos to this folder,\nor move some from your library.") : String(localized: "Add the photos and videos you want\nto keep close. Just for you."))
                 .font(.subheadline).lineSpacing(4).multilineTextAlignment(.center).foregroundStyle(AlbumTheme.secondary)
-            Button(action: add) { Label("Add your first \(filter == .videos ? "video" : "photos")", systemImage: "plus").font(.subheadline.weight(.semibold)) }
+            Button(action: add) { Label(filter == .videos ? String(localized: "Add your first video") : String(localized: "Add your first photos"), systemImage: "plus").font(.subheadline.weight(.semibold)) }
                 .padding(.top, 3)
         }.frame(maxWidth: .infinity)
     }
@@ -158,14 +158,14 @@ struct FolderEditor: View {
                     .background(AlbumTheme.folderColor(colorIndex), in: RoundedRectangle(cornerRadius: 25))
                     .frame(maxWidth: .infinity).padding(.top, 15)
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Folder name").font(.subheadline.weight(.semibold))
-                    TextField("e.g. Weekend escapes", text: $name).focused($focused)
+                    Text(String(localized: "Folder name")).font(.subheadline.weight(.semibold))
+                    TextField(String(localized: "e.g. Weekend escapes"), text: $name).focused($focused)
                         .padding(16).background(.white, in: RoundedRectangle(cornerRadius: 14))
                         .submitLabel(.done).onSubmit { save() }
                         .accessibilityIdentifier("folderName")
                 }
                 VStack(alignment: .leading, spacing: 13) {
-                    Text("Color").font(.subheadline.weight(.semibold))
+                    Text(String(localized: "Color")).font(.subheadline.weight(.semibold))
                     HStack(spacing: 15) {
                         ForEach(AlbumTheme.folderColors.indices, id: \.self) { index in
                             Button { colorIndex = index } label: {
@@ -178,16 +178,16 @@ struct FolderEditor: View {
                 }
                 if let error { Text(error).font(.caption).foregroundStyle(.red) }
                 Button(action: save) {
-                    Text(folder == nil ? "Create folder" : "Save changes").font(.headline).foregroundStyle(.white)
+                    Text(folder == nil ? String(localized: "Create folder") : String(localized: "Save changes")).font(.headline).foregroundStyle(.white)
                         .frame(maxWidth: .infinity).padding(17).background(AlbumTheme.accent, in: Capsule())
                 }.disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || store.isBusy)
                     .accessibilityIdentifier("saveFolder")
                 Spacer(minLength: 0)
             }
             .padding(25).background(AlbumTheme.background)
-            .navigationTitle(folder == nil ? "New folder" : "Edit folder")
+            .navigationTitle(folder == nil ? String(localized: "New folder") : String(localized: "Edit folder"))
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } } }
+            .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { dismiss() } } }
             .onAppear { name = folder?.name ?? ""; colorIndex = folder?.colorIndex ?? 0 }
         }
         .presentationDetents([.height(510), .large])
@@ -214,22 +214,22 @@ struct MoveMediaSheet: View {
         NavigationStack {
             List {
                 Section {
-                    Button { move(to: nil) } label: { Label("No folder", systemImage: "square.grid.2x2") }
+                    Button { move(to: nil) } label: { Label(String(localized: "No folder"), systemImage: "square.grid.2x2") }
                     ForEach(store.snapshot.folders) { folder in
                         Button { move(to: folder.id) } label: {
                             Label { Text(folder.name) } icon: { Image(systemName: "folder.fill").foregroundStyle(AlbumTheme.folderColor(folder.colorIndex)) }
                         }
                     }
-                } header: { Text("Move \(selected.count) \(selected.count == 1 ? "item" : "items") to") }
-                Section { Button { creatingFolder = true } label: { Label("New folder", systemImage: "folder.badge.plus") } }
+                } header: { Text(String(localized: "Move \(selected.count) items to")) }
+                Section { Button { creatingFolder = true } label: { Label(String(localized: "New folder"), systemImage: "folder.badge.plus") } }
             }
             .disabled(store.isBusy)
             .scrollContentBackground(.hidden).background(AlbumTheme.background)
-            .navigationTitle("Move to folder").navigationBarTitleDisplayMode(.inline)
-            .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } } }
+            .navigationTitle(String(localized: "Move to folder")).navigationBarTitleDisplayMode(.inline)
+            .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { dismiss() } } }
             .sheet(isPresented: $creatingFolder) { FolderEditor(folder: nil, store: store) }
-            .alert("Couldn’t move items", isPresented: Binding(get: { store.errorMessage != nil && !creatingFolder }, set: { if !$0 { store.errorMessage = nil } })) {
-                Button("OK", role: .cancel) { store.errorMessage = nil }
+            .alert(String(localized: "Couldn’t move items"), isPresented: Binding(get: { store.errorMessage != nil && !creatingFolder }, set: { if !$0 { store.errorMessage = nil } })) {
+                Button(String(localized: "OK"), role: .cancel) { store.errorMessage = nil }
             } message: { Text(store.errorMessage ?? "") }
         }.tint(AlbumTheme.accent).presentationDetents([.medium, .large])
     }

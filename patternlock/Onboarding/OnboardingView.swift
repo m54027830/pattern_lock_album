@@ -28,22 +28,22 @@ struct OnboardingView: View {
     }
     private var title: String {
         switch setup.step {
-        case .welcome: ["A little space,\njust for you.", "A different pattern.\nA different vault.", "On your device.\nIn your hands."][setup.welcomePage]
-        case .grid: "Find your pattern."
-        case .pattern: "Make it yours."
-        case .confirm: "Once more."
-        case .recovery: "A way back in."
-        case .verifyRecovery: "Keep your key safe."
+        case .welcome: [String(localized: "A little space,\njust for you."), String(localized: "A different pattern.\nA different vault."), String(localized: "On your device.\nIn your hands.")][setup.welcomePage]
+        case .grid: String(localized: "Find your pattern.")
+        case .pattern: String(localized: "Make it yours.")
+        case .confirm: String(localized: "Once more.")
+        case .recovery: String(localized: "A way back in.")
+        case .verifyRecovery: String(localized: "Keep your key safe.")
         }
     }
     private var subtitle: String {
         switch setup.step {
-        case .welcome: ["Welcome to Pattern. A calm home for the photos and videos you want to keep close.", "Each pattern opens its own vault, with separate photos, videos, and folders.", "Deleting Pattern removes your local vaults. Save an encrypted backup to iCloud Drive in settings so you can restore after reinstalling."][setup.welcomePage]
-        case .grid: "Choose the grid you’ll use for every vault. More dots give you more room to draw."
-        case .pattern: "Name your first vault, then connect at least 4 different dots."
-        case .confirm: "Draw the same pattern again to confirm it."
-        case .recovery: "Save a recovery phrase outside Pattern. It can reset this vault’s pattern if you forget it."
-        case .verifyRecovery: "Repeat your saved phrase to make sure you can recover your vault."
+        case .welcome: [String(localized: "Welcome to Pattern. A calm home for the photos and videos you want to keep close."), String(localized: "Each pattern opens its own vault, with separate photos, videos, and folders."), String(localized: "Deleting Pattern removes your local vaults. Save an encrypted backup to iCloud Drive in settings so you can restore after reinstalling.")][setup.welcomePage]
+        case .grid: String(localized: "Choose the grid you’ll use for every vault. More dots give you more room to draw.")
+        case .pattern: String(localized: "Name your first vault, then connect at least 4 different dots.")
+        case .confirm: String(localized: "Draw the same pattern again to confirm it.")
+        case .recovery: String(localized: "Save a recovery phrase outside Pattern. It can reset this vault’s pattern if you forget it.")
+        case .verifyRecovery: String(localized: "Repeat your saved phrase to make sure you can recover your vault.")
         }
     }
 
@@ -62,7 +62,7 @@ struct OnboardingView: View {
                     }.multilineTextAlignment(.center).frame(maxWidth: 440)
                     stepContent(width: min(320, geometry.size.width - 64), compact: geometry.size.height < 650)
                     if let error = setup.error { Text(error).font(.subheadline).foregroundStyle(.red).multilineTextAlignment(.center) }
-                    if setup.busy { ProgressView("Preparing your vault…") }
+                    if setup.busy { ProgressView(String(localized: "Preparing your vault…")) }
                 }
                 .padding(.horizontal, 24).padding(.top, 16).padding(.bottom, 28)
                 .frame(maxWidth: 560).frame(maxWidth: .infinity)
@@ -76,7 +76,7 @@ struct OnboardingView: View {
         .sheet(isPresented: $showingRestore) {
             NavigationStack {
                 RestoreVaultView(onRestored: { showingRestore = false; onRestored?() })
-                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { showingRestore = false } } }
+                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { showingRestore = false } } }
             }.tint(AlbumTheme.accent)
         }
     }
@@ -86,19 +86,19 @@ struct OnboardingView: View {
             HStack {
                 Button { setup.back() } label: { Image(systemName: "chevron.left").frame(width: 32, height: 32) }
                     .opacity(setup.step == .welcome && setup.welcomePage == 0 ? 0 : 1)
-                    .disabled(setup.step == .welcome && setup.welcomePage == 0).accessibilityLabel("Back")
+                    .disabled(setup.step == .welcome && setup.welcomePage == 0).accessibilityLabel(String(localized: "Back"))
                 Spacer()
                 HStack(spacing: 8) { PatternMark(); Text("PATTERN").font(.system(size: 11, weight: .semibold, design: .monospaced)).tracking(3) }
                 Spacer()
                 if setup.step == .welcome {
-                    Button("Skip") { setup.startSetup() }.font(.caption)
+                    Button(String(localized: "Skip")) { setup.startSetup() }.font(.caption)
                 } else { Color.clear.frame(width: 32, height: 32) }
             }
             HStack(spacing: 6) {
                 ForEach(0..<4) { index in
                     Capsule().fill(index <= chapter ? AlbumTheme.accent : AlbumTheme.track).frame(height: 3)
                 }
-            }.accessibilityLabel("Setup step \(chapter + 1) of 4")
+            }.accessibilityLabel(String(localized: "Setup step \(chapter + 1) of 4"))
         }
     }
 
@@ -110,11 +110,11 @@ struct OnboardingView: View {
                     Capsule().fill(index == setup.welcomePage ? AlbumTheme.accent : AlbumTheme.track)
                         .frame(width: index == setup.welcomePage ? 24 : 6, height: 6)
                 }
-            }.padding(.top, 12).accessibilityLabel("Welcome page \(setup.welcomePage + 1) of 3")
-            Label(["No account needed", "One pattern for each vault", "Your recovery phrase stays yours"][setup.welcomePage], systemImage: "checkmark.circle")
+            }.padding(.top, 12).accessibilityLabel(String(localized: "Welcome page \(setup.welcomePage + 1) of 3"))
+            Label([String(localized: "No account needed"), String(localized: "One pattern for each vault"), String(localized: "Your recovery phrase stays yours")][setup.welcomePage], systemImage: "checkmark.circle")
                 .font(.caption).foregroundStyle(AlbumTheme.secondary)
             if setup.welcomePage == 2 {
-                Text("Start free: 3 albums · 5 photos/videos each.\nRemove both limits with one purchase in settings.")
+                Text(String(localized: "Start free: 3 albums · 5 photos/videos each.\nRemove both limits with one purchase in settings."))
                     .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
             }
         case .grid:
@@ -123,27 +123,27 @@ struct OnboardingView: View {
                     .background(.white.opacity(0.6), in: RoundedRectangle(cornerRadius: 32))
             }
             GridSizePicker(selection: $setup.gridSize)
-            Text("You can change this in settings. Changing the grid means creating new patterns for all your vaults.")
+            Text(String(localized: "You can change this in settings. Changing the grid means creating new patterns for all your vaults."))
                 .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
         case .pattern, .confirm:
             if setup.step == .pattern {
-                TextField("First vault name", text: $setup.vaultName)
+                TextField(String(localized: "First vault name"), text: $setup.vaultName)
                     .textInputAutocapitalization(.words).submitLabel(.done)
                     .padding(16).background(.white, in: RoundedRectangle(cornerRadius: 16))
                     .accessibilityIdentifier("firstVaultName")
             } else { Text(setup.vaultName).font(.subheadline.weight(.medium)).foregroundStyle(AlbumTheme.accent) }
             PatternGridView(side: width, gridSize: setup.gridSize, isEnabled: !setup.busy, revision: setup.revision, isDrawing: $drawing, completed: setup.submit)
-            Text("Lift your finger when you’re done.").font(.caption).foregroundStyle(AlbumTheme.secondary)
+            Text(String(localized: "Lift your finger when you’re done.")).font(.caption).foregroundStyle(AlbumTheme.secondary)
         case .recovery:
-            Picker("Phrase type", selection: $setup.useCustomPhrase) {
-                Text("Generated").tag(false)
-                Text("Custom phrase").tag(true)
+            Picker(String(localized: "Phrase type"), selection: $setup.useCustomPhrase) {
+                Text(String(localized: "Generated")).tag(false)
+                Text(String(localized: "Custom phrase")).tag(true)
             }.pickerStyle(.segmented)
             if setup.useCustomPhrase {
-                SecureField("At least 8 words and 40 characters", text: $setup.customPhrase)
+                SecureField(String(localized: "At least 8 words and 40 characters"), text: $setup.customPhrase)
                     .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
                     .padding(18).background(.white, in: RoundedRectangle(cornerRadius: 18))
-                Text("Choose unrelated, unpredictable words. A generated phrase is recommended.")
+                Text(String(localized: "Choose unrelated, unpredictable words. A generated phrase is recommended."))
                     .font(.caption).foregroundStyle(AlbumTheme.secondary)
             } else {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], alignment: .leading, spacing: 12) {
@@ -154,21 +154,21 @@ struct OnboardingView: View {
                         }
                     }
                 }.padding(20).background(.white, in: RoundedRectangle(cornerRadius: 22)).privacySensitive()
-                Button(copied ? "Copied" : "Copy phrase", systemImage: copied ? "checkmark" : "doc.on.doc") {
+                Button(copied ? String(localized: "Copied") : String(localized: "Copy phrase"), systemImage: copied ? "checkmark" : "doc.on.doc") {
                     UIPasteboard.general.setItems([[UIPasteboard.typeAutomatic: setup.phrase]], options: [.localOnly: true, .expirationDate: Date().addingTimeInterval(60)])
                     copied = true
                 }.font(.subheadline)
             }
-            Label("Write it down. Keep it safe. Keep it private.", systemImage: "key")
+            Label(String(localized: "Write it down. Keep it safe. Keep it private."), systemImage: "key")
                 .font(.caption).foregroundStyle(AlbumTheme.secondary)
         case .verifyRecovery:
             Image(systemName: "key.horizontal").font(.system(size: 50, weight: .ultraLight)).foregroundStyle(AlbumTheme.accent).padding(20)
-            SecureField("Repeat the whole recovery phrase", text: $setup.confirmation)
+            SecureField(String(localized: "Repeat the whole recovery phrase"), text: $setup.confirmation)
                 .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
                 .padding(18).background(.white, in: RoundedRectangle(cornerRadius: 18))
                 .accessibilityIdentifier("onboardingPhraseConfirmation")
-            Toggle("I saved my phrase outside Pattern", isOn: $setup.savedPhrase).font(.subheadline)
-            Text("The phrase won’t be shown again after setup. Keep it to reset a forgotten pattern or open an iCloud backup. A phrase alone cannot restore photos after deleting the app.")
+            Toggle(String(localized: "I saved my phrase outside Pattern"), isOn: $setup.savedPhrase).font(.subheadline)
+            Text(String(localized: "The phrase won’t be shown again after setup. Keep it to reset a forgotten pattern or open an iCloud backup. A phrase alone cannot restore photos after deleting the app."))
                 .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
         }
     }
@@ -177,19 +177,19 @@ struct OnboardingView: View {
         VStack(spacing: 8) {
             switch setup.step {
             case .welcome:
-                primary(setup.welcomePage == 2 ? "Set up my vault" : "Continue") {
+                primary(setup.welcomePage == 2 ? String(localized: "Set up my vault") : String(localized: "Continue")) {
                     if setup.welcomePage < 2 { withAnimation(.easeInOut(duration: 0.2)) { setup.welcomePage += 1 } }
                     else { setup.startSetup() }
                 }
                 if onRestored != nil {
-                    Button("Restore from iCloud") { showingRestore = true }.font(.caption).padding(.top, 4)
+                    Button(String(localized: "Restore from iCloud")) { showingRestore = true }.font(.caption).padding(.top, 4)
                 }
-            case .grid: primary("Use \(setup.gridSize) × \(setup.gridSize) grid", action: setup.chooseGrid)
+            case .grid: primary(String(localized: "Use \(setup.gridSize) × \(setup.gridSize) grid"), action: setup.chooseGrid)
             case .pattern: EmptyView()
-            case .confirm: Button("Draw a different pattern", action: setup.back).font(.subheadline).padding(10)
-            case .recovery: primary("I’ve saved my phrase", action: setup.confirmRecovery)
+            case .confirm: Button(String(localized: "Draw a different pattern"), action: setup.back).font(.subheadline).padding(10)
+            case .recovery: primary(String(localized: "I’ve saved my phrase"), action: setup.confirmRecovery)
             case .verifyRecovery:
-                primary("Open my vault") { operation = Task { await setup.finish(completion) } }
+                primary(String(localized: "Open my vault")) { operation = Task { await setup.finish(completion) } }
                     .disabled(!setup.canFinish).opacity(setup.canFinish ? 1 : 0.45)
             }
         }.padding(.horizontal, 24).padding(.top, 12).padding(.bottom, 12)
@@ -213,13 +213,13 @@ struct GridSizePicker: View {
                 Button { selection = size } label: {
                     VStack(spacing: 14) {
                         GridIllustration(size: size).frame(width: 46, height: 46)
-                        Text("\(size) × \(size)").font(.subheadline.weight(.semibold))
+                        Text(String(localized: "\(size) × \(size)")).font(.subheadline.weight(.semibold))
                         Image(systemName: selection == size ? "checkmark.circle.fill" : "circle").font(.body)
                     }.frame(maxWidth: .infinity).padding(.vertical, 18)
                         .background(selection == size ? AlbumTheme.accent.opacity(0.09) : .white, in: RoundedRectangle(cornerRadius: 18))
                         .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(selection == size ? AlbumTheme.accent : .clear, lineWidth: 1.5))
                 }.buttonStyle(.plain).foregroundStyle(AlbumTheme.accent)
-                    .accessibilityLabel("\(size) by \(size)").accessibilityAddTraits(selection == size ? .isSelected : [])
+                    .accessibilityLabel(String(localized: "\(size) by \(size)")).accessibilityAddTraits(selection == size ? .isSelected : [])
                     .accessibilityIdentifier("gridSize\(size)")
             }
         }
@@ -253,14 +253,14 @@ private struct WelcomeArtwork: View {
             Circle().fill(AlbumTheme.accent.opacity(0.06)).frame(width: 235, height: 235)
             if page == 1 {
                 GridIllustration(size: 4, connected: true).frame(width: 175, height: 175)
-                Label("A space of its own", systemImage: "lock.open")
+                Label(String(localized: "A space of its own"), systemImage: "lock.open")
                     .font(.caption.weight(.medium)).padding(12).background(.white, in: Capsule()).offset(y: 108)
             } else {
                 RoundedRectangle(cornerRadius: 24).fill(AlbumTheme.folderColor(1)).frame(width: 156, height: 184).rotationEffect(.degrees(-13)).offset(x: -25, y: -8)
                 VStack(spacing: 18) {
                     Image(systemName: page == 0 ? "photo.on.rectangle.angled" : "icloud.and.arrow.up")
                         .font(.system(size: 52, weight: .ultraLight))
-                    Text(page == 0 ? "Your moments" : "Your choice").font(.caption.weight(.medium))
+                    Text(page == 0 ? String(localized: "Your moments") : String(localized: "Your choice")).font(.caption.weight(.medium))
                 }.foregroundStyle(AlbumTheme.accent).frame(width: 160, height: 190)
                     .background(AlbumTheme.folderColor(0), in: RoundedRectangle(cornerRadius: 24))
                     .rotationEffect(.degrees(8)).offset(x: 25, y: 8)

@@ -7,7 +7,7 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, grid, pattern
     private(set) var step = OnboardingStep.welcome
     var welcomePage = 0
     var gridSize = 5
-    var vaultName = "Personal"
+    var vaultName = String(localized: "Personal")
     private(set) var pattern: [Int] = []
     private(set) var generatedPhrase = ""
     var useCustomPhrase = false
@@ -34,11 +34,11 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, grid, pattern
     func submit(_ nodes: [Int]) {
         guard !busy, step == .pattern || step == .confirm else { return }
         revision += 1; error = nil
-        guard PatternRules.isValid(nodes, gridSize: gridSize) else { error = "Connect at least 4 different dots."; return }
+        guard PatternRules.isValid(nodes, gridSize: gridSize) else { error = String(localized: "Connect at least 4 different dots."); return }
         let name = vaultName.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !name.isEmpty, name.count <= 40 else { error = "Give your first vault a name between 1 and 40 characters."; return }
+        guard !name.isEmpty, name.count <= 40 else { error = String(localized: "Give your first vault a name between 1 and 40 characters."); return }
         if step == .pattern { pattern = nodes; step = .confirm; return }
-        guard nodes == pattern else { error = "Those patterns didn’t match. Try again."; return }
+        guard nodes == pattern else { error = String(localized: "Those patterns didn’t match. Try again."); return }
         do {
             generatedPhrase = try RecoveryPhrase.generate()
             step = .recovery
