@@ -164,22 +164,6 @@ struct ContentView: View {
                     .disabled(store.isBusy)
                     .accessibilityLabel(String(localized: "Vault settings")).accessibilityIdentifier("vaultSettings")
                 }
-                Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        if isSelecting { finishSelection() } else { isSelecting = true }
-                    }
-                } label: {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(isSelecting ? .white : AlbumTheme.accent)
-                        .frame(width: 44, height: 44)
-                        .background(isSelecting ? AlbumTheme.accent : .white, in: Circle())
-                }
-                .disabled((visibleItems.isEmpty && !isSelecting) || store.isBusy)
-                .accessibilityLabel(isSelecting ? String(localized: "Done") : String(localized: "Select"))
-                .accessibilityAddTraits(isSelecting ? [.isSelected] : [])
-                .accessibilityRemoveTraits(isSelecting ? [] : [.isSelected])
-                .accessibilityIdentifier("selectMedia")
             }
             if let currentFolder {
                 HStack(alignment: .bottom) {
@@ -216,6 +200,26 @@ struct ContentView: View {
         }
         .foregroundStyle(AlbumTheme.ink)
         .frame(minHeight: 44, alignment: .leading)
+    }
+
+    private var selectionButton: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                if isSelecting { finishSelection() } else { isSelecting = true }
+            }
+        } label: {
+            Label(isSelecting ? String(localized: "Done") : String(localized: "Select"), systemImage: "checkmark")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(isSelecting ? .white : AlbumTheme.accent)
+                .padding(.horizontal, 16)
+                .frame(minHeight: 44)
+                .background(isSelecting ? AlbumTheme.accent : .white, in: Capsule())
+        }
+        .disabled((visibleItems.isEmpty && !isSelecting) || store.isBusy)
+        .accessibilityLabel(isSelecting ? String(localized: "Done") : String(localized: "Select"))
+        .accessibilityAddTraits(isSelecting ? [.isSelected] : [])
+        .accessibilityRemoveTraits(isSelecting ? [] : [.isSelected])
+        .accessibilityIdentifier("selectMedia")
     }
 
     private var filterBar: some View {
@@ -297,23 +301,28 @@ struct ContentView: View {
     private var mediaSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Text(isSelecting ? String(localized: "\(selected.count) selected") : currentFolderID == nil ? String(localized: "All media") : String(localized: "In this folder"))
-                    .font(.headline).foregroundStyle(AlbumTheme.ink)
+                Menu {
+                    Picker(String(localized: "Sort by"), selection: $sort) {
+                        ForEach(LibrarySort.allCases) { option in Text(option.title).tag(option) }
+                    }
+                } label: {
+                    HStack(spacing: 5) { Text(sort.title); Image(systemName: "arrow.up.arrow.down") }
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(AlbumTheme.secondary)
+                        .frame(minHeight: 44)
+                }
+                .accessibilityLabel(String(localized: "Sort media, \(sort.title)"))
                 Spacer()
-                if isSelecting {
+                selectionButton
+            }
+            if isSelecting {
+                HStack {
+                    Text(String(localized: "\(selected.count) selected"))
+                        .font(.headline).foregroundStyle(AlbumTheme.ink)
+                    Spacer()
                     Button(selected.count == visibleItems.count ? String(localized: "Deselect all") : String(localized: "Select all")) {
                         selected = selected.count == visibleItems.count ? [] : Set(visibleItems.map(\.id))
                     }.font(.system(size: 12, weight: .medium))
-                } else {
-                    Menu {
-                        Picker(String(localized: "Sort by"), selection: $sort) {
-                            ForEach(LibrarySort.allCases) { option in Text(option.title).tag(option) }
-                        }
-                    } label: {
-                        HStack(spacing: 5) { Text(sort.title); Image(systemName: "arrow.up.arrow.down") }
-                            .font(.system(size: 11, weight: .medium)).foregroundStyle(AlbumTheme.secondary)
-                    }
-                    .accessibilityLabel(String(localized: "Sort media, \(sort.title)"))
                 }
             }
             if !store.isLoaded {

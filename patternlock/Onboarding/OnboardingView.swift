@@ -20,7 +20,7 @@ struct OnboardingView: View {
 
     private var chapter: Int {
         switch setup.step {
-        case .welcome: 0
+        case .welcome, .vaultChoice: 0
         case .grid: 1
         case .pattern, .confirm: 2
         case .recovery, .verifyRecovery: 3
@@ -29,6 +29,7 @@ struct OnboardingView: View {
     private var title: String {
         switch setup.step {
         case .welcome: [String(localized: "A little space,\njust for you."), String(localized: "A different pattern.\nA different vault."), String(localized: "On your device.\nIn your hands.")][setup.welcomePage]
+        case .vaultChoice: String(localized: "Create or restore.")
         case .grid: String(localized: "Find your pattern.")
         case .pattern: String(localized: "Make it yours.")
         case .confirm: String(localized: "Once more.")
@@ -39,6 +40,7 @@ struct OnboardingView: View {
     private var subtitle: String {
         switch setup.step {
         case .welcome: [String(localized: "Welcome to Pattern. A calm home for the photos and videos you want to keep close."), String(localized: "Each pattern opens its own vault, with separate photos, videos, and folders."), String(localized: "Deleting Pattern removes your local vaults. Save an encrypted backup to iCloud Drive in settings so you can restore after reinstalling.")][setup.welcomePage]
+        case .vaultChoice: String(localized: "Choose how you’d like to start.")
         case .grid: String(localized: "Choose the grid you’ll use for every vault. More dots give you more room to draw.")
         case .pattern: String(localized: "Name your first vault, then connect at least 4 different dots.")
         case .confirm: String(localized: "Draw the same pattern again to confirm it.")
@@ -54,6 +56,10 @@ struct OnboardingView: View {
                     header
                     if setup.step == .welcome {
                         WelcomeArtwork(page: setup.welcomePage).frame(height: 250).padding(.top, 20)
+                    } else if setup.step == .vaultChoice {
+                        Image(systemName: "square.stack.3d.up")
+                            .font(.system(size: 64, weight: .ultraLight)).foregroundStyle(AlbumTheme.accent)
+                            .frame(height: 140).accessibilityHidden(true)
                     }
                     VStack(spacing: 12) {
                         Text(title).font(.system(size: 32, weight: .semibold, design: .rounded)).tracking(-0.8)
@@ -91,7 +97,7 @@ struct OnboardingView: View {
                 HStack(spacing: 8) { PatternMark(); Text("PATTERN").font(.system(size: 11, weight: .semibold, design: .monospaced)).tracking(3) }
                 Spacer()
                 if setup.step == .welcome {
-                    Button(String(localized: "Skip")) { setup.startSetup() }.font(.caption)
+                    Button(String(localized: "Skip"), action: setup.showVaultChoices).font(.caption)
                 } else { Color.clear.frame(width: 32, height: 32) }
             }
             HStack(spacing: 6) {
@@ -116,6 +122,19 @@ struct OnboardingView: View {
             if setup.welcomePage == 2 {
                 Text(String(localized: "Start free: 3 albums · 5 photos/videos each.\nRemove both limits with one purchase in settings."))
                     .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
+            }
+        case .vaultChoice:
+            VStack(spacing: 14) {
+                vaultChoice(String(localized: "Create a new vault"),
+                            detail: String(localized: "Choose a pattern and get a new recovery phrase."),
+                            icon: "plus", action: setup.startSetup)
+                    .accessibilityIdentifier("onboardingCreateVault")
+                if onRestored != nil {
+                    vaultChoice(String(localized: "Restore an existing vault"),
+                                detail: String(localized: "Use an iCloud backup and its recovery phrase."),
+                                icon: "icloud.and.arrow.down") { showingRestore = true }
+                        .accessibilityIdentifier("onboardingRestoreVault")
+                }
             }
         case .grid:
             if !compact {
@@ -177,13 +196,14 @@ struct OnboardingView: View {
         VStack(spacing: 8) {
             switch setup.step {
             case .welcome:
-                primary(setup.welcomePage == 2 ? String(localized: "Set up my vault") : String(localized: "Continue")) {
+                primary(String(localized: "Continue")) {
                     if setup.welcomePage < 2 { withAnimation(.easeInOut(duration: 0.2)) { setup.welcomePage += 1 } }
-                    else { setup.startSetup() }
+                    else { setup.showVaultChoices() }
                 }
                 if onRestored != nil {
                     Button(String(localized: "Restore from iCloud")) { showingRestore = true }.font(.caption).padding(.top, 4)
                 }
+            case .vaultChoice: EmptyView()
             case .grid: primary(String(localized: "Use \(setup.gridSize) × \(setup.gridSize) grid"), action: setup.chooseGrid)
             case .pattern: EmptyView()
             case .confirm: Button(String(localized: "Draw a different pattern"), action: setup.back).font(.subheadline).padding(10)
@@ -194,6 +214,26 @@ struct OnboardingView: View {
             }
         }.padding(.horizontal, 24).padding(.top, 12).padding(.bottom, 12)
             .frame(maxWidth: 560).frame(maxWidth: .infinity).background(AlbumTheme.background)
+    }
+
+    private func vaultChoice(_ title: String, detail: String, icon: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 16) {
+                Image(systemName: icon).font(.system(size: 24, weight: .light))
+                    .frame(width: 48, height: 48)
+                    .background(AlbumTheme.accent.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(title).font(.headline).foregroundStyle(AlbumTheme.ink)
+                    Text(detail).font(.subheadline).foregroundStyle(AlbumTheme.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }.frame(maxWidth: .infinity, alignment: .leading)
+                Image(systemName: "chevron.right").font(.caption.weight(.semibold))
+            }
+            .multilineTextAlignment(.leading).padding(20)
+            .foregroundStyle(AlbumTheme.accent)
+            .background(.white, in: RoundedRectangle(cornerRadius: 22))
+            .contentShape(RoundedRectangle(cornerRadius: 22))
+        }.buttonStyle(.plain)
     }
 
     private func primary(_ title: String, action: @escaping () -> Void) -> some View {

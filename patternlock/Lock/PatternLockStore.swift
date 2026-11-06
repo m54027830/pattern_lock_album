@@ -79,6 +79,10 @@ nonisolated enum PatternLockStage: Equatable {
 
     func enteredBackground() {
         becameInactive()
+        // Keep unfinished setup mounted so switching apps to save the recovery
+        // phrase preserves its step and secrets in memory. The privacy window
+        // still covers it. An in-flight registration resets to loading above.
+        guard stage != .onboarding else { return }
         lock()
     }
 

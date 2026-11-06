@@ -1,7 +1,7 @@
 import Foundation
 import Observation
 
-nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, grid, pattern, confirm, recovery, verifyRecovery }
+nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, vaultChoice, grid, pattern, confirm, recovery, verifyRecovery }
 
 @MainActor @Observable final class OnboardingStore {
     private(set) var step = OnboardingStep.welcome
@@ -26,6 +26,7 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, grid, pattern
     var phrase: String { useCustomPhrase ? RecoveryPhrase.normalized(customPhrase) : generatedPhrase }
     var canFinish: Bool { savedPhrase && !phrase.isEmpty && RecoveryPhrase.normalized(confirmation) == phrase }
 
+    func showVaultChoices() { step = .vaultChoice; error = nil }
     func startSetup() { step = .grid; error = nil }
     func chooseGrid() {
         guard PatternRules.supportedSizes.contains(gridSize) else { return }
@@ -55,7 +56,8 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, grid, pattern
         error = nil; revision += 1
         switch step {
         case .welcome: welcomePage = max(0, welcomePage - 1)
-        case .grid: step = .welcome
+        case .vaultChoice: step = .welcome
+        case .grid: step = .vaultChoice
         case .pattern: pattern = []; step = .grid
         case .confirm: pattern = []; step = .pattern
         case .recovery: clearRecovery(); pattern = []; step = .pattern

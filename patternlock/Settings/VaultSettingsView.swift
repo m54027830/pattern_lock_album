@@ -9,6 +9,7 @@ struct VaultSettingsView: View {
     @Environment(\.patternGridSize) private var gridSize
     @Environment(\.dismiss) private var dismiss
     @State private var purchases = PurchaseStore.shared
+    @State private var appIcons = AppIconStore.shared
     @State private var showingPurchase = false
     @State private var storageBytes: Int64?
     @State private var hasRecovery = false
@@ -91,6 +92,20 @@ struct VaultSettingsView: View {
                     }
                     Button(String(localized: "What’s this?"), systemImage: "questionmark.circle") { showDuressInfo = true }
                 } header: { Text(String(localized: "Duress vault")) }
+
+                Section {
+                    NavigationLink {
+                        AppIconSettingsView(icons: appIcons)
+                    } label: {
+                        HStack(spacing: 12) {
+                            AppIconPreview(icon: appIcons.selected, size: 32)
+                            Text(String(localized: "App icon")).foregroundStyle(AlbumTheme.ink)
+                            Spacer()
+                            Text(appIcons.selected.title).foregroundStyle(AlbumTheme.secondary)
+                        }
+                    }
+                    .accessibilityIdentifier("appIconSettings")
+                } header: { Text(String(localized: "App settings")) }
 
                 Section {
                     Button { showingPurchase = true } label: {

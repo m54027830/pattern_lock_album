@@ -65,7 +65,7 @@ private struct MediaPage: View {
     var body: some View {
         Group {
             if item.kind == .video {
-                if let player { VideoPlayer(player: player) }
+                if let player { FullscreenVideoPlayer(player: player) }
                 else { ProgressView().tint(.white) }
             } else if let image {
                 ZoomablePhoto(image: image)
@@ -74,12 +74,39 @@ private struct MediaPage: View {
             } else { ProgressView().tint(.white) }
         }
         .task(id: item.id) {
-            if item.kind == .video { player = AVPlayer(url: url) }
+            if item.kind == .video {
+                // Returning from native fullscreen can restart this task.
+                // Keep the same player so its position is preserved.
+                if player == nil { player = AVPlayer(url: url) }
+            }
             else { image = await ImageLoader.shared.image(at: url, maxPixels: 3000); failed = image == nil }
         }
         .onChange(of: isActive) { _, active in if !active { player?.pause() } }
         .onChange(of: scenePhase) { _, phase in if phase != .active { player?.pause() } }
-        .onDisappear { player?.pause() }
+    }
+}
+
+private struct FullscreenVideoPlayer: UIViewControllerRepresentable {
+    let player: AVPlayer
+
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        let controller = AVPlayerViewController()
+        controller.player = player
+        controller.showsPlaybackControls = true
+        // Vault media must stay inside the app's lock and privacy cover.
+        controller.allowsPictureInPicturePlayback = false
+        return controller
+    }
+
+    func updateUIViewController(_ controller: AVPlayerViewController, context: Context) {
+        if controller.player !== player { controller.player = player }
+    }
+
+    static func dismantleUIViewController(_ controller: AVPlayerViewController, coordinator: ()) {
+        // Native fullscreen covers MediaPage without ending playback. Stop only
+        // when its controller is removed; page changes/backgrounding pause above.
+        controller.player?.pause()
+        controller.player = nil
     }
 }
 

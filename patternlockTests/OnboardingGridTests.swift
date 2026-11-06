@@ -135,6 +135,58 @@ private final class GridStorage: PatternCredentialStorage, @unchecked Sendable {
         XCTAssertNil(try storage.read())
     }
 
+    func testRecoverySetupSurvivesSwitchingAppsAndRegistersTheSavedPhrase() async throws {
+        for custom in [false, true] {
+            let storage = GridStorage(), auth = PatternAuthenticator(storage: storage)
+            let lock = PatternLockStore(authenticator: auth)
+            await lock.activate()
+            let setup = OnboardingStore()
+            setup.vaultName = "My moments"
+            setup.startSetup(); setup.gridSize = 3; setup.chooseGrid()
+            setup.submit(newA); setup.submit(newA)
+            setup.useCustomPhrase = custom
+            if custom { setup.customPhrase = phrase }
+            let savedPhrase = setup.phrase
+
+            for step in [OnboardingStep.recovery, .verifyRecovery] {
+                if step == .verifyRecovery {
+                    setup.confirmRecovery()
+                    setup.confirmation = savedPhrase
+                    setup.savedPhrase = true
+                }
+                for _ in 0..<2 {
+                    lock.becameInactive()
+                    lock.enteredBackground()
+                    XCTAssertEqual(lock.stage, .onboarding, "Keep the same view mounted while saving the phrase in another app")
+                    XCTAssertFalse(lock.isActive)
+                    await lock.activate()
+                    XCTAssertEqual(lock.stage, .onboarding)
+                    XCTAssertEqual(setup.step, step)
+                    XCTAssertEqual(setup.phrase, savedPhrase)
+                    XCTAssertEqual(setup.pattern, newA)
+                    XCTAssertEqual(setup.gridSize, 3)
+                    XCTAssertEqual(setup.vaultName, "My moments")
+                    XCTAssertNil(try storage.read(), "Unfinished onboarding should stay in memory")
+                }
+            }
+
+            XCTAssertTrue(setup.canFinish)
+            await setup.finish { name, pattern, size, phrase in
+                try await lock.finishOnboarding(name: name, pattern: pattern, gridSize: size, recoveryPhrase: phrase)
+            }
+            XCTAssertNil(setup.error)
+            XCTAssertEqual(lock.stage, .unlocked)
+            let vault = try XCTUnwrap(lock.unlockedVault)
+            try await auth.validateRecoveryPhrase(vaultID: vault.id, phrase: savedPhrase)
+            XCTAssertTrue(setup.phrase.isEmpty)
+            XCTAssertTrue(setup.pattern.isEmpty)
+
+            lock.enteredBackground()
+            await lock.activate()
+            XCTAssertEqual(lock.stage, .locked, "Completed vaults must still lock on background")
+        }
+    }
+
     func testReturningToGridClearsFirstPatternAndRejectsShortOrWrongRecoveryConfirmation() {
         let setup = OnboardingStore()
         setup.startSetup(); setup.gridSize = 3; setup.chooseGrid()

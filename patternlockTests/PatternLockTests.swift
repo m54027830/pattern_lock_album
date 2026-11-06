@@ -268,12 +268,17 @@ private actor TestAuthenticator: PatternAuthenticating {
         XCTAssertEqual(lock.stage, .unlocked)
     }
 
-    func testBackgroundClearsUnconfirmedRegistration() async {
+    func testBackgroundKeepsOnboardingMountedWithoutRegisteringAVault() async {
         let auth = TestAuthenticator()
         let lock = PatternLockStore(authenticator: auth)
         await lock.activate()
         XCTAssertEqual(lock.stage, .onboarding)
+        lock.becameInactive()
         lock.enteredBackground()
+        // Both the scene notifications and SwiftUI scenePhase report this.
+        lock.enteredBackground()
+        XCTAssertEqual(lock.stage, .onboarding, "Changing stage would discard the onboarding view and its recovery phrase")
+        XCTAssertFalse(lock.isActive)
         XCTAssertNil(lock.unlockedVault)
         await lock.activate()
         XCTAssertEqual(lock.stage, .onboarding)
