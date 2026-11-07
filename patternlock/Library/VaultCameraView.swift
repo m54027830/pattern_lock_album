@@ -39,15 +39,19 @@ struct VaultCameraView: View {
     @State private var silentCamera = SilentCameraController()
     @State private var permissionMessage: String?
     @State private var error: String?
-    @State private var draft: VaultFileDraft?
-    @State private var saving = false
+    @State private var review = CaptureReviewSession()
     @State private var preparingCapture = false
     @State private var closed = false
     @State private var saveTask: Task<Void, Never>?
+    private var saving: Bool { review.isSaving || saveTask != nil }
+    private var draft: VaultFileDraft? { review.draft }
 
     var body: some View {
         ZStack {
-            if showsCameraPreview {
+            if let draft {
+                CaptureReviewView(draft: draft, isSaving: saving, use: saveDraft, retake: retake, cancel: close)
+                    .id(draft.media.url)
+            } else if showsCameraPreview {
                 VaultCameraSurface(isVideo: cameraScene.mode == .video) {
                     cameraPreview
                 } header: {
@@ -66,7 +70,7 @@ struct VaultCameraView: View {
         .task(id: cameraScene) { await authorize() }
         .onChange(of: silentCamera.error) { _, message in if let message { error = message } }
         .onChange(of: scenePhase) { _, phase in if phase == .background { close() } }
-        .onDisappear { closed = true; stopCameras(); saveTask?.cancel(); draft = nil }
+        .onDisappear { closed = true; stopCameras(); saveTask?.cancel(); review.cancel() }
         .alert(String(localized: "Something went wrong"), isPresented: Binding(get: { error != nil }, set: { if !$0 { error = nil } })) {
             Button(String(localized: "OK"), role: .cancel) { error = nil }
         } message: { Text(error ?? "") }
@@ -95,13 +99,6 @@ struct VaultCameraView: View {
     @ViewBuilder private var captureStatus: some View {
         if saving {
             ProgressView(String(localized: "Saving changes…")).frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else if draft != nil {
-            VStack(spacing: 20) {
-                Image(systemName: "camera.fill").font(.largeTitle)
-                Text(String(localized: "Your capture hasn’t been saved yet."))
-                Button(String(localized: "Try again")) { saveDraft() }.buttonStyle(.borderedProminent)
-                Button(String(localized: "Discard"), role: .destructive) { draft = nil }
-            }.frame(maxWidth: .infinity, maxHeight: .infinity).padding()
         } else if let permissionMessage {
             ContentUnavailableView {
                 Label(String(localized: "Camera unavailable"), systemImage: "camera")
@@ -258,19 +255,30 @@ struct VaultCameraView: View {
     }
 
     private func accept(_ captured: VaultFileDraft) {
-        guard !closed, !saving, draft == nil else { return }
-        draft = captured
-        saveDraft()
+        guard !closed, review.stage(captured) else { return }
+        stopCameras()
+        preparingCapture = false
+    }
+
+    private func retake() {
+        guard !closed, !saving else { return }
+        // Keep the selected mode, camera and sound setting, but mount fresh
+        // controllers: review stopped and dismantled the previous camera.
+        stopCameras()
+        systemCamera = VaultSystemCameraController()
+        silentCamera = SilentCameraController()
+        preparingCapture = false
+        error = nil
+        review.discard()
     }
 
     private func saveDraft() {
-        guard let draft, !saving, !closed else { return }
-        saving = true
+        guard draft != nil, !saving, !closed, saveTask == nil else { return }
         saveTask = Task {
-            let success = await store.saveCapture(draft, into: folderID)
+            defer { saveTask = nil }
+            let success = await review.use { captured in await store.saveCapture(captured, into: folderID) }
             guard !closed, !Task.isCancelled else { return }
-            saving = false
-            if success { self.draft = nil; close() }
+            if success { close() }
             else {
                 error = store.errorMessage ?? String(localized: "This file could not be opened.")
                 store.errorMessage = nil
@@ -282,7 +290,7 @@ struct VaultCameraView: View {
         closed = true
         stopCameras()
         saveTask?.cancel()
-        draft = nil
+        review.cancel()
         dismiss()
     }
 }
