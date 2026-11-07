@@ -163,6 +163,44 @@ final class LibraryStore {
         purchaseLimit = nil
     }
 
+    func saveMemo(title: String, body: String, into folderID: UUID?) async -> Bool {
+        await perform { try await self.repository.createMemo(title: title, body: body, folderID: folderID) }
+    }
+
+    func saveCapture(_ draft: VaultFileDraft, into folderID: UUID?) async -> Bool {
+        await perform {
+            defer { withExtendedLifetime(draft) {} }
+            let media = draft.media
+            return try await self.repository.importFile(at: media.url, originalName: media.name, kind: media.kind, folderID: folderID)
+        }
+    }
+
+    func importDocuments(_ urls: [URL], into folderID: UUID?) async {
+        guard canAccess, !isReadOnly, !isBusy, isLoaded, !urls.isEmpty else { return }
+        dismissImportSummary()
+        errorMessage = nil
+        let generation = importGeneration
+        isBusy = true
+        defer { isBusy = false; progress = "" }
+        var failures: [String] = []
+        for (index, url) in urls.enumerated() {
+            guard canAccess, generation == importGeneration, !Task.isCancelled else { return }
+            progress = String(localized: "Importing \(index + 1) of \(urls.count)…")
+            do {
+                let value = try await repository.importDocument(at: url, folderID: folderID)
+                guard canAccess else { return }
+                snapshot = value
+            } catch is FreeTierLimit {
+                if generation == importGeneration { purchaseLimit = .media }
+                break
+            } catch { failures.append(url.lastPathComponent) }
+        }
+        guard canAccess, generation == importGeneration else { return }
+        if !failures.isEmpty {
+            errorMessage = String(localized: "Couldn’t import: \(failures.joined(separator: ", ")). Original files were kept.")
+        }
+    }
+
     func deleteImportedOriginals(summaryID: UUID) async {
         guard canAccess, !isBusy, let summary = importSummary, summary.id == summaryID, !summary.originals.isEmpty else { return }
         let generation = importGeneration
@@ -242,6 +280,7 @@ final class LibraryStore {
             guard canAccess else { return false }
             snapshot = value; return true
         }
+        catch is CancellationError { return false }
         catch { errorMessage = error.localizedDescription; return false }
     }
 }

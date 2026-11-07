@@ -84,7 +84,7 @@ struct MediaCell: View {
             .aspectRatio(0.88, contentMode: .fit)
             .overlay {
                 if let image { Image(uiImage: image).resizable().scaledToFill() }
-                else { Rectangle().fill(AlbumTheme.track).overlay { Image(systemName: item.kind == .video ? "video" : "photo").foregroundStyle(AlbumTheme.secondary) } }
+                else { Rectangle().fill(AlbumTheme.track).overlay { Image(systemName: item.kind.symbol).foregroundStyle(AlbumTheme.secondary) } }
             }
             .overlay {
                 if item.kind == .video { LinearGradient(colors: [.clear, .black.opacity(0.4)], startPoint: .center, endPoint: .bottom) }
@@ -94,6 +94,12 @@ struct MediaCell: View {
                 if item.kind == .video {
                     HStack(spacing: 4) { Image(systemName: "play.fill").font(.system(size: 8)); Text(item.durationLabel).font(.system(size: 10, weight: .semibold).monospacedDigit()) }
                         .foregroundStyle(.white).padding(9)
+                } else if item.kind == .memo || item.kind == .document {
+                    Label(item.originalName, systemImage: item.kind.symbol)
+                        .font(.caption2.weight(.medium)).lineLimit(2)
+                        .foregroundStyle(AlbumTheme.ink).padding(8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(.regularMaterial)
                 }
             }
             .overlay(alignment: .topTrailing) {
@@ -116,9 +122,7 @@ struct MediaCell: View {
 }
 
 struct EmptyLibraryView: View {
-    let filter: MediaFilter
-    let isFolder: Bool
-    let add: () -> Void
+    let add: (VaultAddAction) -> Void
     var body: some View {
         VStack(spacing: 14) {
             ZStack {
@@ -131,12 +135,11 @@ struct EmptyLibraryView: View {
                     .foregroundStyle(AlbumTheme.accent).offset(x: 10, y: 2)
             }
             .frame(height: 105).padding(.bottom, 2).accessibilityHidden(true)
-            Text(filter == .all ? (isFolder ? String(localized: "Make room for memories") : String(localized: "Your story starts here")) : (filter == .videos ? String(localized: "No videos yet") : String(localized: "No photos yet")))
+            Text(String(localized: "Nothing here yet"))
                 .font(.system(size: 21, weight: .medium, design: .rounded)).foregroundStyle(AlbumTheme.ink)
-            Text(isFolder ? String(localized: "Add photos and videos to this folder,\nor move some from your library.") : String(localized: "Add the photos and videos you want\nto keep close. Just for you."))
+            Text(String(localized: "Keep photos, videos, memos, and documents in your vault."))
                 .font(.subheadline).lineSpacing(4).multilineTextAlignment(.center).foregroundStyle(AlbumTheme.secondary)
-            Button(action: add) { Label(filter == .videos ? String(localized: "Add your first video") : String(localized: "Add your first photos"), systemImage: "plus").font(.subheadline.weight(.semibold)) }
-                .padding(.top, 3)
+            VaultAddMenu(prominent: false, action: add).padding(.top, 3)
         }.frame(maxWidth: .infinity)
     }
 }

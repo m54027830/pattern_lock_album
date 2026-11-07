@@ -15,7 +15,7 @@ final class LocalizationTests: XCTestCase {
         for (language, title) in zip(languages, expected) {
             let bundle = try bundle(for: language)
             XCTAssertEqual(String(localized: "Vault settings", bundle: bundle), title, language)
-            for key in ["NSFaceIDUsageDescription", "NSPhotoLibraryUsageDescription", "NSPhotoLibraryAddUsageDescription"] {
+            for key in ["NSFaceIDUsageDescription", "NSPhotoLibraryUsageDescription", "NSPhotoLibraryAddUsageDescription", "NSCameraUsageDescription", "NSMicrophoneUsageDescription"] {
                 let prompt = bundle.localizedString(forKey: key, value: nil, table: "InfoPlist")
                 XCTAssertNotEqual(prompt, key, "\(language): \(key)")
                 XCTAssertFalse(prompt.isEmpty)

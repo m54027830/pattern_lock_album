@@ -1,6 +1,6 @@
 # Pattern
 
-A native SwiftUI photo and video library. Open `patternlock.xcodeproj` in Xcode 26.2 or later, select the `patternlock` scheme, and run on an iPhone or iPad with iOS 26.2 or later. The app and tests use the selected Xcode's iOS SDK. Keep the shared project in its current compatible format (`objectVersion = 77`) when saving it from newer Xcode versions.
+A native SwiftUI vault for photos, videos, memos, and documents. Open `patternlock.xcodeproj` in Xcode 26.2 or later, select the `patternlock` scheme, and run on an iPhone or iPad with iOS 26.2 or later. The app and tests use the selected Xcode's iOS SDK. Keep the shared project in its current compatible format (`objectVersion = 77`) when saving it from newer Xcode versions.
 
 ## Languages
 
@@ -17,7 +17,10 @@ Use `String(localized:)` for user-facing strings built outside SwiftUI’s local
 - Different patterns open separate vaults, each with its own media, folders, and exports.
 - Optional Face ID after the pattern, with a chosen existing vault displayed if Face ID fails.
 - New vault creation with a name, unique pattern, and matching confirmation.
-- Free use includes 3 albums (pattern vaults), with 5 photos/videos total in each. A one-time purchase removes both limits.
+- Free use includes 3 albums (pattern vaults), with 5 items total in each across all item types and folders. A one-time purchase removes both limits.
+- **Add** opens a menu with **Media**, **Camera**, **Memo**, and **Document**. Each action saves into the current folder. New content appears under All, with separate Photos, Videos, Memos, and Documents filters.
+- Camera offers photo and video capture directly into the vault without writing to Photos. Camera permission is requested on opening; microphone permission is requested for video. **Silent photo** uses a rear-camera ARKit video frame on supported devices, with lower detail than a full-resolution photo. Capture remains visible on screen. Captures stop when dismissed or backgrounded, and a failed vault save retains a temporary draft for retry or discard.
+- Write a titled memo, saved as UTF-8 text, or copy multiple documents from Files, including on-device storage and available file providers. Original documents remain untouched. Memos open as text; documents use an embedded Quick Look preview with export controlled by the vault. Unsupported preview formats can still be stored and exported.
 - Import multiple photos and videos through the system Photos picker, with progress and partial-failure reporting.
 - After importing, keep the originals or choose **Delete originals from Photos** for successfully saved items, with Photos permission and system confirmation.
 - Browse all media, photos, or videos. Sort by import date, filename, file date (newest first), largest first, or smallest first. File date uses photo EXIF or video creation metadata, then the original file’s modification/creation timestamp, then its import date if none is available. Size sorting uses original-file bytes; missing sizes go last. Older libraries are enriched on opening, and backups preserve these optional fields.
@@ -125,4 +128,6 @@ Duress tests cover explicit arming/disarming, atomic failure, phrase rotation, p
 
 Installation tests cover onboarding after deletion, real Keychain cleanup, encrypted credential storage, in-place upgrades, relaunches, interrupted migration/reset, corrupt keys, local backup exclusion, and explicit encrypted-archive restoration after reinstall.
 
-Build and test with Xcode 26.2 (17C52) / iOS 26.2. CloudKit development and production have separate schemas and data. A successful local build or fake-transport test is not evidence of a completed Apple upload or a cross-account claim; see the device verification checklist.
+Addition tests cover mixed memo/document persistence and encrypted-backup round trips, original-byte preservation, mixed-item quotas, partial document imports, failed-commit cleanup, extensionless exports, and capture draft disposal. On a physical device, verify photo/video capture, microphone permission, front/rear cameras, AR silent-photo orientation and shutter behavior, interruption/background cleanup, and that no capture appears in Photos. The simulator cannot exercise camera capture or ARKit. Also check Files imports from an iCloud provider and Quick Look previews for PDF and Office files.
+
+Build and test with Xcode 26.2 (17C52) / iOS 26.2 or later. CloudKit development and production have separate schemas and data. A successful local build or fake-transport test is not evidence of a completed Apple upload or a cross-account claim; see the device verification checklist.

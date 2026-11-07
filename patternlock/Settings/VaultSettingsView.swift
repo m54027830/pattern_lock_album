@@ -131,10 +131,10 @@ struct VaultSettingsView: View {
                         valueRow("Pattern Unlimited", value: purchases.isUnlimited ? String(localized: "Purchased") : String(localized: "Unlock once"), icon: "sparkles")
                     }
                     if !purchases.isUnlimited {
-                        valueRow(String(localized: "Free album usage"), value: String(localized: "\(store.snapshot.items.count) / 5 photos/videos"))
+                        valueRow(String(localized: "Free album usage"), value: String(localized: "\(store.snapshot.items.count) / 5 items"))
                     }
                 } header: { Text(String(localized: "Purchase")) } footer: {
-                    Text(String(localized: "Free: 3 albums with 5 photos or videos each. One purchase removes both limits. No subscription."))
+                    Text(String(localized: "Free: 3 albums with 5 items each. One purchase removes both limits. No subscription."))
                 }
 
                 Section {

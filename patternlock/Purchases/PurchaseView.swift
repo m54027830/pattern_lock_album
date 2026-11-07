@@ -16,7 +16,7 @@ struct PurchaseView: View {
                     VStack(spacing: 12) {
                         Text(purchases.isUnlimited ? String(localized: "All yours.") : String(localized: "More room.\nOne purchase."))
                             .font(.system(size: 32, weight: .semibold, design: .rounded)).multilineTextAlignment(.center)
-                        Text(purchases.isUnlimited ? String(localized: "Pattern Unlimited is unlocked.") : String(localized: "Unlimited albums, photos, and videos.\nPay once. No subscription."))
+                        Text(purchases.isUnlimited ? String(localized: "Pattern Unlimited is unlocked.") : String(localized: "Unlimited albums and items.\nPay once. No subscription."))
                             .font(.subheadline).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
                     }
                     if let reason, !purchases.isUnlimited {
@@ -28,7 +28,7 @@ struct PurchaseView: View {
                             .font(.caption.weight(.semibold)).foregroundStyle(AlbumTheme.secondary)
                         comparison(String(localized: "Albums"), free: "3")
                         Divider()
-                        comparison(String(localized: "Photos/videos per album"), free: "5")
+                        comparison(String(localized: "Items per album"), free: "5")
                     }.padding(20).background(.white, in: RoundedRectangle(cornerRadius: 22))
                     Text(String(localized: "Each pattern opens one album. Folders share that album’s photo and video limit. All privacy features are included in the free version."))
                         .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)

@@ -1,7 +1,25 @@
 import Foundation
 
 nonisolated enum MediaKind: String, Codable, Sendable {
-    case photo, video
+    case photo, video, memo, document
+
+    var symbol: String {
+        switch self {
+        case .photo: "photo"
+        case .video: "video"
+        case .memo: "note.text"
+        case .document: "doc.text"
+        }
+    }
+
+    var defaultExtension: String {
+        switch self {
+        case .photo: "jpg"
+        case .video: "mov"
+        case .memo: "txt"
+        case .document: ""
+        }
+    }
 }
 
 nonisolated struct MediaItem: Identifiable, Codable, Equatable, Sendable {
@@ -15,6 +33,15 @@ nonisolated struct MediaItem: Identifiable, Codable, Equatable, Sendable {
     // Optional so existing libraries and older encrypted backups still decode.
     var fileDate: Date? = nil
     var byteCount: Int64? = nil
+
+    var accessibilityLabel: String {
+        switch kind {
+        case .photo: String(localized: "Photo, \(originalName)")
+        case .video: String(localized: "Video, \(originalName)")
+        case .memo: String(localized: "Memo, \(originalName)")
+        case .document: String(localized: "Document, \(originalName)")
+        }
+    }
 
     var durationLabel: String {
         let seconds = Int(max(0, duration ?? 0))
@@ -78,22 +105,30 @@ nonisolated enum LibrarySort: String, CaseIterable, Identifiable, Sendable {
 }
 
 nonisolated enum MediaFilter: String, CaseIterable, Identifiable {
-    case all = "All", photos = "Photos", videos = "Videos"
+    case all = "All", photos = "Photos", videos = "Videos", memos = "Memos", documents = "Documents"
     var id: String { rawValue }
     var title: String {
         switch self {
         case .all: String(localized: "All")
         case .photos: String(localized: "Photos")
         case .videos: String(localized: "Videos")
+        case .memos: String(localized: "Memos")
+        case .documents: String(localized: "Documents")
         }
     }
     func includes(_ item: MediaItem) -> Bool {
-        self == .all || (self == .photos && item.kind == .photo) || (self == .videos && item.kind == .video)
+        switch self {
+        case .all: true
+        case .photos: item.kind == .photo
+        case .videos: item.kind == .video
+        case .memos: item.kind == .memo
+        case .documents: item.kind == .document
+        }
     }
 }
 
-nonisolated enum LibraryError: LocalizedError {
-    case invalidName, duplicateFolder, missingFolder, unsupportedMedia, unreadableLibrary, newerLibrary
+nonisolated enum LibraryError: LocalizedError, Equatable {
+    case invalidName, duplicateFolder, missingFolder, unsupportedMedia, unreadableLibrary, newerLibrary, invalidDocument, emptyMemo
 
     var errorDescription: String? {
         switch self {
@@ -103,6 +138,8 @@ nonisolated enum LibraryError: LocalizedError {
         case .unsupportedMedia: String(localized: "This file could not be read as a photo or video.")
         case .unreadableLibrary: String(localized: "The library could not be opened. Your saved files have been kept. Try reopening the app.")
         case .newerLibrary: String(localized: "This library was created by a newer version of the app. Update the app to open it.")
+        case .invalidDocument: String(localized: "This file could not be imported. Choose a downloaded file, not a folder.")
+        case .emptyMemo: String(localized: "Write something in your memo before saving.")
         }
     }
 }

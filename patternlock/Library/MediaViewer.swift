@@ -1,4 +1,5 @@
 import AVKit
+import QuickLook
 import SwiftUI
 
 struct MediaViewer: View {
@@ -64,7 +65,11 @@ private struct MediaPage: View {
 
     var body: some View {
         Group {
-            if item.kind == .video {
+            if item.kind == .memo {
+                MemoPreview(url: url)
+            } else if item.kind == .document {
+                VaultDocumentPreview(url: url, name: item.originalName)
+            } else if item.kind == .video {
                 if let player { FullscreenVideoPlayer(player: player) }
                 else { ProgressView().tint(.white) }
             } else if let image {
@@ -79,10 +84,73 @@ private struct MediaPage: View {
                 // Keep the same player so its position is preserved.
                 if player == nil { player = AVPlayer(url: url); player?.allowsExternalPlayback = false }
             }
-            else { image = await ImageLoader.shared.image(at: url, maxPixels: 3000); failed = image == nil }
+            else if item.kind == .photo { image = await ImageLoader.shared.image(at: url, maxPixels: 3000); failed = image == nil }
         }
         .onChange(of: isActive) { _, active in if !active { player?.pause() } }
         .onChange(of: scenePhase) { _, phase in if phase != .active { player?.pause() } }
+    }
+}
+
+private actor MemoReader {
+    static let shared = MemoReader()
+    func read(_ url: URL) throws -> String { try String(contentsOf: url, encoding: .utf8) }
+}
+
+private struct MemoPreview: View {
+    let url: URL
+    @State private var text: String?
+    @State private var failed = false
+    var body: some View {
+        Group {
+            if let text {
+                ScrollView {
+                    Text(verbatim: text).font(.body).lineSpacing(6)
+                        .frame(maxWidth: .infinity, alignment: .leading).padding(24)
+                }
+            } else if failed {
+                ContentUnavailableView(String(localized: "This file could not be opened."), systemImage: "note.text")
+            } else { ProgressView() }
+        }
+        .task(id: url) {
+            do { text = try await MemoReader.shared.read(url) }
+            catch { failed = true }
+        }
+    }
+}
+
+/// Embed only Quick Look's content, without its navigation/share toolbar. Export stays
+/// in MediaViewer, where the vault's sharing policy is enforced for every item kind.
+private struct VaultDocumentPreview: UIViewControllerRepresentable {
+    let url: URL
+    let name: String
+    func makeCoordinator() -> Coordinator { Coordinator(url: url, name: name) }
+    func makeUIViewController(context: Context) -> UIViewController {
+        let container = UIViewController()
+        let preview = QLPreviewController()
+        preview.dataSource = context.coordinator
+        preview.delegate = context.coordinator
+        container.addChild(preview)
+        preview.view.translatesAutoresizingMaskIntoConstraints = false
+        container.view.addSubview(preview.view)
+        NSLayoutConstraint.activate([
+            preview.view.topAnchor.constraint(equalTo: container.view.topAnchor),
+            preview.view.bottomAnchor.constraint(equalTo: container.view.bottomAnchor),
+            preview.view.leadingAnchor.constraint(equalTo: container.view.leadingAnchor),
+            preview.view.trailingAnchor.constraint(equalTo: container.view.trailingAnchor)
+        ])
+        preview.didMove(toParent: container)
+        return container
+    }
+    func updateUIViewController(_ controller: UIViewController, context: Context) {}
+
+    final class Coordinator: NSObject, QLPreviewControllerDataSource, QLPreviewControllerDelegate, QLPreviewItem {
+        let previewItemURL: URL?
+        let previewItemTitle: String?
+        init(url: URL, name: String) { previewItemURL = url; previewItemTitle = name }
+        func numberOfPreviewItems(in controller: QLPreviewController) -> Int { 1 }
+        func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> any QLPreviewItem { self }
+        func previewController(_ controller: QLPreviewController, editingModeFor previewItem: any QLPreviewItem) -> QLPreviewItemEditingMode { .disabled }
+        func previewController(_ controller: QLPreviewController, shouldOpen url: URL, for item: any QLPreviewItem) -> Bool { false }
     }
 }
 

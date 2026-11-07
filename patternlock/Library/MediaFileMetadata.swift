@@ -12,7 +12,7 @@ nonisolated struct MediaFileMetadata: Sendable {
         let originalDate: Date?
         if kind == .photo {
             originalDate = photoDate(at: url)
-        } else if let metadata = try? await AVURLAsset(url: url).load(.creationDate) {
+        } else if kind == .video, let metadata = try? await AVURLAsset(url: url).load(.creationDate) {
             originalDate = try? await metadata.load(.dateValue)
         } else {
             originalDate = nil

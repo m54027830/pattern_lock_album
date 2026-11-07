@@ -1,6 +1,7 @@
 import Photos
 import PhotosUI
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ContentView: View {
     @State private var store: LibraryStore
@@ -30,6 +31,10 @@ struct ContentView: View {
     @State private var selected: Set<UUID> = []
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var showingPicker = false
+    @State private var showingDocuments = false
+    @State private var showingCamera = false
+    @State private var addDestination: VaultAddAction?
+    @State private var importFolderID: UUID?
     @State private var showingUpgrade = false
     @State private var showingImportResult = false
     @State private var showingSettings = false
@@ -66,9 +71,21 @@ struct ContentView: View {
             .photosPicker(isPresented: $showingPicker, selection: $pickerItems, matching: .any(of: [.images, .videos]), preferredItemEncoding: .current, photoLibrary: .shared())
             .onChange(of: pickerItems) { _, items in
                 guard !items.isEmpty else { return }
-                let destination = currentFolderID
+                let destination = importFolderID
                 Task { await store.importItems(items, into: destination); pickerItems = [] }
             }
+            .fileImporter(isPresented: $showingDocuments, allowedContentTypes: [.data], allowsMultipleSelection: true) { result in
+                switch result {
+                case .success(let urls):
+                    let destination = importFolderID
+                    Task { await store.importDocuments(urls, into: destination) }
+                case .failure(let error): store.errorMessage = error.localizedDescription
+                }
+            }
+            .sheet(item: $addDestination) { destination in
+                if destination == .memo { MemoComposer(store: store, folderID: importFolderID) }
+            }
+            .fullScreenCover(isPresented: $showingCamera) { VaultCameraView(store: store, folderID: importFolderID) }
             .sheet(isPresented: $showingUpgrade) { PurchaseView(reason: .media) }
             .sheet(item: $store.purchaseLimit) { PurchaseView(reason: $0) }
             .sheet(item: $folderEditor) { destination in
@@ -88,7 +105,7 @@ struct ContentView: View {
             .fullScreenCover(item: $viewer) { destination in
                 MediaViewer(items: visibleItems, initialID: destination.id, store: store)
             }
-            .alert(String(localized: "Something went wrong"), isPresented: Binding(get: { store.errorMessage != nil && viewer == nil && folderEditor == nil && !showingMove }, set: { if !$0 { store.errorMessage = nil } })) {
+            .alert(String(localized: "Something went wrong"), isPresented: Binding(get: { store.errorMessage != nil && viewer == nil && folderEditor == nil && addDestination == nil && !showingCamera && !showingMove }, set: { if !$0 { store.errorMessage = nil } })) {
                 Button(String(localized: "OK"), role: .cancel) { store.errorMessage = nil }
             } message: { Text(store.errorMessage ?? "") }
             .onChange(of: store.importSummary?.id, initial: true) { _, id in
@@ -119,7 +136,7 @@ struct ContentView: View {
                         }
                     }
                 }
-            } message: { Text(String(localized: "The photos and videos inside will stay in All media.")) }
+            } message: { Text(String(localized: "The items inside will stay in your library.")) }
             .task { await store.load(); scheduleCloudUpdate() }
             .onChange(of: store.snapshot) { _, _ in scheduleCloudUpdate() }
             .onChange(of: vaultName) { _, _ in scheduleCloudUpdate() }
@@ -141,11 +158,18 @@ struct ContentView: View {
         }
     }
 
-    private func requestImport() {
-        guard !store.isReadOnly else { return }
+    private func requestAdd(_ action: VaultAddAction) {
+        guard !store.isReadOnly, !store.isBusy, store.isLoaded else { return }
         do {
             try store.repository.purchaseAccess.checkMediaAddition(currentCount: store.snapshot.items.count)
-            showingPicker = true
+            importFolderID = currentFolderID
+            filter = .all
+            switch action {
+            case .media: showingPicker = true
+            case .document: showingDocuments = true
+            case .memo: addDestination = action
+            case .camera: showingCamera = true
+            }
         } catch { showingUpgrade = true }
     }
 
@@ -241,30 +265,32 @@ struct ContentView: View {
     }
 
     private var filterBar: some View {
-        HStack(spacing: 5) {
-            ForEach(MediaFilter.allCases) { choice in
-                Button {
-                    withAnimation(.easeInOut(duration: 0.18)) { filter = choice; selected.removeAll() }
-                } label: {
-                    HStack(spacing: 7) {
-                        Text(choice.title).font(.subheadline.weight(.medium))
-                        if choice == filter {
-                            Text(String(localized: "\(scopedItems.filter { choice.includes($0) }.count)"))
-                                .font(.system(size: 10, weight: .semibold, design: .rounded))
-                                .padding(.horizontal, 6).padding(.vertical, 3)
-                                .background(.white.opacity(0.17), in: Capsule())
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 5) {
+                ForEach(MediaFilter.allCases) { choice in
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.18)) { filter = choice; selected.removeAll() }
+                    } label: {
+                        HStack(spacing: 7) {
+                            Text(choice.title).font(.subheadline.weight(.medium))
+                            if choice == filter {
+                                Text(String(localized: "\(scopedItems.filter { choice.includes($0) }.count)"))
+                                    .font(.system(size: 10, weight: .semibold, design: .rounded))
+                                    .padding(.horizontal, 6).padding(.vertical, 3)
+                                    .background(.white.opacity(0.17), in: Capsule())
+                            }
                         }
+                        .padding(.horizontal, 14).padding(.vertical, 11)
+                        .foregroundStyle(choice == filter ? .white : AlbumTheme.secondary)
+                        .background(choice == filter ? AlbumTheme.ink : .clear, in: Capsule())
                     }
-                    .frame(maxWidth: .infinity).padding(.vertical, 11)
-                    .foregroundStyle(choice == filter ? .white : AlbumTheme.secondary)
-                    .background(choice == filter ? AlbumTheme.ink : .clear, in: Capsule())
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(choice == filter ? [.isSelected] : [])
                 }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(choice == filter ? [.isSelected] : [])
             }
+            .padding(5)
+            .background(AlbumTheme.track, in: Capsule())
         }
-        .padding(5)
-        .background(AlbumTheme.track, in: Capsule())
     }
 
     private var foldersSection: some View {
@@ -354,7 +380,7 @@ struct ContentView: View {
                 if store.isReadOnly {
                     ContentUnavailableView(String(localized: "This shared vault is empty"), systemImage: "photo.on.rectangle")
                 } else {
-                    EmptyLibraryView(filter: filter, isFolder: currentFolderID != nil) { requestImport() }.padding(.vertical, 8)
+                    EmptyLibraryView(add: requestAdd).padding(.vertical, 8)
                 }
             } else {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 5)], spacing: 5) {
@@ -373,13 +399,13 @@ struct ContentView: View {
                             Button(String(localized: "Delete"), systemImage: "trash", role: .destructive) { selected = [item.id]; isSelecting = true; showingDelete = true }
                             }
                         }
-                        .accessibilityLabel(item.kind == .video ? String(localized: "Video, \(item.originalName)") : String(localized: "Photo, \(item.originalName)"))
+                        .accessibilityLabel(item.accessibilityLabel)
                         .accessibilityAddTraits(selected.contains(item.id) ? .isSelected : [])
                         .accessibilityIdentifier("mediaItem-\(item.id.uuidString)")
                     }
                 }
                 .disabled(store.isBusy)
-                Text(String(localized: "Photos: \(scopedItems.filter { $0.kind == .photo }.count) · Videos: \(scopedItems.filter { $0.kind == .video }.count)"))
+                Text(itemCount(scopedItems.count))
                     .font(.caption).foregroundStyle(AlbumTheme.secondary)
                     .frame(maxWidth: .infinity).padding(.top, 12)
             }
@@ -401,13 +427,8 @@ struct ContentView: View {
                     selectionAction(String(localized: "Delete"), icon: "trash", destructive: true) { showingDelete = true } }
                 } else if !store.isReadOnly {
                     Spacer()
-                    Button { requestImport() } label: {
-                        HStack(spacing: 10) { Image(systemName: "plus").font(.system(size: 17, weight: .medium)); Text(String(localized: "Add media")).font(.subheadline.weight(.semibold)) }
-                            .foregroundStyle(.white).padding(.horizontal, 22).padding(.vertical, 16)
-                            .background(AlbumTheme.accent, in: Capsule())
-                    }
+                    VaultAddMenu(action: requestAdd)
                     .disabled(store.isBusy || !store.isLoaded)
-                    .accessibilityIdentifier("addMedia")
                 }
             }
             .padding(.horizontal, 27).padding(.vertical, 15)

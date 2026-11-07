@@ -61,6 +61,7 @@ struct PatternAppRoot: View {
         .sheet(item: $purchaseLimit) { PurchaseView(reason: $0) }
         .task { await purchases.start() }
         .task {
+            VaultFileDraft.cleanTemporaryFilesOnce()
             await VaultBackup.shared.cleanTemporaryFilesOnce()
             try? await PatternAuthenticator.shared.cleanDeletedVaults(in: URL.applicationSupportDirectory.appending(path: "Vaults"))
         }

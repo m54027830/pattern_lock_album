@@ -156,11 +156,13 @@ actor LibraryRepository {
         try security.checkWrite(root.lastPathComponent)
         try purchaseAccess.checkMediaAddition(currentCount: try load().items.count)
         let id = UUID()
-        let ext = source.pathExtension.isEmpty ? (kind == .photo ? "jpg" : "mov") : source.pathExtension
-        let filename = id.uuidString + "." + ext
+        let ext = source.pathExtension.isEmpty ? kind.defaultExtension : source.pathExtension
+        let filename = id.uuidString + (ext.isEmpty ? "" : "." + ext)
         let destination = root.appending(path: "Originals").appending(path: filename)
         let thumb = root.appending(path: "Thumbnails").appending(path: id.uuidString + ".jpg")
         do {
+            let values = try source.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
+            guard values.isRegularFile == true, values.isSymbolicLink != true else { throw LibraryError.invalidDocument }
             // Read the source before copying so its fallback file timestamp survives.
             let metadata = await MediaFileMetadata.read(at: source, kind: kind)
             try Task.checkCancellation()
@@ -177,7 +179,7 @@ actor LibraryRepository {
                 generator.appliesPreferredTrackTransform = true
                 generator.maximumSize = CGSize(width: 600, height: 600)
                 thumbnail = try await generator.image(at: .zero).image
-            } else {
+            } else if kind == .photo {
                 duration = nil
                 guard let imageSource = CGImageSourceCreateWithURL(destination as CFURL, nil),
                       let image = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, [
@@ -186,12 +188,16 @@ actor LibraryRepository {
                         kCGImageSourceThumbnailMaxPixelSize: 600
                       ] as CFDictionary) else { throw LibraryError.unsupportedMedia }
                 thumbnail = image
+            } else {
+                duration = nil
+                thumbnail = try VaultFileThumbnail.make(at: destination, kind: kind)
             }
             guard let writer = CGImageDestinationCreateWithURL(thumb as CFURL, UTType.jpeg.identifier as CFString, 1, nil) else { throw LibraryError.unsupportedMedia }
             CGImageDestinationAddImage(writer, thumbnail, [kCGImageDestinationLossyCompressionQuality: 0.82] as CFDictionary)
             guard CGImageDestinationFinalize(writer) else { throw LibraryError.unsupportedMedia }
             try files.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: thumb.path)
             // Reload after AVFoundation awaits so concurrent folder edits cannot be lost.
+            try Task.checkCancellation()
             var updated = try load()
             // Check again after video processing: concurrent imports and a
             // purchase revocation must not let this commit exceed the limit.
@@ -254,10 +260,11 @@ actor LibraryRepository {
                 try security.checkExport(root.lastPathComponent)
                 let name = URL(fileURLWithPath: item.originalName).deletingPathExtension().lastPathComponent
                 let ext = URL(fileURLWithPath: item.filename).pathExtension
-                var target = directory.appending(path: name + "." + ext)
+                let extensionSuffix = ext.isEmpty ? "" : "." + ext
+                var target = directory.appending(path: name + extensionSuffix)
                 var suffix = 2
                 while files.fileExists(atPath: target.path) {
-                    target = directory.appending(path: "\(name) (\(suffix)).\(ext)")
+                    target = directory.appending(path: "\(name) (\(suffix))" + extensionSuffix)
                     suffix += 1
                 }
                 try files.copyItem(at: mediaURL(item), to: target)
