@@ -46,52 +46,19 @@ struct VaultCameraView: View {
     @State private var saveTask: Task<Void, Never>?
 
     var body: some View {
-        VaultCameraSurface {
-            cameraPreview
-        } controls: {
-            VStack(spacing: 0) {
-                VStack(spacing: 0) {
-                    HStack {
-                        Button(String(localized: "Cancel")) { close() }.disabled(saving)
-                        Spacer()
-                        Text(String(localized: "Camera")).font(.headline)
-                        Spacer()
-                        Image(systemName: "lock.fill").accessibilityHidden(true)
-                    }.padding()
-                    Text(String(localized: "Saved only to this vault, never to Photos."))
-                        .font(.caption).foregroundStyle(.secondary).padding(.bottom, 10)
-                    Picker(String(localized: "Camera mode"), selection: Binding(get: { cameraScene.mode }, set: { mode in reloadCamera { $0.mode = mode } })) {
-                        ForEach(VaultCameraMode.allCases) { choice in Text(choice.title).tag(choice) }
-                    }
-                    .pickerStyle(.segmented).padding(.horizontal).padding(.bottom, 12)
-                    .disabled(cameraControlsLocked)
+        ZStack {
+            if showsCameraPreview {
+                VaultCameraSurface(isVideo: cameraScene.mode == .video) {
+                    cameraPreview
+                } header: {
+                    cameraHeader
+                } controls: {
+                    captureControls.background(.black.opacity(0.9))
                 }
-                .background(.black.opacity(0.9))
-
-                Group {
-                    if saving {
-                        ProgressView(String(localized: "Saving changes…")).frame(maxWidth: .infinity, maxHeight: .infinity)
-                    } else if draft != nil {
-                        VStack(spacing: 20) {
-                            Image(systemName: "camera.fill").font(.largeTitle)
-                            Text(String(localized: "Your capture hasn’t been saved yet."))
-                            Button(String(localized: "Try again")) { saveDraft() }.buttonStyle(.borderedProminent)
-                            Button(String(localized: "Discard"), role: .destructive) { draft = nil }
-                        }.frame(maxWidth: .infinity, maxHeight: .infinity).padding()
-                    } else if let permissionMessage {
-                        ContentUnavailableView {
-                            Label(String(localized: "Camera unavailable"), systemImage: "camera")
-                        } description: {
-                            Text(permissionMessage)
-                        } actions: {
-                            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                                Button(String(localized: "Open Settings")) { openURL(URL(string: UIApplication.openSettingsURLString)!) }
-                            }
-                        }
-                    } else if showsCameraPreview {
-                        Spacer(minLength: 0)
-                        captureControls.background(.black.opacity(0.9))
-                    } else { ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity) }
+            } else {
+                VStack(spacing: 0) {
+                    cameraHeader
+                    captureStatus
                 }
             }
         }
@@ -103,6 +70,49 @@ struct VaultCameraView: View {
         .alert(String(localized: "Something went wrong"), isPresented: Binding(get: { error != nil }, set: { if !$0 { error = nil } })) {
             Button(String(localized: "OK"), role: .cancel) { error = nil }
         } message: { Text(error ?? "") }
+    }
+
+    private var cameraHeader: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Button(String(localized: "Cancel")) { close() }.disabled(saving)
+                Spacer()
+                Text(String(localized: "Camera")).font(.headline)
+                Spacer()
+                Image(systemName: "lock.fill").accessibilityHidden(true)
+            }.padding()
+            Text(String(localized: "Saved only to this vault, never to Photos."))
+                .font(.caption).foregroundStyle(.secondary).padding(.bottom, 10)
+            Picker(String(localized: "Camera mode"), selection: Binding(get: { cameraScene.mode }, set: { mode in reloadCamera { $0.mode = mode } })) {
+                ForEach(VaultCameraMode.allCases) { choice in Text(choice.title).tag(choice) }
+            }
+            .pickerStyle(.segmented).padding(.horizontal).padding(.bottom, 12)
+            .disabled(cameraControlsLocked)
+        }
+        .background(.black.opacity(0.9))
+    }
+
+    @ViewBuilder private var captureStatus: some View {
+        if saving {
+            ProgressView(String(localized: "Saving changes…")).frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else if draft != nil {
+            VStack(spacing: 20) {
+                Image(systemName: "camera.fill").font(.largeTitle)
+                Text(String(localized: "Your capture hasn’t been saved yet."))
+                Button(String(localized: "Try again")) { saveDraft() }.buttonStyle(.borderedProminent)
+                Button(String(localized: "Discard"), role: .destructive) { draft = nil }
+            }.frame(maxWidth: .infinity, maxHeight: .infinity).padding()
+        } else if let permissionMessage {
+            ContentUnavailableView {
+                Label(String(localized: "Camera unavailable"), systemImage: "camera")
+            } description: {
+                Text(permissionMessage)
+            } actions: {
+                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    Button(String(localized: "Open Settings")) { openURL(URL(string: UIApplication.openSettingsURLString)!) }
+                }
+            }
+        } else { ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity) }
     }
 
     private var showsCameraPreview: Bool {
@@ -277,21 +287,34 @@ struct VaultCameraView: View {
     }
 }
 
-/// UIKit's camera picker expects a full-screen surface. Header, mode selection,
-/// timer and shutter controls overlay it instead of changing its preview bounds.
-struct VaultCameraSurface<Preview: View, Controls: View>: View {
+/// Video keeps its full-screen picker to avoid a black strip. Photo previews sit
+/// between the header and shutter row, so those controls cannot obscure the
+/// top and bottom of the normal photo frame and make it appear square.
+struct VaultCameraSurface<Preview: View, Header: View, Controls: View>: View {
+    let isVideo: Bool
     @ViewBuilder let preview: Preview
+    @ViewBuilder let header: Header
     @ViewBuilder let controls: Controls
 
     var body: some View {
         ZStack {
-            GeometryReader { geometry in
-                preview
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    .clipped()
+            if isVideo {
+                GeometryReader { geometry in
+                    preview
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipped()
+                }
+                .ignoresSafeArea()
             }
-            .ignoresSafeArea()
-            controls
+            VStack(spacing: 0) {
+                header
+                if isVideo {
+                    Spacer(minLength: 0)
+                } else {
+                    preview.frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                controls
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

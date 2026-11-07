@@ -4,7 +4,7 @@ import XCTest
 @testable import patternlock
 
 @MainActor final class VaultCameraControlTests: XCTestCase {
-    func testCameraPreviewFillsWindowAcrossModesRotationAndRecordingControls() async throws {
+    func testPhotoControlsDoNotCoverPreviewWhileVideoStillFillsWindow() async throws {
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
         let window = UIWindow(windowScene: scene)
         let initialPreview = CameraPreviewProbeState()
@@ -30,23 +30,32 @@ import XCTest
                 let preview = try XCTUnwrap(state.view)
                 XCTAssertNotNil(preview.window)
                 let frame = preview.convert(preview.bounds, to: window)
-                XCTAssertEqual(frame.minX, 0, accuracy: 0.5)
-                XCTAssertEqual(frame.maxX, window.bounds.width, accuracy: 0.5, "No uncovered strip after changing to video")
-                XCTAssertEqual(frame.minY, 0, accuracy: 0.5)
-                XCTAssertEqual(frame.height, window.bounds.height, accuracy: 0.5, "Controls must overlay the picker, not shrink it")
+                if video {
+                    XCTAssertEqual(frame.minX, 0, accuracy: 0.5)
+                    XCTAssertEqual(frame.maxX, window.bounds.width, accuracy: 0.5, "Keep the video black-strip fix")
+                    XCTAssertEqual(frame.minY, 0, accuracy: 0.5)
+                    XCTAssertEqual(frame.height, window.bounds.height, accuracy: 0.5)
+                } else {
+                    let safeFrame = host.view.convert(host.view.safeAreaLayoutGuide.layoutFrame, to: window)
+                    XCTAssertEqual(frame.minX, safeFrame.minX, accuracy: 0.5)
+                    XCTAssertEqual(frame.width, safeFrame.width, accuracy: 0.5)
+                    XCTAssertEqual(frame.minY, safeFrame.minY + 140, accuracy: 0.5, "Header must not cover the photo frame")
+                    XCTAssertEqual(frame.maxY, safeFrame.maxY - 108, accuracy: 0.5, "Shutter row must not cover the photo frame")
+                    if size.width < size.height {
+                        XCTAssertGreaterThan(frame.height, frame.width, "Portrait photos must not be squeezed into a square opening")
+                    }
+                }
             }
         }
     }
 
     private func surface(preview: CameraPreviewProbeState, video: Bool, recording: Bool) -> some View {
-        VaultCameraSurface {
+        VaultCameraSurface(isVideo: video) {
             CameraPreviewProbe(state: preview, video: video).id(video)
+        } header: {
+            Color.black.frame(height: 140)
         } controls: {
-            VStack(spacing: 0) {
-                Color.black.frame(height: 140)
-                Spacer(minLength: 0)
-                Color.black.frame(height: recording ? 140 : 108)
-            }
+            Color.black.frame(height: recording ? 140 : 108)
         }
     }
 
