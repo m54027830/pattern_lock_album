@@ -21,6 +21,8 @@ struct ContentView: View {
         self.onVaultChanged = onVaultChanged
         self.onVaultDeleted = onVaultDeleted
     }
+    @State private var cloudTask: Task<Void, Never>?
+    @State private var cloud = VaultCloudService.shared
     @State private var currentFolderID: UUID?
     @State private var filter = MediaFilter.all
     @AppStorage("librarySort") private var sort = LibrarySort.newest
@@ -49,7 +51,7 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 28) {
                     header
                     filterBar
-                    if currentFolderID == nil && !isSelecting { foldersSection }
+                    if currentFolderID == nil && !isSelecting && (!store.isReadOnly || !store.snapshot.folders.isEmpty) { foldersSection }
                     mediaSection
                 }
                 .padding(.horizontal, 24)
@@ -118,13 +120,29 @@ struct ContentView: View {
                     }
                 }
             } message: { Text(String(localized: "The photos and videos inside will stay in All media.")) }
-            .task { await store.load() }
+            .task { await store.load(); scheduleCloudUpdate() }
+            .onChange(of: store.snapshot) { _, _ in scheduleCloudUpdate() }
+            .onChange(of: vaultName) { _, _ in scheduleCloudUpdate() }
+            .onDisappear { cloudTask?.cancel() }
         }
         .tint(AlbumTheme.accent)
         .preferredColorScheme(.light)
     }
 
+    private func scheduleCloudUpdate() {
+        guard let vault, !store.isReadOnly else { return }
+        cloudTask?.cancel()
+        cloudTask = Task {
+            do {
+                try await Task.sleep(for: .seconds(3))
+                while store.isBusy { try await Task.sleep(for: .seconds(1)) }
+                try await cloud.synchronize(vault: vault, store: store)
+            } catch { /* Status remains visible in cloud settings; retry on next open/change. */ }
+        }
+    }
+
     private func requestImport() {
+        guard !store.isReadOnly else { return }
         do {
             try store.repository.purchaseAccess.checkMediaAddition(currentCount: store.snapshot.items.count)
             showingPicker = true
@@ -177,12 +195,12 @@ struct ContentView: View {
                             .foregroundStyle(AlbumTheme.secondary)
                     }
                     Spacer()
-                    Menu {
+                    if !store.isReadOnly { Menu {
                         Button(String(localized: "Edit folder"), systemImage: "pencil") { folderEditor = .init(folder: currentFolder) }
                         Button(String(localized: "Delete folder"), systemImage: "trash", role: .destructive) { folderToDelete = currentFolder }
                     } label: { Image(systemName: "ellipsis").font(.title3).padding(12).background(.white, in: Circle()) }
                     .disabled(store.isBusy)
-                    .accessibilityLabel(String(localized: "Folder options"))
+                    .accessibilityLabel(String(localized: "Folder options")) }
                 }
             }
         }
@@ -255,11 +273,11 @@ struct ContentView: View {
                 Text(String(localized: "Folders")).font(.headline).foregroundStyle(AlbumTheme.ink)
                 Text(String(localized: "\(store.snapshot.folders.count)")).font(.caption).foregroundStyle(AlbumTheme.secondary)
                 Spacer()
-                Button { folderEditor = .init(folder: nil) } label: {
+                if !store.isReadOnly { Button { folderEditor = .init(folder: nil) } label: {
                     Label(String(localized: "New folder"), systemImage: "plus").font(.system(size: 12, weight: .semibold))
                 }
                 .disabled(store.isBusy || !store.isLoaded)
-                .accessibilityIdentifier("newFolder")
+                .accessibilityIdentifier("newFolder") }
             }
             if store.snapshot.folders.isEmpty {
                 Button { folderEditor = .init(folder: nil) } label: {
@@ -286,8 +304,10 @@ struct ContentView: View {
                             }
                             .buttonStyle(.plain)
                             .contextMenu {
+                                if !store.isReadOnly {
                                 Button(String(localized: "Edit folder"), systemImage: "pencil") { folderEditor = .init(folder: folder) }
                                 Button(String(localized: "Delete folder"), systemImage: "trash", role: .destructive) { folderToDelete = folder }
+                                }
                             }
                             .disabled(store.isBusy)
                         }
@@ -331,8 +351,11 @@ struct ContentView: View {
                     Button(String(localized: "Try again")) { Task { await store.load() } }
                 }.frame(maxWidth: .infinity).padding(.vertical, 60)
             } else if visibleItems.isEmpty {
-                EmptyLibraryView(filter: filter, isFolder: currentFolderID != nil) { requestImport() }
-                    .padding(.vertical, 8)
+                if store.isReadOnly {
+                    ContentUnavailableView(String(localized: "This shared vault is empty"), systemImage: "photo.on.rectangle")
+                } else {
+                    EmptyLibraryView(filter: filter, isFolder: currentFolderID != nil) { requestImport() }.padding(.vertical, 8)
+                }
             } else {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 5)], spacing: 5) {
                     ForEach(visibleItems) { item in
@@ -344,9 +367,11 @@ struct ContentView: View {
                         .buttonStyle(.plain)
                         .contextMenu {
                             Button(String(localized: "Select"), systemImage: "checkmark.circle") { isSelecting = true; selected = [item.id] }
-                            Button(String(localized: "Export"), systemImage: "square.and.arrow.up") { Task { await store.export([item.id]) } }
+                            if store.allowsExport { Button(String(localized: "Export"), systemImage: "square.and.arrow.up") { Task { await store.export([item.id]) } } }
+                            if !store.isReadOnly {
                             Button(String(localized: "Move to folder"), systemImage: "folder") { selected = [item.id]; isSelecting = true; showingMove = true }
                             Button(String(localized: "Delete"), systemImage: "trash", role: .destructive) { selected = [item.id]; isSelecting = true; showingDelete = true }
+                            }
                         }
                         .accessibilityLabel(item.kind == .video ? String(localized: "Video, \(item.originalName)") : String(localized: "Photo, \(item.originalName)"))
                         .accessibilityAddTraits(selected.contains(item.id) ? .isSelected : [])
@@ -369,12 +394,12 @@ struct ContentView: View {
             }
             HStack(spacing: 16) {
                 if isSelecting {
-                    selectionAction(String(localized: "Export"), icon: "square.and.arrow.up") { Task { await store.export(selected) } }
+                    if store.allowsExport { selectionAction(String(localized: "Export"), icon: "square.and.arrow.up") { Task { await store.export(selected) } } }
                     Spacer()
-                    selectionAction(String(localized: "Move"), icon: "folder") { showingMove = true }
+                    if !store.isReadOnly { selectionAction(String(localized: "Move"), icon: "folder") { showingMove = true }
                     Spacer()
-                    selectionAction(String(localized: "Delete"), icon: "trash", destructive: true) { showingDelete = true }
-                } else {
+                    selectionAction(String(localized: "Delete"), icon: "trash", destructive: true) { showingDelete = true } }
+                } else if !store.isReadOnly {
                     Spacer()
                     Button { requestImport() } label: {
                         HStack(spacing: 10) { Image(systemName: "plus").font(.system(size: 17, weight: .medium)); Text(String(localized: "Add media")).font(.subheadline.weight(.semibold)) }

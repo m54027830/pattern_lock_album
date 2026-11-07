@@ -1,14 +1,40 @@
 import StoreKit
 import UIKit
+import OSLog
 
 @MainActor final class StoreKitPurchaseClient: LifetimePurchaseClient {
     private var product: Product?
     private var transactions: [UInt64: StoreKit.Transaction] = [:]
+    #if DEBUG
+    private let logger = Logger(subsystem: PurchaseConfiguration.bundleID, category: "Purchases")
+    #endif
 
     func loadProduct() async throws -> LifetimeProduct? {
-        product = try await Product.products(for: [PurchaseConfiguration.productID])
-            .first { $0.id == PurchaseConfiguration.productID && $0.type == .nonConsumable }
-        return product.map { LifetimeProduct(id: $0.id, displayName: $0.displayName, displayPrice: $0.displayPrice) }
+        product = nil
+        #if DEBUG
+        logger.notice("StoreKit requesting product \(PurchaseConfiguration.productID, privacy: .public)")
+        #endif
+        do {
+            let products = try await Product.products(for: [PurchaseConfiguration.productID])
+            product = products.first { $0.id == PurchaseConfiguration.productID && $0.type == .nonConsumable }
+            #if DEBUG
+            let storefront = await Storefront.current
+            let country = storefront?.countryCode ?? "unknown"
+            for value in products {
+                logger.notice("StoreKit returned product=\(value.id, privacy: .public) price=\(value.displayPrice, privacy: .public) currency=\(value.priceFormatStyle.currencyCode, privacy: .public) storefront=\(country, privacy: .public) type=\(value.type.rawValue, privacy: .public)")
+            }
+            if product == nil {
+                logger.notice("StoreKit returned no matching non-consumable; count=\(products.count) storefront=\(country, privacy: .public)")
+            }
+            #endif
+            return product.map { LifetimeProduct(id: $0.id, displayName: $0.displayName, displayPrice: $0.displayPrice) }
+        } catch {
+            #if DEBUG
+            let failure = error as NSError
+            logger.error("StoreKit product request failed: domain=\(failure.domain, privacy: .public) code=\(failure.code)")
+            #endif
+            throw error
+        }
     }
 
     func currentEntitlements() async -> [PurchaseVerification] {

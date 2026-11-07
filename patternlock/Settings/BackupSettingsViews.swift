@@ -1,6 +1,47 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
+struct FileBackupSettingsView: View {
+    let store: LibraryStore
+    let vault: Vault
+    let authenticator: PatternAuthenticator
+    @State private var hasRecovery = false
+    @State private var loaded = false
+    @State private var error: String?
+
+    var body: some View {
+        Form {
+            Section {
+                Text(String(localized: "Save an encrypted backup file to iCloud Drive or another location in Files. Export again to include newer changes. Import requires the file and its original recovery phrase."))
+                NavigationLink {
+                    BackupExportView(store: store, vault: vault, authenticator: authenticator)
+                } label: {
+                    Label(String(localized: "Export backup file"), systemImage: "arrow.up.doc")
+                }.disabled(!loaded || !hasRecovery)
+                NavigationLink {
+                    RestoreVaultView(authenticator: authenticator, source: .file)
+                } label: {
+                    Label(String(localized: "Import a backup file"), systemImage: "arrow.down.doc")
+                }
+            } footer: {
+                if loaded && !hasRecovery {
+                    Text(String(localized: "Set up a recovery phrase in vault settings before exporting a file."))
+                }
+            }
+            if let error { Section { Text(error).foregroundStyle(.red) } }
+        }
+        .scrollContentBackground(.hidden).background(AlbumTheme.background)
+        .navigationTitle(String(localized: "File backup")).navigationBarTitleDisplayMode(.inline)
+        .task {
+            do {
+                hasRecovery = try await authenticator.settings(for: vault.id).recovery != nil
+                loaded = true
+                error = nil
+            } catch { self.error = error.localizedDescription }
+        }
+    }
+}
+
 struct BackupExportView: View {
     let store: LibraryStore
     let vault: Vault
@@ -15,19 +56,19 @@ struct BackupExportView: View {
     var body: some View {
         Form {
             Section {
-                Label(String(localized: "Encrypted backup"), systemImage: "lock.icloud")
+                Label(String(localized: "Encrypted backup"), systemImage: "lock.doc")
                 Text(String(localized: "Your photos, videos, folders, and vault name are encrypted before saving. Choose iCloud Drive in Files to keep the backup in iCloud."))
                 SecureField(String(localized: "This vault’s recovery phrase"), text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
             } footer: { Text(String(localized: "Save the phrase separately and wait for iCloud Drive to finish uploading before deleting Pattern. Deleting the app removes local vaults. Restoration needs both the backup file and its original phrase.")) }
             Section {
-                Button(String(localized: "Back up now"), systemImage: "icloud.and.arrow.up", action: createBackup).disabled(phrase.isEmpty || busy || store.isBusy)
+                Button(String(localized: "Export backup file"), systemImage: "arrow.up.doc", action: createBackup).disabled(phrase.isEmpty || busy || store.isBusy)
                 if busy { ProgressView(String(localized: "Encrypting backup…")) }
                 if saved { Label(String(localized: "Backup saved through Files"), systemImage: "checkmark.circle").foregroundStyle(AlbumTheme.accent) }
                 if let error { Text(error).foregroundStyle(.red) }
             }
         }
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
-        .navigationTitle(String(localized: "Back up vault")).navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(String(localized: "Export backup file")).navigationBarTitleDisplayMode(.inline)
         .sheet(item: $export, onDismiss: cleanup) { backup in
             BackupFileExporter(url: backup.url) { didSave in saved = didSave; export = nil; cleanupURL(backup.url) }
                 .ignoresSafeArea()
@@ -78,10 +119,17 @@ private struct BackupFileExporter: UIViewControllerRepresentable {
 }
 
 struct RestoreVaultView: View {
+    enum Source { case iCloud, file }
+
     var authenticator = PatternAuthenticator.shared
     var onRestored: (() -> Void)?
+    var source: Source = .iCloud
+    var offersFileImport = true
     @Environment(\.dismiss) private var dismiss
     @State private var selectingFile = false
+    @State private var backups: [CloudBackupSummary] = []
+    @State private var selectedBackup: String?
+    @State private var listing = false
     @State private var url: URL?
     @State private var phrase = ""
     @State private var prepared: PreparedVaultRestore?
@@ -116,20 +164,51 @@ struct RestoreVaultView: View {
                 }
             } else {
                 Section {
-                    Label(String(localized: "Restore from iCloud Drive"), systemImage: "lock.icloud")
-                    Text(String(localized: "In Files, open Browse → iCloud Drive and select your saved .patternbackup file. Sign in to the same Apple Account and turn on iCloud Drive if it isn’t listed."))
-                    Button(url == nil ? String(localized: "Choose iCloud backup") : String(localized: "Choose another backup"), systemImage: "icloud.and.arrow.down") { selectingFile = true }
-                    if let url { Text(url.lastPathComponent).font(.caption).foregroundStyle(AlbumTheme.secondary) }
+                    if source == .file {
+                        Text(String(localized: "Previously exported .patternbackup files can still be restored with their original recovery phrases."))
+                        Button(String(localized: "Import a backup file"), systemImage: "arrow.down.doc") { selectingFile = true }
+                        if let url { Text(url.lastPathComponent).font(.caption).foregroundStyle(AlbumTheme.secondary) }
+                    } else {
+                        Label(String(localized: "Restore from iCloud"), systemImage: "lock.icloud")
+                        Text(String(localized: "Sign in to the Apple Account that owns the backup, choose a saved backup, and enter its recovery phrase."))
+                        if listing { ProgressView(String(localized: "Looking for backups…")) }
+                        else if backups.isEmpty && error == nil { Text(String(localized: "No cloud backups found. A backup must have completed before the app was deleted.")) }
+                        else if !backups.isEmpty {
+                            Picker(String(localized: "Backup"), selection: $selectedBackup) {
+                                Text(String(localized: "Choose a backup")).tag(String?.none)
+                                ForEach(Array(backups.enumerated()), id: \.element.id) { index, backup in
+                                    Text(String(localized: "Backup") + " " + String(index + 1) + " · " + backup.date.formatted(date: .abbreviated, time: .shortened)).tag(Optional(backup.id))
+                                }
+                            }
+                        }
+                        Button(String(localized: "Refresh backups")) { Task { await listBackups() } }.disabled(listing)
+                    }
                     SecureField(String(localized: "Phrase used for this backup"), text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
-                    Button(String(localized: "Open encrypted backup"), action: prepare).disabled(url == nil || phrase.isEmpty || busy)
+                    Button(String(localized: "Open encrypted backup"), action: prepare).disabled((source == .file ? url == nil : selectedBackup == nil) || phrase.isEmpty || busy)
                     if busy { ProgressView(String(localized: "Opening backup…")) }
                     if let error { Text(error).foregroundStyle(.red) }
-                } footer: { Text(String(localized: "You need a backup saved before the app was deleted and the recovery phrase used to encrypt it. A recovery phrase alone cannot restore deleted photos or videos.")) }
+                } footer: {
+                    if source == .iCloud {
+                        Text(String(localized: "Cloud backups are encrypted before upload. Only the recovery phrase used for the latest completed backup can open it. Your pattern alone cannot restore deleted files."))
+                    }
+                }
+                // Keep file restoration reachable from onboarding and the lock
+                // screen. Settings already provides its own File backup section.
+                if source == .iCloud && offersFileImport {
+                    Section {
+                        NavigationLink {
+                            RestoreVaultView(authenticator: authenticator, onRestored: onRestored, source: .file)
+                        } label: {
+                            Label(String(localized: "Import a backup file"), systemImage: "arrow.down.doc")
+                        }
+                    } header: { Text(String(localized: "File backup")) }
+                }
+
             }
         }
         .disabled(busy)
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
-        .navigationTitle(String(localized: "Restore from iCloud")).navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(source == .file ? String(localized: "Import a backup file") : String(localized: "Restore from iCloud")).navigationBarTitleDisplayMode(.inline)
         .fileImporter(isPresented: $selectingFile, allowedContentTypes: [.data]) { result in
             do { url = try result.get(); error = nil }
             catch { self.error = error.localizedDescription }
@@ -140,14 +219,31 @@ struct RestoreVaultView: View {
             if busy { operation?.cancel() }
         }
         .onChange(of: restored) { _, done in if done { phrase = "" } }
+        .task { if source == .iCloud { await listBackups() } }
+    }
+
+    private func listBackups() async {
+        listing = true; error = nil
+        defer { listing = false }
+        do {
+            backups = try await VaultCloudService.shared.listBackups()
+            if selectedBackup == nil, backups.count == 1 { selectedBackup = backups.first?.id }
+        } catch { self.error = error.localizedDescription }
     }
 
     private func prepare() {
-        guard let url else { return }
         busy = true; error = nil
         operation = Task {
             do {
-                let value = try await VaultBackup.shared.prepareRestore(from: url, phrase: phrase, security: authenticator.security)
+                let value: PreparedVaultRestore
+                switch source {
+                case .file:
+                    guard let url else { throw VaultCloudError.invalidData }
+                    value = try await VaultBackup.shared.prepareRestore(from: url, phrase: phrase, security: authenticator.security)
+                case .iCloud:
+                    guard let id = selectedBackup else { throw VaultCloudError.invalidData }
+                    value = try await VaultCloudService.shared.prepareBackup(id: id, phrase: phrase)
+                }
                 if Task.isCancelled { try? FileManager.default.removeItem(at: value.directory) }
                 else { prepared = value; name = String(String(localized: "\(value.name) restored").prefix(40)); phrase = "" }
             } catch { if !Task.isCancelled { self.error = error.localizedDescription } }
@@ -171,7 +267,7 @@ struct RecoverPatternView: View {
             } else {
                 Section {
                     SecureField(String(localized: "Recovery phrase"), text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
-                } footer: { Text(String(localized: "This resets a pattern for a vault still on this device. After deleting and reinstalling Pattern, use Restore from iCloud instead; you’ll need your saved backup file and its phrase.")) }
+                } footer: { Text(String(localized: "This resets a pattern for a vault still on this device. After reinstalling Pattern, use Restore from iCloud with a completed backup and its recovery phrase.")) }
                 Section {
                     NavigationLink(String(localized: "Choose a new pattern")) {
                         PatternSetupView(title: String(localized: "Reset pattern"), needsCurrentPattern: false) { _, pattern in

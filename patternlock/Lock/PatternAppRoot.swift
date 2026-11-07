@@ -4,6 +4,7 @@ import UIKit
 
 struct PatternAppRoot: View {
     @State private var presentationRevision = 0
+    @State private var cloudSessionScope = UUID()
     @State private var purchases = PurchaseStore.shared
     @State private var purchaseLimit: FreeTierLimit?
     @State private var lock = PatternLockStore()
@@ -18,12 +19,14 @@ struct PatternAppRoot: View {
                 AlbumTheme.background.ignoresSafeArea()
                     .accessibilityIdentifier("initialLoadingScreen")
             } else if lock.stage == .unlocked, let vault = lock.unlockedVault {
+                VaultAccessGate(vault: vault, store: libraries.store(for: vault), sessionScope: cloudSessionScope, isDummy: lock.isDummySession, lock: { libraries.dismissPresentations(); lock.lock(); Task { await lock.activate() } }) {
                 ContentView(store: libraries.store(for: vault), vaultName: vault.name,
                             createVault: lock.isDummySession ? nil : { beginNewVault(from: vault) },
                             lockVault: { libraries.dismissPresentations(); lock.lock(); Task { await lock.activate() } },
                             vault: lock.isDummySession ? nil : vault,
                             onVaultChanged: { lock.updateUnlockedVault($0) },
-                            onVaultDeleted: { libraries.forget(vault); lock.lock(); Task { await lock.activate() } })
+                            onVaultDeleted: { libraries.forget(vault); lock.lock(); Task { await lock.activate(); await VaultCloudService.shared.processDeletions() } })
+                }
                     .id(vault.id + "-" + String(presentationRevision))
             } else if lock.stage == .onboarding {
                 OnboardingView(onRestored: { lock.lock(); Task { await lock.activate() } }) { name, pattern, size, phrase in
@@ -34,6 +37,9 @@ struct PatternAppRoot: View {
             }
         }
         .environment(\.patternGridSize, lock.gridSize)
+        .onChange(of: lock.stage) { _, stage in
+            if stage != .unlocked { VaultCloudService.shared.stopViewingSessions(scope: cloudSessionScope) }
+        }
         .transaction { transaction in
             if lock.stage != .unlocked && lock.stage != .onboarding { transaction.disablesAnimations = true }
         }
@@ -46,7 +52,7 @@ struct PatternAppRoot: View {
         ))
         .onChange(of: scenePhase, initial: true) { _, phase in
             switch phase {
-            case .active: Task { await lock.activate(); await purchases.refreshEntitlements() }
+            case .active: Task { await lock.activate(); await purchases.refreshEntitlements(); await VaultCloudService.shared.processDeletions() }
             case .inactive: lock.becameInactive()
             case .background: purchaseLimit = nil; lock.enteredBackground(); libraries.dismissPresentations()
             @unknown default: lock.becameInactive()
@@ -68,6 +74,8 @@ struct PatternAppRoot: View {
             guard let activation = notification.object as? DuressActivation else { return }
             purchaseLimit = nil
             libraries.applyDuress(activation)
+            VaultCloudService.shared.stopViewingSessions()
+            Task { await VaultCloudService.shared.processDeletions() }
             presentationRevision += 1 // Dismiss sheets, previews, and pickers in every window.
             for id in activation.revokedVaultIDs {
                 if lock.revokeAccess(to: id) { Task { await lock.activate() } }

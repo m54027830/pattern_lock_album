@@ -1261,6 +1261,7 @@
       }
     },
     "A little space that’s only yours." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1762,6 +1763,53 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "访问"
+          }
+        }
+      }
+    },
+    "Access to this shared vault has expired." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Zugriff auf diesen geteilten Tresor ist abgelaufen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access to this shared vault has expired."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’accès à ce coffre partagé a expiré."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’accesso a questa cassaforte condivisa è scaduto."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この共有保管庫のアクセス期限が切れました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 공유 보관함의 접근 기간이 만료되었습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此共享保险库的访问权限已到期。"
           }
         }
       }
@@ -2319,7 +2367,55 @@
         }
       }
     },
+    "Allow export" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export erlauben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow export"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoriser l’exportation"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consenti esportazione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書き出しを許可"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내보내기 허용"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许导出"
+          }
+        }
+      }
+    },
     "Always on" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2596,6 +2692,7 @@
       }
     },
     "Available" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2734,6 +2831,7 @@
       }
     },
     "Back up to iCloud Drive" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2780,6 +2878,7 @@
       }
     },
     "Back up vault" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2867,6 +2966,53 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "备份"
+          }
+        }
+      }
+    },
+    "Backup is off until you enable it for this vault. While the vault is open, changes upload automatically. Reopen it to retry interrupted uploads. Keep your recovery phrase somewhere outside this phone." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Backup ist zunächst ausgeschaltet. Bei geöffnetem Tresor werden Änderungen automatisch hochgeladen. Öffne ihn erneut, um abgebrochene Uploads zu wiederholen. Bewahre die Wiederherstellungsphrase außerhalb dieses Telefons auf."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup is off until you enable it for this vault. While the vault is open, changes upload automatically. Reopen it to retry interrupted uploads. Keep your recovery phrase somewhere outside this phone."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La sauvegarde reste désactivée jusqu’à votre activation. Les changements sont envoyés lorsque le coffre est ouvert. Rouvrez-le pour réessayer un envoi interrompu. Conservez la phrase de récupération hors de ce téléphone."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il backup è disattivato finché non lo abiliti. Le modifiche vengono caricate quando la cassaforte è aperta. Riaprila per riprovare i caricamenti interrotti. Conserva la frase di recupero fuori da questo telefono."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この保管庫で有効にするまでバックアップは行われません。保管庫を開いている間に変更を自動送信します。中断した場合は再度開くと再試行します。復元フレーズはこの端末以外に保管してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 보관함에서 켜기 전에는 백업하지 않습니다. 보관함이 열려 있으면 변경 사항을 자동 업로드합니다. 중단되면 다시 열어 재시도하세요. 복구 문구는 이 휴대폰 외부에 보관하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "为此保险库启用后才会备份。打开保险库时会自动上传更改；上传中断后请重新打开以重试。请将恢复短语保存在此手机之外。"
           }
         }
       }
@@ -3010,6 +3156,7 @@
       }
     },
     "Backups on this device" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3331,6 +3478,53 @@
         }
       }
     },
+    "Checking vault access…" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tresorzugriff wird geprüft …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Checking vault access…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification de l’accès…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verifica dell’accesso…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アクセス権を確認中…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보관함 접근 확인 중…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在检查访问权限…"
+          }
+        }
+      }
+    },
     "Checking your pattern…" : {
       "localizations" : {
         "de" : {
@@ -3419,6 +3613,53 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "请选择 3 × 3、4 × 4 或 5 × 5 网格。"
+          }
+        }
+      }
+    },
+    "Choose a backup" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup auswählen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a backup"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisir une sauvegarde"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scegli un backup"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップを選択"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "백업 선택"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择备份"
           }
         }
       }
@@ -3653,6 +3894,53 @@
         }
       }
     },
+    "Choose a pattern" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muster wählen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a pattern"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisir un schéma"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scegli una sequenza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "パターンを設定"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "패턴 설정"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置图案"
+          }
+        }
+      }
+    },
     "Choose a pattern and get a new recovery phrase." : {
       "localizations" : {
         "de" : {
@@ -3838,6 +4126,7 @@
       }
     },
     "Choose another backup" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3930,6 +4219,7 @@
       }
     },
     "Choose iCloud backup" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4293,6 +4583,147 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "关闭预览"
+          }
+        }
+      }
+    },
+    "Cloud backup and sharing are stopped on this device after a duress unlock." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach dem Entsperren unter Zwang sind Cloud-Backup und Teilen auf diesem Gerät gestoppt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cloud backup and sharing are stopped on this device after a duress unlock."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le déverrouillage sous contrainte a arrêté la sauvegarde cloud et le partage sur cet appareil."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo sblocco sotto costrizione ha interrotto il backup cloud e la condivisione su questo dispositivo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "緊急用パターンで開いたため、この端末でのクラウドバックアップと共有は停止しています。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "긴급 패턴으로 잠금을 해제하여 이 기기의 클라우드 백업과 공유가 중지되었습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用胁迫图案解锁后，此设备已停止云备份和共享。"
+          }
+        }
+      }
+    },
+    "Cloud backups are encrypted before upload. Only the recovery phrase used for the latest completed backup can open it. Your pattern alone cannot restore deleted files." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backups werden vor dem Upload verschlüsselt. Du benötigst die Phrase des letzten abgeschlossenen Backups. Das Muster allein stellt gelöschte Dateien nicht wieder her."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cloud backups are encrypted before upload. Only the recovery phrase used for the latest completed backup can open it. Your pattern alone cannot restore deleted files."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les sauvegardes sont chiffrées avant l’envoi. Seule la phrase de la dernière sauvegarde terminée permet de l’ouvrir. Le schéma seul ne restaure pas les fichiers supprimés."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I backup vengono crittografati prima dell’upload. Serve la frase dell’ultimo backup completato. La sola sequenza non ripristina i file eliminati."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップは送信前に暗号化されます。最後に完了したバックアップの復元フレーズが必要です。パターンだけでは削除したファイルを復元できません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "백업은 업로드 전에 암호화됩니다. 마지막으로 완료된 백업에 사용한 복구 문구가 필요합니다. 패턴만으로 삭제된 파일을 복원할 수는 없습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "备份会在上传前加密。只有最近一次完整备份所用的恢复短语才能打开它。仅凭图案无法恢复已删除的文件。"
+          }
+        }
+      }
+    },
+    "Cloud removal is pending. Pattern will retry when it can reach iCloud." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Cloud-Löschung steht aus. Pattern versucht es erneut, sobald iCloud erreichbar ist."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cloud removal is pending. Pattern will retry when it can reach iCloud."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La suppression cloud est en attente. Pattern réessaiera dès qu’iCloud sera accessible."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La rimozione dal cloud è in attesa. Pattern riproverà quando iCloud sarà raggiungibile."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クラウドからの削除は保留中です。iCloudに接続でき次第、再試行します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "클라우드 삭제가 대기 중입니다. iCloud에 연결되면 다시 시도합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "云端删除正在等待处理。连接到 iCloud 后 Pattern 会重试。"
           }
         }
       }
@@ -5309,6 +5740,53 @@
         }
       }
     },
+    "Copy sharing phrase" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freigabephrase kopieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy sharing phrase"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copier la phrase de partage"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia frase di condivisione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有フレーズをコピー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 문구 복사"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制共享短语"
+          }
+        }
+      }
+    },
     "Couldn’t change app icon" : {
       "localizations" : {
         "de" : {
@@ -5903,6 +6381,100 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "创建或恢复。"
+          }
+        }
+      }
+    },
+    "Create sharing phrase" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freigabephrase erstellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create sharing phrase"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créer une phrase de partage"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crea frase di condivisione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有フレーズを作成"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 문구 만들기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建共享短语"
+          }
+        }
+      }
+    },
+    "Creating shares requires Pattern Unlimited. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zum Teilen brauchst du Pattern Unlimited. Geteilte Tresore zu öffnen ist kostenlos. Jede Phrase kann von einem Apple Account beansprucht werden. Erstelle für jede Person eine eigene."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creating shares requires Pattern Unlimited. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Unlimited est nécessaire pour créer un partage. L’ouverture est gratuite. Chaque phrase est réservée à un seul compte Apple. Créez une phrase par personne."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per creare condivisioni serve Pattern Unlimited. Aprirle è gratuito. Ogni frase può essere riscattata da un solo Apple Account. Creane una per ogni persona."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有の作成にはPattern Unlimitedが必要です。共有保管庫を開くのは無料です。各フレーズは1つのApple Accountでのみ受け取れます。相手ごとに作成してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 생성에는 Pattern Unlimited가 필요합니다. 공유 보관함 열기는 무료입니다. 각 문구는 하나의 Apple 계정만 사용할 수 있습니다. 사람마다 별도 문구를 만드세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建共享需要 Pattern Unlimited，打开共享保险库则免费。每个短语仅供一个 Apple 账户领取。请为每位接收者创建独立短语。"
           }
         }
       }
@@ -6617,7 +7189,102 @@
         }
       }
     },
+    "Delete this vault’s iCloud backup?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das iCloud-Backup dieses Tresors löschen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete this vault’s iCloud backup?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer la sauvegarde iCloud de ce coffre ?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminare il backup iCloud di questa cassaforte?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この保管庫のiCloudバックアップを削除しますか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 보관함의 iCloud 백업을 삭제할까요?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除此保险库的 iCloud 备份？"
+          }
+        }
+      }
+    },
+    "Deletes local files and credentials. For an owned vault, its configured cloud backup and shares are also removed when iCloud is available. Other vaults, Photos originals, and exported backup files remain." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löscht lokale Dateien und Zugangsdaten. Bei eigenen Tresoren werden auch das eingerichtete Cloud-Backup und Freigaben gelöscht, sobald iCloud erreichbar ist. Andere Tresore, Fotos-Originale und exportierte Backups bleiben."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deletes local files and credentials. For an owned vault, its configured cloud backup and shares are also removed when iCloud is available. Other vaults, Photos originals, and exported backup files remain."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprime les fichiers et identifiants locaux. Pour vos coffres, la sauvegarde cloud configurée et les partages sont aussi supprimés dès qu’iCloud est accessible. Les autres coffres, originaux Photos et sauvegardes exportées restent."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina file e credenziali locali. Per le casseforti di tua proprietà, rimuove anche il backup cloud configurato e le condivisioni quando iCloud è disponibile. Restano le altre casseforti, gli originali in Foto e i backup esportati."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "端末内のファイルと認証情報を削除します。所有する保管庫では、設定済みのクラウドバックアップと共有もiCloud接続時に削除します。他の保管庫、写真アプリのオリジナル、書き出したバックアップは残ります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로컬 파일과 인증 정보를 삭제합니다. 소유한 보관함의 설정된 클라우드 백업과 공유도 iCloud 연결 시 제거합니다. 다른 보관함, 사진 앱 원본, 내보낸 백업 파일은 유지됩니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除本地文件和凭据。如果是你拥有的保险库，iCloud 可用时还会删除已配置的云备份和共享。其他保险库、照片原件和导出的备份文件会保留。"
+          }
+        }
+      }
+    },
     "Deletes this vault’s local files and access credentials. Other vaults, Photos originals, and saved backup files remain." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6709,7 +7376,55 @@
         }
       }
     },
+    "Deleting Pattern removes your local vaults. Enable encrypted iCloud backup in settings to restore after reinstalling." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn du Pattern löschst, werden lokale Tresore entfernt. Aktiviere das verschlüsselte iCloud-Backup in den Einstellungen, um sie nach einer Neuinstallation wiederherzustellen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting Pattern removes your local vaults. Enable encrypted iCloud backup in settings to restore after reinstalling."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer Pattern efface les coffres locaux. Activez la sauvegarde iCloud chiffrée dans les réglages pour les restaurer après réinstallation."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminando Pattern rimuovi le casseforti locali. Abilita il backup iCloud crittografato nelle impostazioni per ripristinarle dopo la reinstallazione."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Patternを削除すると端末内の保管庫も削除されます。再インストール後に復元するには、設定で暗号化iCloudバックアップを有効にしてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern을 삭제하면 로컬 보관함도 삭제됩니다. 재설치 후 복원하려면 설정에서 암호화된 iCloud 백업을 켜세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除 Pattern 会清除本地保险库。请在设置中启用加密 iCloud 备份，以便重新安装后恢复。"
+          }
+        }
+      }
+    },
     "Deleting Pattern removes your local vaults. Save an encrypted backup to iCloud Drive in settings so you can restore after reinstalling." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -7399,6 +8114,53 @@
         }
       }
     },
+    "Drawing this pattern removes access to your other vaults and stops cloud backup and sharing here. The selected dummy vault, or this vault, opens with a new recovery phrase. All owned shares are queued for revocation." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Muster entfernt den Zugriff auf andere Tresore und stoppt Cloud-Backup und Teilen hier. Der gewählte Ködertresor oder dieser Tresor öffnet sich mit einer neuen Phrase. Alle eigenen Freigaben werden zum Entzug vorgemerkt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drawing this pattern removes access to your other vaults and stops cloud backup and sharing here. The selected dummy vault, or this vault, opens with a new recovery phrase. All owned shares are queued for revocation."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce schéma retire l’accès aux autres coffres et arrête la sauvegarde cloud et le partage ici. Le coffre leurre choisi, ou ce coffre, s’ouvre avec une nouvelle phrase. Tous vos partages sont mis en attente de révocation."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questa sequenza rimuove l’accesso alle altre casseforti e ferma backup cloud e condivisione qui. Si apre la cassaforte esca scelta, o questa, con una nuova frase. Tutte le condivisioni create vengono messe in coda per la revoca."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このパターンで開くと、他の保管庫へのアクセスと、この端末のクラウドバックアップ・共有を停止します。選択したダミー保管庫、またはこの保管庫が新しい復元フレーズで開きます。すべての共有の取り消しを予約します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 패턴을 그리면 다른 보관함 접근과 이 기기의 클라우드 백업 및 공유가 중지됩니다. 선택한 가짜 보관함 또는 이 보관함이 새 복구 문구로 열립니다. 생성한 모든 공유의 취소를 예약합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "绘制此图案会移除对其他保险库的访问，并停止此设备的云备份和共享。所选伪装保险库或此保险库会使用新的恢复短语打开。所有由你创建的共享将排队撤销。"
+          }
+        }
+      }
+    },
     "Drawing this vault’s current pattern will permanently delete it." : {
       "localizations" : {
         "de" : {
@@ -7446,6 +8208,7 @@
       }
     },
     "Drawing this vault’s pattern removes access to every vault except the one displayed and stops backups here. Your selected dummy vault opens, or this vault if no dummy is set. The surviving vault gets a new recovery phrase and active sharing closes." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -7630,6 +8393,7 @@
       }
     },
     "Duress unlock turned off new backups from Pattern on this device. Previously saved iCloud Drive backups remain available for restoration." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -7997,6 +8761,100 @@
         }
       }
     },
+    "Enable automatic encrypted backup separately for each vault. Restore directly from iCloud after reinstalling." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktiviere das automatische verschlüsselte Backup für jeden Tresor einzeln. Nach einer Neuinstallation kannst du direkt aus iCloud wiederherstellen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable automatic encrypted backup separately for each vault. Restore directly from iCloud after reinstalling."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activez la sauvegarde automatique chiffrée pour chaque coffre. Restaurez directement depuis iCloud après réinstallation."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abilita il backup automatico crittografato per ogni cassaforte. Dopo la reinstallazione, ripristina direttamente da iCloud."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保管庫ごとに暗号化自動バックアップを有効にできます。再インストール後はiCloudから直接復元できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보관함마다 암호화된 자동 백업을 켤 수 있습니다. 재설치 후 iCloud에서 바로 복원하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "为每个保险库分别启用自动加密备份。重新安装后可直接从 iCloud 恢复。"
+          }
+        }
+      }
+    },
+    "Enable iCloud backup" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud-Backup aktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable iCloud backup"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activer la sauvegarde iCloud"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abilita backup iCloud"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudバックアップを有効にする"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 백업 켜기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用 iCloud 备份"
+          }
+        }
+      }
+    },
     "Enabling this setting doesn’t activate it immediately. You can keep adding everyday photos here before locking the app." : {
       "localizations" : {
         "de" : {
@@ -8044,6 +8902,7 @@
       }
     },
     "Encrypt backup" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -8135,6 +8994,53 @@
         }
       }
     },
+    "Encrypted iCloud backup" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verschlüsseltes iCloud-Backup"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encrypted iCloud backup"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegarde iCloud chiffrée"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup iCloud crittografato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暗号化iCloudバックアップ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "암호화된 iCloud 백업"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加密 iCloud 备份"
+          }
+        }
+      }
+    },
     "Encrypting backup…" : {
       "localizations" : {
         "de" : {
@@ -8181,6 +9087,147 @@
         }
       }
     },
+    "Enter a sharing phrase from someone you trust." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib die Freigabephrase einer Person ein, der du vertraust."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a sharing phrase from someone you trust."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saisissez la phrase de partage d’une personne de confiance."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inserisci la frase ricevuta da una persona fidata."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "信頼できる相手から受け取った共有フレーズを入力してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "신뢰하는 사람에게 받은 공유 문구를 입력하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入可信任的人提供的共享短语。"
+          }
+        }
+      }
+    },
+    "Enter the sharing phrase from the vault’s owner. This is different from a recovery phrase. Claiming ties the invitation to your current Apple Account." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib die Freigabephrase des Eigentümers ein. Sie ist keine Wiederherstellungsphrase. Beim Annehmen wird die Einladung mit deinem aktuellen Apple Account verknüpft."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter the sharing phrase from the vault’s owner. This is different from a recovery phrase. Claiming ties the invitation to your current Apple Account."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saisissez la phrase de partage du propriétaire, différente d’une phrase de récupération. L’acceptation lie l’invitation à votre compte Apple actuel."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inserisci la frase di condivisione del proprietario, diversa da quella di recupero. Accettando, colleghi l’invito al tuo Apple Account attuale."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有者から受け取った共有フレーズを入力してください。復元フレーズとは異なります。受け取ると、このApple Accountに招待が紐付けられます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "소유자가 준 공유 문구를 입력하세요. 복구 문구와 다릅니다. 수락하면 초대가 현재 Apple 계정에 연결됩니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入所有者提供的共享短语，它与恢复短语不同。领取后，邀请将绑定到当前 Apple 账户。"
+          }
+        }
+      }
+    },
+    "Expires" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ablaufdatum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expires"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expiration"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scadenza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有効期限"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "만료일"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "到期时间"
+          }
+        }
+      }
+    },
     "Export" : {
       "localizations" : {
         "de" : {
@@ -8223,6 +9270,53 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "导出"
+          }
+        }
+      }
+    },
+    "Export backup file" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup-Datei exportieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export backup file"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporter un fichier de sauvegarde"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esporta file di backup"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップファイルを書き出す"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "백업 파일 내보내기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出备份文件"
           }
         }
       }
@@ -8365,6 +9459,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "更改这些访问设置必须通过 Face ID 验证。请确保此设备已为 Pattern 启用 Face ID。"
+          }
+        }
+      }
+    },
+    "File backup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateisicherung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File backup"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegarde dans un fichier"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup su file"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルバックアップ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 백업"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件备份"
           }
         }
       }
@@ -9013,6 +10153,53 @@
         }
       }
     },
+    "Give one person read-only access with a separate sharing phrase. They need Pattern and an iCloud account. Your pattern and recovery phrase stay private." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib einer Person mit einer eigenen Freigabephrase Lesezugriff. Sie benötigt Pattern und einen iCloud-Account. Dein Muster und deine Wiederherstellungsphrase bleiben privat."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Give one person read-only access with a separate sharing phrase. They need Pattern and an iCloud account. Your pattern and recovery phrase stay private."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accordez à une personne un accès en lecture seule avec une phrase distincte. Elle doit utiliser Pattern et iCloud. Votre schéma et votre phrase de récupération restent privés."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concedi accesso in sola lettura a una persona con una frase separata. Servono Pattern e un account iCloud. La tua sequenza e la frase di recupero restano private."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "専用の共有フレーズで1人に閲覧専用アクセスを付与します。相手にはPatternとiCloudアカウントが必要です。パターンや復元フレーズは共有されません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "별도 공유 문구로 한 사람에게 읽기 전용 접근을 허용합니다. 상대방에게 Pattern과 iCloud 계정이 필요합니다. 패턴과 복구 문구는 공개되지 않습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通过独立共享短语授予一人只读访问权限。对方需要 Pattern 和 iCloud 账户。你的图案及恢复短语不会共享。"
+          }
+        }
+      }
+    },
     "Give the vault a unique name between 1 and 40 characters." : {
       "localizations" : {
         "de" : {
@@ -9381,6 +10568,53 @@
         }
       }
     },
+    "I saved the sharing phrase" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ich habe die Freigabephrase gesichert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I saved the sharing phrase"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "J’ai enregistré la phrase"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ho salvato la frase"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有フレーズを保存しました"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 문구를 저장했어요"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我已保存共享短语"
+          }
+        }
+      }
+    },
     "I understand that other vault access will be removed" : {
       "localizations" : {
         "de" : {
@@ -9473,6 +10707,53 @@
         }
       }
     },
+    "iCloud backup" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud-Backup"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud backup"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegarde iCloud"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup iCloud"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudバックアップ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 백업"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 备份"
+          }
+        }
+      }
+    },
     "If Face ID fails, is cancelled, or is unavailable, this vault is shown. That does not activate duress, remove access, rotate recovery phrases, or stop backups. A dummy session can browse its media but cannot change vault settings or create vaults. Unlock its own pattern for full access." : {
       "localizations" : {
         "de" : {
@@ -9561,6 +10842,53 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "若此保险库被保留，每次使用其胁迫图案解锁都会重复操作。若选择了其他伪装保险库，则仅保留该伪装保险库。"
+          }
+        }
+      }
+    },
+    "Import a backup file" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup-Datei importieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import a backup file"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importer un fichier de sauvegarde"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importa file di backup"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップファイルを読み込む"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "백업 파일 가져오기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入备份文件"
           }
         }
       }
@@ -9658,6 +10986,7 @@
       }
     },
     "In Files, open Browse → iCloud Drive and select your saved .patternbackup file. Sign in to the same Apple Account and turn on iCloud Drive if it isn’t listed." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -9792,6 +11121,100 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "包含内容"
+          }
+        }
+      }
+    },
+    "Join shared vault" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geteiltem Tresor beitreten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Join shared vault"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rejoindre un coffre partagé"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accedi a una cassaforte condivisa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有保管庫に参加"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 보관함 참여"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入共享保险库"
+          }
+        }
+      }
+    },
+    "Keep an encrypted copy of this vault in your iCloud account. Photos, videos, folders, and names are encrypted before upload. Your recovery phrase is required to restore." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichere eine verschlüsselte Kopie in iCloud. Fotos, Videos, Ordner und Namen werden vor dem Upload verschlüsselt. Zur Wiederherstellung brauchst du die Wiederherstellungsphrase."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep an encrypted copy of this vault in your iCloud account. Photos, videos, folders, and names are encrypted before upload. Your recovery phrase is required to restore."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conservez une copie chiffrée de ce coffre dans iCloud. Photos, vidéos, dossiers et noms sont chiffrés avant l’envoi. La phrase de récupération est nécessaire pour restaurer."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conserva una copia crittografata in iCloud. Foto, video, cartelle e nomi vengono crittografati prima dell’upload. Per ripristinare serve la frase di recupero."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この保管庫の暗号化コピーをiCloudに保存します。写真、動画、フォルダ、名前は送信前に暗号化されます。復元には復元フレーズが必要です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 보관함의 암호화된 사본을 iCloud에 보관합니다. 사진, 동영상, 폴더, 이름은 업로드 전에 암호화됩니다. 복원하려면 복구 문구가 필요합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 iCloud 中保存此保险库的加密副本。照片、视频、文件夹及名称都会在上传前加密。恢复时需要恢复短语。"
           }
         }
       }
@@ -9980,6 +11403,53 @@
         }
       }
     },
+    "Last completed backup" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letztes abgeschlossenes Backup"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last completed backup"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernière sauvegarde terminée"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ultimo backup completato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最後に完了したバックアップ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마지막 완료된 백업"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次完成的备份"
+          }
+        }
+      }
+    },
     "Library" : {
       "localizations" : {
         "de" : {
@@ -10114,6 +11584,53 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "丁香紫"
+          }
+        }
+      }
+    },
+    "Limit number of opens" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anzahl der Öffnungen begrenzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit number of opens"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limiter le nombre d’ouvertures"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limita il numero di aperture"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開く回数を制限"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "열기 횟수 제한"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "限制打开次数"
           }
         }
       }
@@ -10256,6 +11773,53 @@
         }
       }
     },
+    "Lock on screen capture" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bei Bildschirmaufnahme sperren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lock on screen capture"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verrouiller lors d’une capture"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blocca alla cattura dello schermo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画面キャプチャ時にロック"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "화면 캡처 시 잠금"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "截屏或录屏时锁定"
+          }
+        }
+      }
+    },
     "Lock vault" : {
       "localizations" : {
         "de" : {
@@ -10298,6 +11862,53 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "锁定保险库"
+          }
+        }
+      }
+    },
+    "Looking for backups…" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backups werden gesucht …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looking for backups…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche des sauvegardes…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ricerca dei backup…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップを検索中…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "백업 검색 중…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在查找备份…"
           }
         }
       }
@@ -10390,6 +12001,53 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "为回忆腾出空间"
+          }
+        }
+      }
+    },
+    "Maximum opens: %lld" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximale Öffnungen: %lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximum opens: %lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvertures maximales : %lld"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperture massime: %lld"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開く回数の上限：%lld"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최대 열기 횟수: %lld"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最多打开 %lld 次"
           }
         }
       }
@@ -11159,6 +12817,53 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无需账户"
+          }
+        }
+      }
+    },
+    "No cloud backups found. A backup must have completed before the app was deleted." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Cloud-Backups gefunden. Vor dem Löschen der App muss ein Backup abgeschlossen worden sein."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No cloud backups found. A backup must have completed before the app was deleted."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune sauvegarde cloud trouvée. Une sauvegarde doit avoir été terminée avant la suppression de l’app."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nessun backup cloud trovato. Un backup deve essere stato completato prima di eliminare l’app."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クラウドバックアップが見つかりません。アプリを削除する前にバックアップが完了している必要があります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "클라우드 백업이 없습니다. 앱 삭제 전에 백업이 완료되어 있어야 합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未找到云备份。必须在删除应用之前完成备份。"
           }
         }
       }
@@ -12163,6 +13868,100 @@
         }
       }
     },
+    "Only the owner can change a shared vault." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur der Eigentümer kann einen geteilten Tresor ändern."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only the owner can change a shared vault."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seul le propriétaire peut modifier un coffre partagé."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo il proprietario può modificare una cassaforte condivisa."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有保管庫を変更できるのは所有者だけです。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "소유자만 공유 보관함을 변경할 수 있습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只有所有者可以修改共享保险库。"
+          }
+        }
+      }
+    },
+    "Only the owner can change the contents. Removing this vault from your device does not delete the owner’s vault." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur der Eigentümer kann Inhalte ändern. Wenn du diesen Tresor von deinem Gerät entfernst, bleibt der Tresor des Eigentümers erhalten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only the owner can change the contents. Removing this vault from your device does not delete the owner’s vault."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seul le propriétaire peut modifier le contenu. Retirer ce coffre de votre appareil ne supprime pas celui du propriétaire."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo il proprietario può modificare i contenuti. Rimuoverla dal tuo dispositivo non elimina la cassaforte del proprietario."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内容を変更できるのは所有者だけです。この端末から削除しても、所有者の保管庫は削除されません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "소유자만 내용을 변경할 수 있습니다. 이 기기에서 제거해도 소유자의 보관함은 삭제되지 않습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只有所有者可以修改内容。从你的设备移除此保险库不会删除所有者的保险库。"
+          }
+        }
+      }
+    },
     "Open encrypted backup" : {
       "localizations" : {
         "de" : {
@@ -12301,6 +14100,53 @@
         }
       }
     },
+    "Opening shared vault…" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geteilter Tresor wird geöffnet …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opening shared vault…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouverture du coffre partagé…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apertura della cassaforte condivisa…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有保管庫を開いています…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 보관함 여는 중…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在打开共享保险库…"
+          }
+        }
+      }
+    },
     "Opening your library…" : {
       "localizations" : {
         "de" : {
@@ -12393,7 +14239,55 @@
         }
       }
     },
+    "Other vaults lose their local patterns and recovery phrases. Their files remain, but restoring access needs a saved backup. Share revocation retries when iCloud is available. Existing personal backups and copies already exported by recipients remain." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Andere Tresore verlieren ihre lokalen Muster und Phrasen. Dateien bleiben erhalten, für den Zugriff brauchst du aber ein Backup. Der Freigabeentzug wird bei erreichbarem iCloud wiederholt. Persönliche Backups und exportierte Kopien bleiben bestehen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other vaults lose their local patterns and recovery phrases. Their files remain, but restoring access needs a saved backup. Share revocation retries when iCloud is available. Existing personal backups and copies already exported by recipients remain."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les schémas et phrases des autres coffres sont retirés de cet appareil. Les fichiers restent, mais une sauvegarde est nécessaire pour rétablir l’accès. La révocation réessaie avec iCloud. Les sauvegardes personnelles et copies déjà exportées restent."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le altre casseforti perdono sequenze e frasi locali. I file restano, ma per recuperarne l’accesso serve un backup. La revoca viene ritentata quando iCloud è disponibile. Restano i backup personali e le copie già esportate."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "他の保管庫のパターンと復元フレーズは端末から削除されます。ファイルは残りますが、アクセスの復元には保存済みバックアップが必要です。共有の取り消しはiCloud接続時に再試行します。既存の個人バックアップと相手が書き出したコピーは残ります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다른 보관함의 로컬 패턴과 복구 문구가 삭제됩니다. 파일은 남지만 접근을 복구하려면 저장된 백업이 필요합니다. iCloud에 연결되면 공유 취소를 재시도합니다. 기존 개인 백업과 수신자가 내보낸 사본은 유지됩니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "其他保险库的本地图案和恢复短语将被移除。文件仍保留，但重新获得访问需要已保存的备份。iCloud 可用时会重试撤销共享。已有个人备份和接收者已导出的副本会保留。"
+          }
+        }
+      }
+    },
     "Other vaults’ patterns and recovery phrases are removed from this device, including this vault’s if a different dummy vault is selected. Their local files are kept, but you’ll need a saved backup to restore access in Pattern. Already saved iCloud backups and copies sent to others can’t be recalled. Automatic iCloud sync and revocable share links aren’t available in this version." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -12628,6 +14522,53 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已解锁 Pattern Unlimited。"
+          }
+        }
+      }
+    },
+    "People with access" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personen mit Zugriff"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "People with access"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personnes ayant accès"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Persone con accesso"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アクセスできる相手"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "접근 가능한 사람"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有访问权限的人"
           }
         }
       }
@@ -13139,6 +15080,53 @@
         }
       }
     },
+    "Previously exported .patternbackup files can still be restored with their original recovery phrases." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Früher exportierte .patternbackup-Dateien lassen sich weiterhin mit ihrer ursprünglichen Wiederherstellungsphrase öffnen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previously exported .patternbackup files can still be restored with their original recovery phrases."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les anciens fichiers .patternbackup restent restaurables avec leur phrase de récupération d’origine."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I file .patternbackup già esportati si possono ancora ripristinare con la frase di recupero originale."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以前書き出した.patternbackupファイルは、元の復元フレーズで引き続き復元できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기존에 내보낸 .patternbackup 파일은 원래 복구 문구로 계속 복원할 수 있습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以前导出的 .patternbackup 文件仍可使用原恢复短语恢复。"
+          }
+        }
+      }
+    },
     "Purchase" : {
       "localizations" : {
         "de" : {
@@ -13277,6 +15265,147 @@
         }
       }
     },
+    "Read-only shared vault" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geteilter Tresor mit Lesezugriff"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read-only shared vault"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coffre partagé en lecture seule"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cassaforte condivisa in sola lettura"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "閲覧専用の共有保管庫"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "읽기 전용 공유 보관함"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只读共享保险库"
+          }
+        }
+      }
+    },
+    "Recipient label (only on this device)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empfängername (nur auf diesem Gerät)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipient label (only on this device)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nom du destinataire (sur cet appareil)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nome del destinatario (solo qui)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "相手の名前（この端末のみ）"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "받는 사람 이름 (이 기기에만 저장)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接收者备注（仅保存在本机）"
+          }
+        }
+      }
+    },
+    "Recipients check access online before opening. Updates are sent while your vault is open. Expiration, open limits, and export controls are app rules; they cannot erase saved copies. Screen capture detection can lock the vault after a screenshot, but cannot prevent that first screenshot or another camera." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empfänger prüfen den Zugriff vor dem Öffnen online. Updates werden bei geöffnetem Tresor gesendet. Ablaufdatum, Öffnungs- und Exportlimits sind App-Regeln und löschen keine gespeicherten Kopien. Die Aufnahmeerkennung kann nach einem Screenshot sperren, verhindert aber weder den ersten Screenshot noch eine andere Kamera."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recipients check access online before opening. Updates are sent while your vault is open. Expiration, open limits, and export controls are app rules; they cannot erase saved copies. Screen capture detection can lock the vault after a screenshot, but cannot prevent that first screenshot or another camera."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’accès est vérifié en ligne avant l’ouverture. Les mises à jour partent quand votre coffre est ouvert. Expiration, limites d’ouverture et d’exportation sont des règles de l’app : elles n’effacent pas les copies enregistrées. La détection peut verrouiller après une capture, sans empêcher la première capture ni une autre caméra."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’accesso viene verificato online prima dell’apertura. Gli aggiornamenti partono quando la cassaforte è aperta. Scadenza, limiti di apertura ed esportazione sono regole dell’app e non eliminano copie salvate. Il rilevamento può bloccare dopo uno screenshot, ma non impedisce il primo né un’altra fotocamera."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "受信者は開く前にオンラインで権限を確認します。更新は所有者が保管庫を開いている間に送信されます。有効期限、回数、書き出しの制限はアプリ内のルールで、保存済みコピーは消せません。撮影検知でロックできますが、最初のスクリーンショットや別のカメラは防げません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "수신자는 열기 전에 온라인으로 권한을 확인합니다. 소유자가 보관함을 열면 변경 사항이 전송됩니다. 만료, 열기 횟수, 내보내기 제한은 앱 규칙이며 저장된 사본을 지울 수 없습니다. 캡처 감지 후 잠글 수 있지만 첫 스크린샷이나 다른 카메라 촬영은 막을 수 없습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接收者打开前会在线检查权限。你打开保险库时才会发送更新。到期、打开次数和导出限制属于应用规则，无法删除已保存的副本。检测到截屏后可锁定，但无法阻止第一次截屏或其他相机拍摄。"
+          }
+        }
+      }
+    },
     "Recover vault" : {
       "localizations" : {
         "de" : {
@@ -13411,6 +15540,53 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "恢复短语"
+          }
+        }
+      }
+    },
+    "Refresh backups" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backups aktualisieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh backups"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualiser les sauvegardes"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aggiorna elenco backup"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップを更新"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "백업 새로고침"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刷新备份"
           }
         }
       }
@@ -13692,6 +15868,7 @@
       }
     },
     "Replacing the phrase disables the old phrase for this vault. Existing backup files still require the phrase used when they were created. Make a new backup after changing it." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -14014,6 +16191,7 @@
       }
     },
     "Restore from iCloud Drive" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -14285,6 +16463,194 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "请返回 Pattern 并重试购买。"
+          }
+        }
+      }
+    },
+    "Revocation is pending. Pattern will retry when it can reach iCloud." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Zugriffsentzug steht aus. Pattern versucht es erneut, sobald iCloud erreichbar ist."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revocation is pending. Pattern will retry when it can reach iCloud."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La révocation est en attente. Pattern réessaiera dès qu’iCloud sera accessible."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La revoca è in attesa. Pattern riproverà quando iCloud sarà raggiungibile."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アクセスの取り消しは保留中です。iCloudに接続でき次第、再試行します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "접근 취소가 대기 중입니다. iCloud에 연결되면 다시 시도합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "撤销正在等待处理。连接到 iCloud 后 Pattern 会重试。"
+          }
+        }
+      }
+    },
+    "Revocation takes effect when iCloud receives it. Copies already saved outside Pattern cannot be removed." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Entzug wird wirksam, sobald iCloud ihn erhält. Bereits außerhalb von Pattern gespeicherte Kopien können nicht gelöscht werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revocation takes effect when iCloud receives it. Copies already saved outside Pattern cannot be removed."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La révocation prend effet à réception par iCloud. Les copies déjà enregistrées hors de Pattern ne peuvent pas être supprimées."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La revoca ha effetto quando iCloud la riceve. Le copie già salvate fuori da Pattern non possono essere rimosse."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudが受け付けると取り消しが有効になります。Patternの外に保存済みのコピーは削除できません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud가 요청을 받으면 취소가 적용됩니다. Pattern 외부에 이미 저장된 사본은 삭제할 수 없습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 收到请求后撤销才会生效。无法删除已保存到 Pattern 之外的副本。"
+          }
+        }
+      }
+    },
+    "Revoke access" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zugriff entziehen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoke access"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révoquer l’accès"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoca accesso"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アクセスを取り消す"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "접근 취소"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "撤销访问权限"
+          }
+        }
+      }
+    },
+    "Revoke this person’s access?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Person den Zugriff entziehen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoke this person’s access?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révoquer l’accès de cette personne ?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revocare l’accesso a questa persona?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この相手のアクセスを取り消しますか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 사람의 접근을 취소할까요?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "撤销此人的访问权限？"
           }
         }
       }
@@ -14611,7 +16977,54 @@
         }
       }
     },
+    "Save an encrypted backup file to iCloud Drive or another location in Files. Export again to include newer changes. Import requires the file and its original recovery phrase." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichere eine verschlüsselte Sicherungsdatei in iCloud Drive oder an einem anderen Ort in „Dateien“. Exportiere sie erneut, um neuere Änderungen einzuschließen. Zum Importieren brauchst du die Datei und ihre ursprüngliche Wiederherstellungsphrase."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save an encrypted backup file to iCloud Drive or another location in Files. Export again to include newer changes. Import requires the file and its original recovery phrase."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrez un fichier de sauvegarde chiffré dans iCloud Drive ou ailleurs dans Fichiers. Exportez-le à nouveau pour inclure les dernières modifications. L’importation nécessite le fichier et sa phrase de récupération d’origine."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salva un file di backup crittografato su iCloud Drive o in un’altra posizione in File. Esportalo di nuovo per includere le modifiche più recenti. Per importarlo servono il file e la frase di recupero originale."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暗号化されたバックアップファイルをiCloud Driveまたは「ファイル」内の別の場所に保存します。最新の変更を含めるには、もう一度書き出してください。読み込みには、ファイルと作成時の復元フレーズが必要です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "암호화된 백업 파일을 iCloud Drive 또는 파일 앱의 다른 위치에 저장합니다. 최신 변경 사항을 포함하려면 다시 내보내세요. 가져오려면 파일과 생성 당시의 복구 문구가 필요합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将加密备份文件保存到 iCloud 云盘或“文件”中的其他位置。要包含最新更改，请重新导出。导入需要该文件及其创建时使用的恢复短语。"
+          }
+        }
+      }
+    },
     "Save an encrypted backup through Files and choose iCloud Drive. Deleting the app removes local vaults; restoring requires this backup and its recovery phrase. Backups are manual." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15209,6 +17622,147 @@
         }
       }
     },
+    "Send latest changes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neueste Änderungen senden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send latest changes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyer les dernières modifications"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invia ultime modifiche"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最新の変更を送信"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최신 변경 사항 보내기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送最新更改"
+          }
+        }
+      }
+    },
+    "Send this phrase privately. Anyone who receives it before it is claimed can join. It will not be shown again after you leave this screen." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sende die Phrase vertraulich. Wer sie vor dem ersten Einlösen erhält, kann beitreten. Nach Verlassen dieses Bildschirms wird sie nicht erneut angezeigt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send this phrase privately. Anyone who receives it before it is claimed can join. It will not be shown again after you leave this screen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez cette phrase en privé. Toute personne qui l’obtient avant son utilisation peut rejoindre le coffre. Elle ne sera plus affichée après avoir quitté cet écran."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invia questa frase privatamente. Chi la riceve prima che venga riscattata può accedere. Non verrà più mostrata dopo aver lasciato questa schermata."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このフレーズは安全な方法で伝えてください。受け取られる前なら、フレーズを知る誰でも参加できます。この画面を離れると再表示されません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 문구는 비공개로 전달하세요. 수락되기 전에 받은 사람은 누구나 참여할 수 있습니다. 이 화면을 떠나면 다시 표시되지 않습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请私下发送此短语。在被领取之前，任何收到它的人都能加入。离开此页面后将不再显示。"
+          }
+        }
+      }
+    },
+    "Set an expiration date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ablaufdatum festlegen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set an expiration date"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Définir une date d’expiration"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imposta scadenza"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有効期限を設定"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "만료일 설정"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置到期时间"
+          }
+        }
+      }
+    },
     "Set custom recovery phrase" : {
       "localizations" : {
         "de" : {
@@ -15347,7 +17901,55 @@
         }
       }
     },
+    "Set up a recovery phrase below before enabling iCloud backup." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Richte unten eine Wiederherstellungsphrase ein, bevor du das iCloud-Backup aktivierst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set up a recovery phrase below before enabling iCloud backup."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurez une phrase de récupération ci-dessous avant d’activer la sauvegarde iCloud."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configura una frase di recupero qui sotto prima di abilitare il backup iCloud."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudバックアップを有効にする前に、下で復元フレーズを設定してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 백업을 켜기 전에 아래에서 복구 문구를 설정하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用 iCloud 备份前，请先在下方设置恢复短语。"
+          }
+        }
+      }
+    },
     "Set up a recovery phrase below, then save an encrypted backup to iCloud Drive. Local vaults are removed when you delete the app and aren’t included in device backups." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15435,6 +18037,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "请先设置恢复短语，并保存在应用之外的安全位置。"
+          }
+        }
+      }
+    },
+    "Set up a recovery phrase in vault settings before enabling backup or exporting a file." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Richte in den Tresoreinstellungen eine Wiederherstellungsphrase ein, bevor du die Sicherung aktivierst oder eine Datei exportierst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set up a recovery phrase in vault settings before enabling backup or exporting a file."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurez une phrase de récupération dans les réglages du coffre avant d’activer la sauvegarde ou d’exporter un fichier."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imposta una frase di recupero nelle impostazioni della cassaforte prima di attivare il backup o esportare un file."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップを有効にしたりファイルを書き出したりする前に、保管庫の設定で復元フレーズを設定してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "백업을 활성화하거나 파일을 내보내기 전에 보관함 설정에서 복구 문구를 설정하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用备份或导出文件前，请先在保险库设置中设置恢复短语。"
           }
         }
       }
@@ -15532,6 +18180,288 @@
         }
       }
     },
+    "Share this vault" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diesen Tresor teilen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share this vault"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partager ce coffre"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Condividi questa cassaforte"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この保管庫を共有"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 보관함 공유"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共享此保险库"
+          }
+        }
+      }
+    },
+    "Shared vault" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geteilter Tresor"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shared vault"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coffre partagé"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cassaforte condivisa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有保管庫"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 보관함"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共享保险库"
+          }
+        }
+      }
+    },
+    "Shared vault added" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geteilter Tresor hinzugefügt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shared vault added"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coffre partagé ajouté"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cassaforte condivisa aggiunta"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有保管庫を追加しました"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 보관함 추가됨"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已添加共享保险库"
+          }
+        }
+      }
+    },
+    "Shared vault pattern" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muster für geteilten Tresor"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shared vault pattern"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schéma du coffre partagé"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sequenza della cassaforte condivisa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有保管庫のパターン"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 보관함 패턴"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共享保险库图案"
+          }
+        }
+      }
+    },
+    "Sharing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teilen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sharing"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partage"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Condivisione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共享"
+          }
+        }
+      }
+    },
+    "Sharing phrase" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freigabephrase"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sharing phrase"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phrase de partage"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frase di condivisione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有フレーズ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 문구"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共享短语"
+          }
+        }
+      }
+    },
     "Show new recovery phrase" : {
       "localizations" : {
         "de" : {
@@ -15574,6 +18504,147 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "显示新恢复短语"
+          }
+        }
+      }
+    },
+    "Sign in to iCloud in iPhone Settings to continue." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Melde dich zum Fortfahren in den iPhone-Einstellungen bei iCloud an."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to iCloud in iPhone Settings to continue."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connectez-vous à iCloud dans les réglages de l’iPhone pour continuer."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per continuare, accedi a iCloud nelle impostazioni di iPhone."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "続けるにはiPhoneの設定でiCloudにサインインしてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계속하려면 iPhone 설정에서 iCloud에 로그인하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请在 iPhone 设置中登录 iCloud 以继续。"
+          }
+        }
+      }
+    },
+    "Sign in to the Apple Account that owns the backup, choose a saved backup, and enter its recovery phrase." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Melde dich mit dem Apple Account des Backups an, wähle ein Backup und gib seine Wiederherstellungsphrase ein."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to the Apple Account that owns the backup, choose a saved backup, and enter its recovery phrase."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connectez-vous au compte Apple propriétaire de la sauvegarde, choisissez-la et saisissez sa phrase de récupération."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accedi all’Apple Account proprietario del backup, scegli il backup e inserisci la frase di recupero."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バックアップを所有するApple Accountでサインインし、バックアップを選んで復元フレーズを入力してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "백업을 소유한 Apple 계정에 로그인한 후 백업을 선택하고 복구 문구를 입력하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录拥有备份的 Apple 账户，选择备份并输入其恢复短语。"
+          }
+        }
+      }
+    },
+    "Sign in to the Apple Account used to set up this vault’s cloud access." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Melde dich mit dem Apple Account an, mit dem der Cloud-Zugriff dieses Tresors eingerichtet wurde."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to the Apple Account used to set up this vault’s cloud access."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connectez-vous au compte Apple utilisé pour configurer l’accès cloud de ce coffre."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accedi all’Apple Account usato per configurare l’accesso cloud di questa cassaforte."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この保管庫のクラウドアクセスを設定したApple Accountでサインインしてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 보관함의 클라우드 접근을 설정한 Apple 계정에 로그인하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请登录设置此保险库云访问时使用的 Apple 账户。"
           }
         }
       }
@@ -16729,6 +19800,100 @@
         }
       }
     },
+    "The encrypted cloud data couldn’t be verified. Your local files have been kept." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die verschlüsselten Cloud-Daten konnten nicht geprüft werden. Deine lokalen Dateien wurden behalten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The encrypted cloud data couldn’t be verified. Your local files have been kept."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les données cloud chiffrées n’ont pas pu être vérifiées. Vos fichiers locaux ont été conservés."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossibile verificare i dati crittografati nel cloud. I file locali sono stati conservati."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暗号化されたクラウドデータを検証できませんでした。端末内のファイルは保持されています。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "암호화된 클라우드 데이터를 확인할 수 없습니다. 로컬 파일은 유지되었습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法验证加密云数据。你的本地文件已保留。"
+          }
+        }
+      }
+    },
+    "The first backup has not finished yet." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das erste Backup ist noch nicht abgeschlossen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The first backup has not finished yet."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La première sauvegarde n’est pas encore terminée."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il primo backup non è ancora terminato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最初のバックアップはまだ完了していません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "첫 백업이 아직 완료되지 않았습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "首次备份尚未完成。"
+          }
+        }
+      }
+    },
     "The free version includes 3 albums. Unlock Pattern Unlimited to create more." : {
       "localizations" : {
         "de" : {
@@ -16867,6 +20032,53 @@
         }
       }
     },
+    "The local vault stays on this device. Its cloud backup will be removed when iCloud is available, and future backups will stop." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der lokale Tresor bleibt auf diesem Gerät. Sein Cloud-Backup wird gelöscht, sobald iCloud erreichbar ist. Künftige Backups werden gestoppt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The local vault stays on this device. Its cloud backup will be removed when iCloud is available, and future backups will stop."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le coffre local reste sur cet appareil. Sa sauvegarde sera supprimée dès qu’iCloud sera accessible, et les futures sauvegardes seront arrêtées."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La cassaforte locale resta sul dispositivo. Il backup cloud verrà eliminato quando iCloud sarà disponibile e i backup futuri saranno interrotti."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "端末内の保管庫は残ります。iCloudに接続でき次第クラウドバックアップを削除し、以後のバックアップを停止します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "로컬 보관함은 이 기기에 남습니다. iCloud에 연결되면 클라우드 백업을 삭제하고 이후 백업을 중지합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本地保险库会保留在此设备上。iCloud 可用时将删除云备份，并停止后续备份。"
+          }
+        }
+      }
+    },
     "The new patterns didn’t match. Try again." : {
       "localizations" : {
         "de" : {
@@ -16909,6 +20121,100 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新图案不一致，请重试。"
+          }
+        }
+      }
+    },
+    "The old phrase stops working for local recovery immediately. Your cloud backup uses the new phrase after the next successful backup. Exported files always need their original phrases." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die alte Phrase funktioniert lokal sofort nicht mehr. Das Cloud-Backup nutzt die neue Phrase nach dem nächsten erfolgreichen Backup. Exportierte Dateien brauchen immer ihre ursprüngliche Phrase."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The old phrase stops working for local recovery immediately. Your cloud backup uses the new phrase after the next successful backup. Exported files always need their original phrases."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’ancienne phrase cesse immédiatement de fonctionner pour la récupération locale. Le cloud utilise la nouvelle après la prochaine sauvegarde réussie. Les fichiers exportés gardent leur phrase d’origine."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La vecchia frase smette subito di funzionare per il recupero locale. Il backup cloud usa quella nuova dopo il prossimo backup riuscito. I file esportati richiedono sempre la frase originale."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "古いフレーズは直ちに端末内の復元に使えなくなります。クラウドバックアップは次のバックアップ成功後に新しいフレーズへ切り替わります。書き出したファイルには元のフレーズが必要です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기존 문구는 즉시 로컬 복구에 사용할 수 없게 됩니다. 클라우드 백업은 다음 백업 성공 후 새 문구를 사용합니다. 내보낸 파일에는 항상 원래 문구가 필요합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "旧短语会立即失去本地恢复功能。下次备份成功后，云备份才会使用新短语。导出的文件始终需要原短语。"
+          }
+        }
+      }
+    },
+    "The owner has turned off exporting from this shared vault." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Eigentümer hat den Export dieses geteilten Tresors deaktiviert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The owner has turned off exporting from this shared vault."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le propriétaire a désactivé l’exportation de ce coffre partagé."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il proprietario ha disattivato l’esportazione da questa cassaforte condivisa."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有者がこの共有保管庫の書き出しを無効にしています。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "소유자가 이 공유 보관함의 내보내기를 껐습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有者已禁用此共享保险库的导出功能。"
           }
         }
       }
@@ -17558,6 +20864,7 @@
       }
     },
     "This resets a pattern for a vault still on this device. After deleting and reinstalling Pattern, use Restore from iCloud instead; you’ll need your saved backup file and its phrase." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -17599,6 +20906,288 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "这会重设仍在此设备上的保险库图案。删除并重新安装 Pattern 后，请使用“从 iCloud 恢复”；你需要已保存的备份文件及其短语。"
+          }
+        }
+      }
+    },
+    "This resets a pattern for a vault still on this device. After reinstalling Pattern, use Restore from iCloud with a completed backup and its recovery phrase." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dies setzt das Muster eines Tresors auf diesem Gerät zurück. Verwende nach einer Neuinstallation die iCloud-Wiederherstellung mit einem abgeschlossenen Backup und seiner Phrase."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This resets a pattern for a vault still on this device. After reinstalling Pattern, use Restore from iCloud with a completed backup and its recovery phrase."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette option réinitialise le schéma d’un coffre encore sur cet appareil. Après réinstallation, utilisez Restaurer depuis iCloud avec une sauvegarde terminée et sa phrase de récupération."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reimposta la sequenza di una cassaforte ancora sul dispositivo. Dopo la reinstallazione, usa Ripristina da iCloud con un backup completato e la sua frase di recupero."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この端末に残っている保管庫のパターンを再設定します。再インストール後は、完了済みのバックアップと復元フレーズを使って「iCloudから復元」を選んでください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 기기에 남아 있는 보관함의 패턴을 재설정합니다. 재설치 후에는 완료된 백업과 복구 문구로 iCloud에서 복원하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此操作重设仍在本设备上的保险库图案。重新安装后，请使用完整备份及其恢复短语从 iCloud 恢复。"
+          }
+        }
+      }
+    },
+    "This shared vault has reached its open limit." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser geteilte Tresor hat sein Öffnungslimit erreicht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This shared vault has reached its open limit."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce coffre partagé a atteint sa limite d’ouvertures."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questa cassaforte condivisa ha raggiunto il limite di aperture."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この共有保管庫を開ける回数の上限に達しました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 공유 보관함의 열기 횟수 제한에 도달했습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此共享保险库已达到打开次数上限。"
+          }
+        }
+      }
+    },
+    "This shared vault is already on this device. Use its pattern to open it." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser geteilte Tresor ist bereits auf diesem Gerät. Öffne ihn mit seinem Muster."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This shared vault is already on this device. Use its pattern to open it."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce coffre partagé est déjà sur cet appareil. Ouvrez-le avec son schéma."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questa cassaforte condivisa è già sul dispositivo. Aprila con la sua sequenza."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この共有保管庫は既に端末にあります。パターンを使って開いてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 공유 보관함은 이미 이 기기에 있습니다. 패턴으로 여세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此共享保险库已在本设备上。请使用其图案打开。"
+          }
+        }
+      }
+    },
+    "This shared vault is empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser geteilte Tresor ist leer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This shared vault is empty"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce coffre partagé est vide"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questa cassaforte condivisa è vuota"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この共有保管庫は空です"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 공유 보관함은 비어 있습니다"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此共享保险库为空"
+          }
+        }
+      }
+    },
+    "This shared vault is unavailable. It may have been claimed by another Apple Account or revoked by its owner." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser geteilte Tresor ist nicht verfügbar. Vielleicht wurde er von einem anderen Apple Account beansprucht oder der Eigentümer hat den Zugriff entzogen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This shared vault is unavailable. It may have been claimed by another Apple Account or revoked by its owner."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce coffre partagé est indisponible. Un autre compte Apple l’a peut-être réclamé, ou le propriétaire a révoqué l’accès."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questa cassaforte condivisa non è disponibile. Potrebbe essere stata riscattata da un altro Apple Account o revocata dal proprietario."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この共有保管庫は利用できません。別のApple Accountで受け取られたか、所有者がアクセスを取り消した可能性があります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 공유 보관함을 사용할 수 없습니다. 다른 Apple 계정이 수락했거나 소유자가 접근을 취소했을 수 있습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此共享保险库不可用。可能已被其他 Apple 账户领取，或所有者已撤销访问权限。"
+          }
+        }
+      }
+    },
+    "This sharing phrase couldn’t be opened. Check every word and ask the owner whether access is still available." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Freigabephrase konnte nicht geöffnet werden. Prüfe jedes Wort und frage den Eigentümer, ob der Zugriff noch verfügbar ist."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This sharing phrase couldn’t be opened. Check every word and ask the owner whether access is still available."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette phrase de partage n’a pas pu être ouverte. Vérifiez chaque mot et demandez au propriétaire si l’accès est toujours disponible."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossibile aprire questa frase di condivisione. Controlla ogni parola e chiedi al proprietario se l’accesso è ancora disponibile."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この共有フレーズを確認できませんでした。各単語を確認し、所有者にアクセスが有効か問い合わせてください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 문구를 확인할 수 없습니다. 모든 단어를 확인하고 소유자에게 접근이 아직 가능한지 문의하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法使用此共享短语。请检查每个词，并询问所有者是否仍可访问。"
           }
         }
       }
@@ -18188,6 +21777,53 @@
         }
       }
     },
+    "Turn off and delete cloud backup" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deaktivieren und Cloud-Backup löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off and delete cloud backup"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactiver et supprimer la sauvegarde cloud"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disattiva ed elimina il backup cloud"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無効にしてクラウドバックアップを削除"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "끄고 클라우드 백업 삭제"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭并删除云备份"
+          }
+        }
+      }
+    },
     "Turn off duress vault" : {
       "localizations" : {
         "de" : {
@@ -18602,6 +22238,53 @@
         }
       }
     },
+    "Updating iCloud…" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud wird aktualisiert …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updating iCloud…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mise à jour d’iCloud…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aggiornamento iCloud…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudを更新中…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 업데이트 중…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在更新 iCloud…"
+          }
+        }
+      }
+    },
     "Use %lld × %lld grid" : {
       "localizations" : {
         "de" : {
@@ -18966,6 +22649,53 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "将此保险库用于胁迫模式"
+          }
+        }
+      }
+    },
+    "Use your new pattern to open it. An internet connection is required to check access." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffne ihn mit deinem neuen Muster. Zum Prüfen des Zugriffs ist eine Internetverbindung nötig."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use your new pattern to open it. An internet connection is required to check access."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrez-le avec votre nouveau schéma. Une connexion Internet est nécessaire pour vérifier l’accès."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprila con la nuova sequenza. Serve una connessione Internet per verificare l’accesso."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しいパターンで開いてください。アクセス権の確認にはインターネット接続が必要です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 패턴으로 여세요. 접근 권한을 확인하려면 인터넷 연결이 필요합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用新图案打开。检查访问权限需要互联网连接。"
           }
         }
       }
@@ -19892,6 +23622,7 @@
       }
     },
     "You need a backup saved before the app was deleted and the recovery phrase used to encrypt it. A recovery phrase alone cannot restore deleted photos or videos." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -20761,6 +24492,144 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "设置期间保险库发生了变化，请重新开始以使用最新设置。"
+          }
+        }
+      }
+    },
+    "Encrypted Backup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verschlüsseltes Backup"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encrypted Backup"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegarde chiffrée"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup crittografato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暗号化バックアップ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "암호화된 백업"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加密备份"
+          }
+        }
+      }
+    },
+    "Set up a recovery phrase in vault settings before enabling iCloud backup." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Richte in den Tresoreinstellungen eine Wiederherstellungsphrase ein, bevor du die iCloud-Sicherung aktivierst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set up a recovery phrase in vault settings before enabling iCloud backup."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurez une phrase de récupération dans les réglages du coffre avant d’activer la sauvegarde iCloud."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imposta una frase di recupero nelle impostazioni della cassaforte prima di attivare il backup iCloud."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudバックアップを有効にする前に、保管庫の設定で復元フレーズを設定してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 백업을 활성화하기 전에 보관함 설정에서 복구 문구를 설정하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用 iCloud 备份前，请先在保险库设置中设置恢复短语。"
+          }
+        }
+      }
+    },
+    "Set up a recovery phrase in vault settings before exporting a file." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Richte in den Tresoreinstellungen eine Wiederherstellungsphrase ein, bevor du eine Datei exportierst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set up a recovery phrase in vault settings before exporting a file."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurez une phrase de récupération dans les réglages du coffre avant d’exporter un fichier."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imposta una frase di recupero nelle impostazioni della cassaforte prima di esportare un file."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルを書き出す前に、保管庫の設定で復元フレーズを設定してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일을 내보내기 전에 보관함 설정에서 복구 문구를 설정하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出文件前，请先在保险库设置中设置恢复短语。"
           }
         }
       }

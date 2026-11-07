@@ -24,9 +24,9 @@ struct MediaViewer: View {
                 Spacer()
                 Text(String(localized: "\((items.firstIndex { $0.id == currentID } ?? 0) + 1) of \(items.count)")).font(.subheadline).foregroundStyle(.white.opacity(0.7))
                 Spacer()
-                Button { Task { await store.export([currentID]) } } label: {
+                if store.allowsExport { Button { Task { await store.export([currentID]) } } label: {
                     Image(systemName: "square.and.arrow.up").font(.body).frame(width: 44, height: 44).background(.white.opacity(0.12), in: Circle())
-                }.accessibilityLabel(String(localized: "Export media")).disabled(store.isBusy)
+                }.accessibilityLabel(String(localized: "Export media")).disabled(store.isBusy) }
             }.padding(.horizontal, 20).padding(.vertical, 12)
             TabView(selection: $currentID) {
                 ForEach(items) { item in
@@ -77,7 +77,7 @@ private struct MediaPage: View {
             if item.kind == .video {
                 // Returning from native fullscreen can restart this task.
                 // Keep the same player so its position is preserved.
-                if player == nil { player = AVPlayer(url: url) }
+                if player == nil { player = AVPlayer(url: url); player?.allowsExternalPlayback = false }
             }
             else { image = await ImageLoader.shared.image(at: url, maxPixels: 3000); failed = image == nil }
         }

@@ -39,6 +39,7 @@ actor VaultBackup {
     func create(name: String, snapshot: LibrarySnapshot, root: URL, phrase: String, security: VaultSecurityState = .shared) throws -> URL {
         let lease = try security.lease(for: root.lastPathComponent)
         try security.check(lease, forBackup: true)
+        try security.checkExport(root.lastPathComponent)
         cleanTemporaryFilesOnce()
         try RecoveryPhrase.validate(phrase)
         let directory = try temporaryDirectory(prefix: "EncryptedBackup-")

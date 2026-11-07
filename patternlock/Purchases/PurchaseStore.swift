@@ -3,7 +3,7 @@ import Observation
 import UIKit
 
 nonisolated enum PurchaseConfiguration {
-    static let productID = "jp.gm.patternlock.unlimited"
+    static let productID = "jp.gm.patternlock.pro"
     static let bundleID = "jp.gm.patternlock"
 }
 
@@ -115,6 +115,7 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
     func loadProduct() async {
         guard !loadingProduct else { return }
         loadingProduct = true
+        product = nil // Never keep showing an old storefront price after a failed refresh.
         defer { loadingProduct = false }
         error = nil
         do {

@@ -136,7 +136,7 @@ struct RecoveryPhraseSettingsView: View {
                     .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
                 Toggle(String(localized: "I saved it somewhere safe"), isOn: $savedPhrase)
             } footer: {
-                Text(String(localized: "Replacing the phrase disables the old phrase for this vault. Existing backup files still require the phrase used when they were created. Make a new backup after changing it."))
+                Text(String(localized: "The old phrase stops working for local recovery immediately. Your cloud backup uses the new phrase after the next successful backup. Exported files always need their original phrases."))
             }
             if let error { Section { Text(error).foregroundStyle(.red) } }
             Section {

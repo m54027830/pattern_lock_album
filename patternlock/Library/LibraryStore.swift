@@ -69,6 +69,16 @@ final class LibraryStore {
         self.originalDeleter = originalDeleter
     }
 
+    var isReadOnly: Bool { repository.security.isReadOnly(repository.root.lastPathComponent) }
+    var allowsExport: Bool { repository.security.allowsExport(repository.root.lastPathComponent) }
+
+    func replaceFromShare(_ prepared: PreparedVaultRestore) async throws {
+        try await withExclusiveAccess {
+            self.finishExport()
+            self.snapshot = try await self.repository.replaceFromShare(prepared)
+        }
+    }
+
     private var canAccess: Bool { !accessRevoked && repository.security.allowsAccess(to: repository.root.lastPathComponent) }
 
     func load() async {
@@ -105,7 +115,7 @@ final class LibraryStore {
     }
 
     func importItems<Item: MediaImportSource>(_ items: [Item], into folderID: UUID?) async {
-        guard canAccess, !isBusy, isLoaded, !items.isEmpty else { return }
+        guard canAccess, !isReadOnly, !isBusy, isLoaded, !items.isEmpty else { return }
         dismissImportSummary()
         errorMessage = nil
         let generation = importGeneration

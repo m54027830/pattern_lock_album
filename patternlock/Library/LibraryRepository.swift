@@ -4,7 +4,7 @@ import ImageIO
 import UniformTypeIdentifiers
 
 /// Local originals and the manifest are excluded from device backup.
-/// Restoration uses the user's explicitly saved encrypted archive in iCloud Drive.
+/// Restoration uses an encrypted CloudKit backup or a legacy exported archive.
 actor LibraryRepository {
     nonisolated let root: URL
     nonisolated let security: VaultSecurityState
@@ -25,11 +25,15 @@ actor LibraryRepository {
     func load() throws -> LibrarySnapshot {
         try security.checkAccess(to: root.lastPathComponent)
         if let snapshot { return snapshot }
-        for prefix in ["DeletingVault-", "InstallingVault-"] {
+        for prefix in ["ReplacingVaultOld-", "DeletingVault-", "InstallingVault-"] {
             let staged = root.deletingLastPathComponent().appending(path: prefix + root.lastPathComponent)
             if !files.fileExists(atPath: root.path), files.fileExists(atPath: staged.path) {
                 try files.moveItem(at: staged, to: root)
             }
+        }
+        for prefix in ["ReplacingVaultOld-", "ReplacingVaultNew-"] {
+            let stale = root.deletingLastPathComponent().appending(path: prefix + root.lastPathComponent)
+            if files.fileExists(atPath: root.path), files.fileExists(atPath: stale.path) { try files.removeItem(at: stale) }
         }
         try LocalVaultStorage.prepareDirectory(root)
         try files.createDirectory(at: root.appending(path: "Originals"), withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.complete])
@@ -62,6 +66,7 @@ actor LibraryRepository {
 
     /// Enrich older libraries without changing identifiers, ordering, or media.
     func loadForDisplay() async throws -> LibrarySnapshot {
+        if security.isReadOnly(root.lastPathComponent) { return try load() }
         let pending = try load().items.filter { $0.fileDate == nil || $0.byteCount == nil }
         var metadata: [UUID: MediaFileMetadata] = [:]
         for item in pending {
@@ -100,6 +105,7 @@ actor LibraryRepository {
     }
 
     private func commit(_ updated: LibrarySnapshot) throws -> LibrarySnapshot {
+        try security.checkWrite(root.lastPathComponent)
         try security.checkAccess(to: root.lastPathComponent)
         let data = try JSONEncoder().encode(updated)
         try data.write(to: root.appending(path: "library.json"), options: [.atomic, .completeFileProtection])
@@ -108,6 +114,7 @@ actor LibraryRepository {
     }
 
     func createFolder(name: String, colorIndex: Int) throws -> LibrarySnapshot {
+        try security.checkWrite(root.lastPathComponent)
         var updated = try load()
         let name = try validatedName(name, folders: updated.folders)
         updated.folders.append(AlbumFolder(id: UUID(), name: name, colorIndex: colorIndex, createdAt: Date()))
@@ -115,6 +122,7 @@ actor LibraryRepository {
     }
 
     func renameFolder(id: UUID, name: String, colorIndex: Int) throws -> LibrarySnapshot {
+        try security.checkWrite(root.lastPathComponent)
         var updated = try load()
         guard let index = updated.folders.firstIndex(where: { $0.id == id }) else { throw LibraryError.missingFolder }
         let name = try validatedName(name, folders: updated.folders.filter { $0.id != id })
@@ -125,6 +133,7 @@ actor LibraryRepository {
 
     /// Removing a folder keeps its originals in All media.
     func deleteFolder(id: UUID) throws -> LibrarySnapshot {
+        try security.checkWrite(root.lastPathComponent)
         var updated = try load()
         updated.folders.removeAll { $0.id == id }
         for index in updated.items.indices where updated.items[index].folderID == id {
@@ -134,6 +143,7 @@ actor LibraryRepository {
     }
 
     func move(ids: Set<UUID>, to folderID: UUID?) throws -> LibrarySnapshot {
+        try security.checkWrite(root.lastPathComponent)
         var updated = try load()
         if let folderID, !updated.folders.contains(where: { $0.id == folderID }) { throw LibraryError.missingFolder }
         for index in updated.items.indices where ids.contains(updated.items[index].id) {
@@ -143,6 +153,7 @@ actor LibraryRepository {
     }
 
     func importFile(at source: URL, originalName: String, kind: MediaKind, folderID: UUID?) async throws -> LibrarySnapshot {
+        try security.checkWrite(root.lastPathComponent)
         try purchaseAccess.checkMediaAddition(currentCount: try load().items.count)
         let id = UUID()
         let ext = source.pathExtension.isEmpty ? (kind == .photo ? "jpg" : "mov") : source.pathExtension
@@ -197,6 +208,7 @@ actor LibraryRepository {
     }
 
     func delete(ids: Set<UUID>) throws -> LibrarySnapshot {
+        try security.checkWrite(root.lastPathComponent)
         var updated = try load()
         let removed = updated.items.filter { ids.contains($0.id) }
         // Stage removals so a failed manifest write can restore the original files.
@@ -231,6 +243,7 @@ actor LibraryRepository {
     }
 
     func export(ids: Set<UUID>) throws -> URL {
+        try security.checkExport(root.lastPathComponent)
         let lease = try security.lease(for: root.lastPathComponent)
         let current = try load()
         let directory = files.temporaryDirectory.appending(path: "Export-" + UUID().uuidString)
@@ -238,6 +251,7 @@ actor LibraryRepository {
         do {
             for item in current.items where ids.contains(item.id) {
                 try security.check(lease)
+                try security.checkExport(root.lastPathComponent)
                 let name = URL(fileURLWithPath: item.originalName).deletingPathExtension().lastPathComponent
                 let ext = URL(fileURLWithPath: item.filename).pathExtension
                 var target = directory.appending(path: name + "." + ext)
@@ -254,6 +268,28 @@ actor LibraryRepository {
             try? files.removeItem(at: directory)
             throw error
         }
+    }
+
+    func replaceFromShare(_ prepared: PreparedVaultRestore) throws -> LibrarySnapshot {
+        let lease = try security.lease(for: root.lastPathComponent)
+        try security.check(lease)
+        guard security.isReadOnly(root.lastPathComponent) else { throw VaultCloudError.invalidData }
+        let old = root.deletingLastPathComponent().appending(path: "ReplacingVaultOld-" + root.lastPathComponent)
+        let new = root.deletingLastPathComponent().appending(path: "ReplacingVaultNew-" + root.lastPathComponent)
+        _ = try load()
+        try files.copyItem(at: prepared.directory, to: new)
+        do {
+            try security.check(lease)
+            try files.moveItem(at: root, to: old)
+            try files.moveItem(at: new, to: root)
+        } catch {
+            if !files.fileExists(atPath: root.path), files.fileExists(atPath: old.path) { try? files.moveItem(at: old, to: root) }
+            try? files.removeItem(at: new)
+            throw error
+        }
+        snapshot = prepared.snapshot
+        try? files.removeItem(at: old)
+        return prepared.snapshot
     }
 
     private func validatedName(_ name: String, folders: [AlbumFolder]) throws -> String {

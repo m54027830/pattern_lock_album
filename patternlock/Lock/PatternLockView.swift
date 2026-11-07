@@ -5,6 +5,7 @@ struct PatternLockView: View {
     @State private var isDrawing = false
     @State private var showingRecovery = false
     @State private var showingRestore = false
+    @State private var showingJoin = false
     @FocusState private var nameFocused: Bool
     @Environment(\.scenePhase) private var scenePhase
 
@@ -133,18 +134,22 @@ struct PatternLockView: View {
                     } else if lock.stage == .create && lock.isCreatingVault {
                         Button(String(localized: "Edit vault name")) { lock.editVaultName() }
                             .font(.subheadline.weight(.medium)).padding(.vertical, 15)
-                    } else {
-                        Text(lock.stage == .create ? String(localized: "Choose a pattern you’ll remember.") : String(localized: "A little space that’s only yours."))
+                    } else if lock.stage == .create {
+                        Text(String(localized: "Choose a pattern you’ll remember."))
                             .font(.caption).foregroundStyle(AlbumTheme.secondary.opacity(0.8))
                             .padding(.vertical, 18)
                     }
                     Spacer(minLength: 20)
                     if !lock.isCreatingVault && [.locked, .create, .unavailable].contains(lock.stage) {
-                        HStack(spacing: 24) {
+                        VStack(spacing: 4) {
                             if lock.stage != .create {
                                 Button(String(localized: "Recover vault")) { showingRecovery = true }
+                                    .frame(minHeight: 44)
                             }
                             Button(String(localized: "Restore from iCloud")) { showingRestore = true }
+                                .frame(minHeight: 44)
+                            Button(String(localized: "Join shared vault")) { showingJoin = true }
+                                .frame(minHeight: 44)
                         }.font(.caption).padding(.bottom, 20).disabled(lock.isBusy)
                     }
                 }
@@ -165,6 +170,12 @@ struct PatternLockView: View {
                     .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { showingRecovery = false } } }
             }.tint(AlbumTheme.accent)
         }
+        .sheet(isPresented: $showingJoin) {
+            NavigationStack {
+                JoinSharedVaultView(onJoined: { showingJoin = false; Task { await lock.activate() } })
+                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { showingJoin = false } } }
+            }.tint(AlbumTheme.accent)
+        }
         .sheet(isPresented: $showingRestore) {
             NavigationStack {
                 RestoreVaultView(onRestored: { showingRestore = false; lock.lock(); Task { await lock.activate() } })
@@ -172,7 +183,7 @@ struct PatternLockView: View {
             }.tint(AlbumTheme.accent)
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .background { showingRecovery = false; showingRestore = false }
+            if phase == .background { showingRecovery = false; showingRestore = false; showingJoin = false }
         }
     }
 

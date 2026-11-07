@@ -54,17 +54,36 @@ struct VaultSettingsView: View {
                     Text(String(localized: "Add Face ID after your pattern and choose which vault to show if it fails. Failed Face ID never activates duress."))
                 }
 
-                Section {
-                    valueRow(String(localized: "Backups on this device"), value: backupsDisabled ? String(localized: "Off") : String(localized: "Available"), icon: "icloud")
-                    valueRow(String(localized: "Encrypt backup"), value: String(localized: "Always on"), icon: "lock.shield")
-                    NavigationLink { BackupExportView(store: store, vault: vault, authenticator: authenticator) } label: {
-                        Label(String(localized: "Back up to iCloud Drive"), systemImage: "icloud.and.arrow.up")
-                    }.disabled(!hasRecovery || backupsDisabled)
-                    NavigationLink { RestoreVaultView(authenticator: authenticator) } label: {
-                        Label(String(localized: "Restore from iCloud"), systemImage: "icloud.and.arrow.down")
+                if !store.isReadOnly {
+                    Section {
+                        NavigationLink { CloudBackupSettingsView(vault: vault, store: store) } label: {
+                            Label(String(localized: "iCloud backup"), systemImage: "lock.icloud")
+                        }.disabled(backupsDisabled)
+                        NavigationLink {
+                            FileBackupSettingsView(store: store, vault: vault, authenticator: authenticator)
+                        } label: {
+                            Label(String(localized: "File backup"), systemImage: "lock.doc")
+                        }.disabled(backupsDisabled)
+                    } header: { Text(String(localized: "Encrypted Backup")) } footer: {
+                        if backupsDisabled {
+                            Text(String(localized: "Cloud backup and sharing are stopped on this device after a duress unlock."))
+                        } else if !hasRecovery {
+                            Text(String(localized: "Set up a recovery phrase in vault settings before enabling backup or exporting a file."))
+                        }
                     }
-                } header: { Text(String(localized: "Backup")) } footer: {
-                    Text(backupsDisabled ? String(localized: "Duress unlock turned off new backups from Pattern on this device. Previously saved iCloud Drive backups remain available for restoration.") : hasRecovery ? String(localized: "Save an encrypted backup through Files and choose iCloud Drive. Deleting the app removes local vaults; restoring requires this backup and its recovery phrase. Backups are manual.") : String(localized: "Set up a recovery phrase below, then save an encrypted backup to iCloud Drive. Local vaults are removed when you delete the app and aren’t included in device backups."))
+                    Section {
+                        NavigationLink { VaultSharingSettingsView(vault: vault, store: store) } label: {
+                            Label(String(localized: "Share this vault"), systemImage: "person.2")
+                        }.disabled(backupsDisabled)
+                        NavigationLink { JoinSharedVaultView() } label: {
+                            Label(String(localized: "Join shared vault"), systemImage: "person.badge.plus")
+                        }.disabled(backupsDisabled)
+                    } header: { Text(String(localized: "Sharing")) }
+                } else {
+                    Section {
+                        Label(String(localized: "Read-only shared vault"), systemImage: "person.2")
+                        Text(String(localized: "Only the owner can change the contents. Removing this vault from your device does not delete the owner’s vault."))
+                    }
                 }
 
                 Section {
@@ -84,14 +103,14 @@ struct VaultSettingsView: View {
                     Text(String(localized: "A recovery phrase can reset a forgotten pattern. Keep it outside the app. After a duress unlock, save the new phrase here. Your previous phrase no longer opens this vault."))
                 }
 
-                Section {
+                if !store.isReadOnly { Section {
                     NavigationLink {
                         DuressSetupView(vault: vault, enabled: isDuressVault, authenticator: authenticator) { revision += 1 }
                     } label: {
                         valueRow(String(localized: "Use a duress vault"), value: isDuressVault ? String(localized: "On") : String(localized: "Off"), icon: "person.crop.rectangle")
                     }
                     Button(String(localized: "What’s this?"), systemImage: "questionmark.circle") { showDuressInfo = true }
-                } header: { Text(String(localized: "Duress vault")) }
+                } header: { Text(String(localized: "Duress vault")) } }
 
                 Section {
                     NavigationLink {
@@ -122,7 +141,7 @@ struct VaultSettingsView: View {
                     NavigationLink {
                         DeleteVaultView(vault: vault, store: store, authenticator: authenticator) { onDeleted(); dismiss() }
                     } label: { Label(String(localized: "Delete this vault"), systemImage: "trash").foregroundStyle(.red) }
-                } footer: { Text(String(localized: "Deletes this vault’s local files and access credentials. Other vaults, Photos originals, and saved backup files remain.")) }
+                } footer: { Text(String(localized: "Deletes local files and credentials. For an owned vault, its configured cloud backup and shares are also removed when iCloud is available. Other vaults, Photos originals, and exported backup files remain.")) }
             }
             .disabled(!isLoaded || store.isBusy)
             .scrollContentBackground(.hidden).background(AlbumTheme.background)
@@ -175,8 +194,8 @@ struct VaultSettingsView: View {
 }
 
 private enum DuressExplanation {
-    static let summary = String(localized: "Drawing this vault’s pattern removes access to every vault except the one displayed and stops backups here. Your selected dummy vault opens, or this vault if no dummy is set. The surviving vault gets a new recovery phrase and active sharing closes.")
-    static let limits = String(localized: "Other vaults’ patterns and recovery phrases are removed from this device, including this vault’s if a different dummy vault is selected. Their local files are kept, but you’ll need a saved backup to restore access in Pattern. Already saved iCloud backups and copies sent to others can’t be recalled. Automatic iCloud sync and revocable share links aren’t available in this version.")
+    static let summary = String(localized: "Drawing this pattern removes access to your other vaults and stops cloud backup and sharing here. The selected dummy vault, or this vault, opens with a new recovery phrase. All owned shares are queued for revocation.")
+    static let limits = String(localized: "Other vaults lose their local patterns and recovery phrases. Their files remain, but restoring access needs a saved backup. Share revocation retries when iCloud is available. Existing personal backups and copies already exported by recipients remain.")
 }
 
 private struct DuressSetupView: View {
@@ -224,6 +243,9 @@ private struct DeleteVaultView: View {
             Section {
                 Label(String(localized: "This cannot be undone"), systemImage: "exclamationmark.triangle").foregroundStyle(.red)
                 Text(String(localized: "Delete “\(vault.name)” and all its files (\(store.snapshot.items.count)), its pattern, and its recovery phrase from this device. Other vaults and originals in Photos stay. Backups saved in Files must be deleted separately."))
+                if !store.isReadOnly {
+                    Text(String(localized: "Deletes local files and credentials. For an owned vault, its configured cloud backup and shares are also removed when iCloud is available. Other vaults, Photos originals, and exported backup files remain."))
+                }
                 TextField(String(localized: "Type \(vault.name) to confirm"), text: $confirmation).autocorrectionDisabled()
             }
             Section {

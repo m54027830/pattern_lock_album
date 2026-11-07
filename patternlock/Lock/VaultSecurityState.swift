@@ -8,6 +8,7 @@ nonisolated final class VaultSecurityState: @unchecked Sendable {
     private var revokedIDs: Set<String> = []
     private var backupStopped = false
     private var shareEpoch: UUID?
+    private var sharedPolicies: [String: VaultSharePolicy] = [:]
 
     struct Lease: Sendable {
         let vaultID: String
@@ -19,10 +20,24 @@ nonisolated final class VaultSecurityState: @unchecked Sendable {
             revokedIDs = Set(registry.revokedVaultIDs ?? [])
             backupStopped = registry.backupsDisabled == true
             shareEpoch = registry.sharingEpoch
+            sharedPolicies = Dictionary(uniqueKeysWithValues: registry.vaults.compactMap { entry in
+                entry.joinedShare.map { (entry.vault.id, $0.policy) }
+            })
         }
     }
 
     var backupsDisabled: Bool { lock.withLock { backupStopped } }
+
+    func isReadOnly(_ id: String) -> Bool { lock.withLock { sharedPolicies[id] != nil } }
+    func allowsExport(_ id: String) -> Bool { lock.withLock { sharedPolicies[id]?.allowsExport ?? true } }
+    func checkWrite(_ id: String) throws {
+        try checkAccess(to: id)
+        if isReadOnly(id) { throw VaultCloudError.readOnly }
+    }
+    func checkExport(_ id: String) throws {
+        try checkAccess(to: id)
+        if !allowsExport(id) { throw VaultCloudError.exportDisabled }
+    }
 
     func allowsAccess(to vaultID: String) -> Bool {
         lock.withLock { !revokedIDs.contains(vaultID) }

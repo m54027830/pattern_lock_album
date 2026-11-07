@@ -7,6 +7,7 @@ struct OnboardingView: View {
     let completion: @MainActor (String, [Int], Int, String) async throws -> Void
     @State private var setup: OnboardingStore
     @State private var showingRestore = false
+    @State private var showingJoin = false
     @State private var drawing = false
     @State private var copied = false
     @State private var operation: Task<Void, Never>?
@@ -39,7 +40,7 @@ struct OnboardingView: View {
     }
     private var subtitle: String {
         switch setup.step {
-        case .welcome: [String(localized: "Welcome to Pattern. A calm home for the photos and videos you want to keep close."), String(localized: "Each pattern opens its own vault, with separate photos, videos, and folders."), String(localized: "Deleting Pattern removes your local vaults. Save an encrypted backup to iCloud Drive in settings so you can restore after reinstalling.")][setup.welcomePage]
+        case .welcome: [String(localized: "Welcome to Pattern. A calm home for the photos and videos you want to keep close."), String(localized: "Each pattern opens its own vault, with separate photos, videos, and folders."), String(localized: "Deleting Pattern removes your local vaults. Enable encrypted iCloud backup in settings to restore after reinstalling.")][setup.welcomePage]
         case .vaultChoice: String(localized: "Choose how you’d like to start.")
         case .grid: String(localized: "Choose the grid you’ll use for every vault. More dots give you more room to draw.")
         case .pattern: String(localized: "Name your first vault, then connect at least 4 different dots.")
@@ -79,6 +80,12 @@ struct OnboardingView: View {
         .foregroundStyle(AlbumTheme.ink).tint(AlbumTheme.accent).preferredColorScheme(.light)
         .disabled(setup.busy)
         .onDisappear { operation?.cancel(); setup.clearSecrets() }
+        .sheet(isPresented: $showingJoin) {
+            NavigationStack {
+                JoinSharedVaultView(onJoined: { showingJoin = false; onRestored?() })
+                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { showingJoin = false } } }
+            }.tint(AlbumTheme.accent)
+        }
         .sheet(isPresented: $showingRestore) {
             NavigationStack {
                 RestoreVaultView(onRestored: { showingRestore = false; onRestored?() })
@@ -134,6 +141,8 @@ struct OnboardingView: View {
                                 detail: String(localized: "Use an iCloud backup and its recovery phrase."),
                                 icon: "icloud.and.arrow.down") { showingRestore = true }
                         .accessibilityIdentifier("onboardingRestoreVault")
+                    vaultChoice(String(localized: "Join shared vault"), detail: String(localized: "Enter a sharing phrase from someone you trust."), icon: "person.badge.plus") { showingJoin = true }
+                        .accessibilityIdentifier("onboardingJoinSharedVault")
                 }
             }
         case .grid:

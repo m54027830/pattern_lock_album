@@ -162,6 +162,23 @@ import UIKit
         XCTAssertEqual(client.purchases, 0)
         XCTAssertNotNil(store.error)
     }
+
+    func testFailedPriceRefreshClearsOldPriceAndRetryUsesReturnedCurrency() async {
+        let client = TestPurchaseClient(), store = PurchaseStore(client: client, access: PurchaseAccess())
+        await store.start(); await store.loadProduct()
+        XCTAssertNotNil(store.product)
+        client.productFails = true
+        await store.loadProduct()
+        XCTAssertNil(store.product)
+        XCTAssertNotNil(store.error)
+        await store.purchase(in: nil)
+        XCTAssertEqual(client.purchases, 0)
+        client.productFails = false
+        client.product = .init(id: PurchaseConfiguration.productID, displayName: "Pattern Unlimited", displayPrice: "¥600")
+        await store.loadProduct()
+        XCTAssertEqual(store.product?.displayPrice, "¥600")
+        XCTAssertNil(store.error)
+    }
 }
 
 @MainActor final class StoreKitIntegrationTests: XCTestCase {
@@ -172,7 +189,12 @@ import UIKit
         defer { session.clearTransactions() }
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first { $0.activationState == .foregroundActive })
         let store = PurchaseStore(client: StoreKitPurchaseClient(), access: PurchaseAccess())
-        await store.start(); await store.loadProduct(); await store.purchase(in: scene)
+        await store.start(); await store.loadProduct()
+        let appleProducts = try await Product.products(for: ["jp.gm.patternlock.pro"])
+        let appleProduct = try XCTUnwrap(appleProducts.first)
+        XCTAssertEqual(store.product?.id, "jp.gm.patternlock.pro")
+        XCTAssertEqual(store.product?.displayPrice, appleProduct.displayPrice, "Display StoreKit’s localized price verbatim")
+        await store.purchase(in: scene)
         XCTAssertTrue(store.isUnlimited, store.error ?? "Purchase did not unlock access")
         XCTAssertNil(store.error)
         XCTAssertFalse(store.isPurchasing)
