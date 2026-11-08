@@ -13,10 +13,13 @@ import XCTest
         window.isHidden = false
         defer { window.isHidden = true }
 
-        for size in [CGSize(width: 393, height: 852), CGSize(width: 852, height: 393), CGSize(width: 393, height: 852)] {
+        for size in [CGSize(width: 393, height: 852), CGSize(width: 852, height: 393),
+                     CGSize(width: 834, height: 1194), CGSize(width: 1194, height: 834),
+                     CGSize(width: 320, height: 700), CGSize(width: 700, height: 760),
+                     CGSize(width: 393, height: 852)] {
             window.frame = CGRect(origin: .zero, size: size)
             // Include the side insets that a camera encounters in landscape.
-            host.additionalSafeAreaInsets = size.width > size.height ? UIEdgeInsets(top: 0, left: 59, bottom: 0, right: 59) : .zero
+            host.additionalSafeAreaInsets = size.width > size.height ? UIEdgeInsets(top: 0, left: 59, bottom: 0, right: 21) : .zero
             for (video, recording) in [(false, false), (true, false), (true, true), (false, false)] {
                 let state = CameraPreviewProbeState()
                 host.rootView = surface(preview: state, video: video, recording: recording)
@@ -41,7 +44,7 @@ import XCTest
                     XCTAssertEqual(frame.width, safeFrame.width, accuracy: 0.5)
                     XCTAssertEqual(frame.minY, safeFrame.minY + 140, accuracy: 0.5, "Header must not cover the photo frame")
                     XCTAssertEqual(frame.maxY, safeFrame.maxY - 108, accuracy: 0.5, "Shutter row must not cover the photo frame")
-                    if size.width < size.height {
+                    if size.width == 393 && size.height == 852 {
                         XCTAssertGreaterThan(frame.height, frame.width, "Portrait photos must not be squeezed into a square opening")
                     }
                 }

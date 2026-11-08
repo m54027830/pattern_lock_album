@@ -18,10 +18,10 @@ struct FaceIDSettingsView: View {
     var body: some View {
         Form {
             Section {
-                Toggle(String(localized: "Require Face ID after pattern"), isOn: $requireFaceID)
+                Toggle(String(localized: "Require \(DeviceBiometrics.name) after pattern"), isOn: $requireFaceID)
                     .accessibilityIdentifier("requireFaceID")
-            } header: { Text(String(localized: "Face ID")) } footer: {
-                Text(String(localized: "Your pattern selects a vault. When enabled, Face ID must succeed before its photos and folders appear. The device passcode cannot replace this check."))
+            } header: { Text(DeviceBiometrics.name) } footer: {
+                Text(String(localized: "Your pattern selects a vault. When enabled, \(DeviceBiometrics.name) must succeed before its photos and folders appear. The device passcode cannot replace this check."))
             }
             Section {
                 Picker(String(localized: "Dummy vault"), selection: $dummyVaultID) {
@@ -33,11 +33,11 @@ struct FaceIDSettingsView: View {
                         .font(.subheadline).foregroundStyle(AlbumTheme.secondary)
                 }
             } header: { Text(String(localized: "What to show instead")) } footer: {
-                Text(String(localized: "If Face ID fails, is cancelled, or is unavailable, this vault is shown. That does not activate duress, remove access, rotate recovery phrases, or stop backups. A dummy session can browse its media but cannot change vault settings or create vaults. Unlock its own pattern for full access."))
+                Text(String(localized: "If \(DeviceBiometrics.name) fails, is cancelled, or is unavailable, this vault is shown. That does not activate duress, remove access, rotate recovery phrases, or stop backups. A dummy session can browse its media but cannot change vault settings or create vaults. Unlock its own pattern for full access."))
             }
             Section {
                 Text(isDuressVault
-                     ? String(localized: "Duress is enabled for this pattern. A duress unlock keeps the selected dummy vault (or this vault if none is selected) and removes access to all other vaults on this device, including this one when a different dummy is selected. Face ID failure never performs those actions.")
+                     ? String(localized: "Duress is enabled for this pattern. A duress unlock keeps the selected dummy vault (or this vault if none is selected) and removes access to all other vaults on this device, including this one when a different dummy is selected. \(DeviceBiometrics.name) failure never performs those actions.")
                      : String(localized: "The same dummy vault is displayed if you separately enable and use duress. Choosing a dummy here does not enable duress."))
                     .font(.subheadline)
             } header: { Text(String(localized: "Duress")) }
@@ -52,12 +52,12 @@ struct FaceIDSettingsView: View {
                 .disabled(requireFaceID && dummy == nil)
                 .accessibilityIdentifier("saveFaceIDSettings")
             } footer: {
-                Text(requireFaceID && dummy == nil ? String(localized: "Choose a dummy vault before turning on Face ID.") : String(localized: "Confirm your current pattern to save. Selecting a different dummy also requires its pattern. Enabling or removing Face ID protection requires a successful Face ID check."))
+                Text(requireFaceID && dummy == nil ? String(localized: "Choose a dummy vault before turning on \(DeviceBiometrics.name).") : String(localized: "Confirm your current pattern to save. Selecting a different dummy also requires its pattern. Enabling or removing \(DeviceBiometrics.name) protection requires a successful \(DeviceBiometrics.name) check."))
             }
         }
         .disabled(!loaded)
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
-        .navigationTitle(String(localized: "Face ID & dummy vault")).navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(String(localized: "\(DeviceBiometrics.name) & dummy vault")).navigationBarTitleDisplayMode(.inline)
         .task {
             do {
                 let settings = try await authenticator.settings(for: vault.id)
@@ -94,20 +94,22 @@ private struct FaceIDSettingsConfirmationView: View {
     private var confirmingDummy: Bool { needsDummyPattern && !currentPattern.isEmpty }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                Image(systemName: confirmingDummy ? "photo.on.rectangle" : "faceid")
-                    .font(.system(size: 35, weight: .light)).foregroundStyle(AlbumTheme.accent)
-                Text(confirmingDummy ? String(localized: "Confirm the pattern for “\(dummy?.name ?? "")”") : String(localized: "Confirm the pattern for “\(vault.name)”"))
-                    .font(.headline).multilineTextAlignment(.center)
-                Text(confirmingDummy ? String(localized: "This allows the selected vault to be shown without its pattern when Face ID fails or duress is used.") : String(localized: "This only updates settings. Confirming a duress pattern here does not activate duress."))
-                    .font(.subheadline).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
-                PatternGridView(side: 300, isEnabled: !busy, revision: revision, isDrawing: $isDrawing, completed: submit)
-                if busy { ProgressView(String(localized: "Confirming access…")) }
-                if let error { Text(error).foregroundStyle(.red).multilineTextAlignment(.center).font(.subheadline) }
-            }.padding(24).frame(maxWidth: .infinity)
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: 24) {
+                    Image(systemName: confirmingDummy ? "photo.on.rectangle" : DeviceBiometrics.symbol)
+                        .font(.system(size: 35, weight: .light)).foregroundStyle(AlbumTheme.accent)
+                    Text(confirmingDummy ? String(localized: "Confirm the pattern for “\(dummy?.name ?? "")”") : String(localized: "Confirm the pattern for “\(vault.name)”"))
+                        .font(.headline).multilineTextAlignment(.center)
+                    Text(confirmingDummy ? String(localized: "This allows the selected vault to be shown without its pattern when \(DeviceBiometrics.name) fails or duress is used.") : String(localized: "This only updates settings. Confirming a duress pattern here does not activate duress."))
+                        .font(.subheadline).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
+                    PatternGridView(side: max(0, min(300, geometry.size.width - 48)), isEnabled: !busy, revision: revision, isDrawing: $isDrawing, completed: submit)
+                    if busy { ProgressView(String(localized: "Confirming access…")) }
+                    if let error { Text(error).foregroundStyle(.red).multilineTextAlignment(.center).font(.subheadline) }
+                }.padding(24).frame(maxWidth: .infinity)
+            }
+            .scrollDisabled(isDrawing)
         }
-        .scrollDisabled(isDrawing)
         .background(AlbumTheme.background)
         .navigationTitle(String(localized: "Confirm access")).navigationBarTitleDisplayMode(.inline)
         .interactiveDismissDisabled(busy)

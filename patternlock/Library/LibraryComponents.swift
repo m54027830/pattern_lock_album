@@ -169,12 +169,13 @@ struct FolderEditor: View {
                 }
                 VStack(alignment: .leading, spacing: 13) {
                     Text(String(localized: "Color")).font(.subheadline.weight(.semibold))
-                    HStack(spacing: 15) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 44), spacing: 8)], alignment: .leading, spacing: 8) {
                         ForEach(AlbumTheme.folderColors.indices, id: \.self) { index in
                             Button { colorIndex = index } label: {
                                 Circle().fill(AlbumTheme.folderColor(index)).frame(width: 37, height: 37)
                                     .overlay { if index == colorIndex { Image(systemName: "checkmark").font(.subheadline.weight(.semibold)).foregroundStyle(AlbumTheme.ink) } }
-                            }.accessibilityLabel(AlbumTheme.colorNames[index])
+                            }.frame(minWidth: 44, minHeight: 44)
+                                .accessibilityLabel(AlbumTheme.colorNames[index])
                                 .accessibilityAddTraits(index == colorIndex ? [.isSelected] : [])
                         }
                     }

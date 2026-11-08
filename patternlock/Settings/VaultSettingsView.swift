@@ -48,10 +48,10 @@ struct VaultSettingsView: View {
                     NavigationLink {
                         FaceIDSettingsView(vault: vault, authenticator: authenticator) { revision += 1 }
                     } label: {
-                        valueRow(String(localized: "Face ID & dummy vault"), value: requiresFaceID ? String(localized: "On") : String(localized: "Off"), icon: "faceid")
+                        valueRow(String(localized: "\(DeviceBiometrics.name) & dummy vault"), value: requiresFaceID ? String(localized: "On") : String(localized: "Off"), icon: DeviceBiometrics.symbol)
                     }
                 } header: { Text(String(localized: "Access")) } footer: {
-                    Text(String(localized: "Add Face ID after your pattern and choose which vault to show if it fails. Failed Face ID never activates duress."))
+                    Text(String(localized: "Add \(DeviceBiometrics.name) after your pattern and choose which vault to show if it fails. Failed \(DeviceBiometrics.name) never activates duress."))
                 }
 
                 if !store.isReadOnly {
