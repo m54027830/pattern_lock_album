@@ -86,13 +86,15 @@ struct VaultCameraView: View {
                 Image(systemName: "lock.fill").accessibilityHidden(true)
             }.padding()
             Text(String(localized: "Saved only to this vault, never to Photos."))
-                .font(.caption).foregroundStyle(.secondary).padding(.bottom, 10)
+                .font(.caption).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                .padding(.horizontal).padding(.bottom, 10)
             Picker(String(localized: "Camera mode"), selection: Binding(get: { cameraScene.mode }, set: { mode in reloadCamera { $0.mode = mode } })) {
                 ForEach(VaultCameraMode.allCases) { choice in Text(choice.title).tag(choice) }
             }
             .pickerStyle(.segmented).padding(.horizontal).padding(.bottom, 12)
             .disabled(cameraControlsLocked)
         }
+        .frame(maxWidth: 600).frame(maxWidth: .infinity)
         .background(.black.opacity(0.9))
     }
 
@@ -144,10 +146,7 @@ struct VaultCameraView: View {
                         .font(.caption.monospacedDigit()).foregroundStyle(.red)
                 }
             }
-            HStack(spacing: 0) {
-                // Equal side columns keep the shutter centered, including on small phones.
-                Color.clear.frame(width: 96, height: 44).accessibilityHidden(true)
-                Spacer(minLength: 0)
+            CameraShutterRow {
                 Button(action: capture) {
                     ZStack {
                         Circle().stroke(.white, lineWidth: 3).frame(width: 72, height: 72)
@@ -161,7 +160,7 @@ struct VaultCameraView: View {
                 .disabled(preparingCapture || (cameraScene.usesSilentCamera ? !silentCamera.ready : !systemCamera.canCapture))
                 .accessibilityLabel(cameraScene.mode == .photo ? String(localized: "Take photo") : (systemCamera.isRecording ? String(localized: "Stop recording") : String(localized: "Record video")))
                 .accessibilityIdentifier("cameraShutter")
-                Spacer(minLength: 0)
+            } options: {
                 HStack(spacing: 8) {
                     if cameraScene.mode == .photo {
                         Button { reloadCamera { $0.muted.toggle() } } label: {
@@ -183,6 +182,7 @@ struct VaultCameraView: View {
                 }.foregroundStyle(.white)
             }
         }.padding(.horizontal, 12).padding(.vertical, 18)
+            .frame(maxWidth: 520).frame(maxWidth: .infinity)
     }
 
     private var canSwitchCamera: Bool {
@@ -292,6 +292,27 @@ struct VaultCameraView: View {
         saveTask?.cancel()
         review.cancel()
         dismiss()
+    }
+}
+
+/// Keep the shutter centered when space permits. In narrow windows, give the
+/// controls their full touch targets without an invisible balancing column.
+struct CameraShutterRow<Shutter: View, Options: View>: View {
+    @ViewBuilder let shutter: Shutter
+    @ViewBuilder let options: Options
+
+    var body: some View {
+        GeometryReader { geometry in
+            let trailing = max(96, (geometry.size.width - 72) / 2)
+            HStack(spacing: 0) {
+                Color.clear
+                    .frame(width: max(0, geometry.size.width - 72 - trailing))
+                    .accessibilityHidden(true)
+                shutter.frame(width: 72, height: 72)
+                options.frame(width: trailing, alignment: .trailing)
+            }
+        }
+        .frame(height: 72)
     }
 }
 

@@ -82,6 +82,7 @@ struct CaptureReviewView: View {
             }
             .font(.headline).disabled(isSaving)
             .padding(20)
+            .frame(maxWidth: 560)
         }
         .foregroundStyle(.white).background(.black).preferredColorScheme(.dark)
         .accessibilityIdentifier("captureReview")

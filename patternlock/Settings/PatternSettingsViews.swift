@@ -22,19 +22,21 @@ struct PatternSetupView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                Image(systemName: "hand.draw").font(.system(size: 36, weight: .light)).foregroundStyle(AlbumTheme.accent)
-                Text(instruction).font(.title3.weight(.medium)).multilineTextAlignment(.center)
-                PatternGridView(side: 300, isEnabled: !busy, revision: revision, isDrawing: $isDrawing, completed: submit)
-                if busy { ProgressView(String(localized: "Saving pattern…")) }
-                if let error { Text(error).font(.subheadline).foregroundStyle(.red).multilineTextAlignment(.center) }
-                if !proposed.isEmpty && !busy {
-                    Button(String(localized: "Start over")) { current = []; proposed = []; error = nil; revision += 1 }
-                }
-            }.padding(24).frame(maxWidth: .infinity)
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: 24) {
+                    Image(systemName: "hand.draw").font(.system(size: 36, weight: .light)).foregroundStyle(AlbumTheme.accent)
+                    Text(instruction).font(.title3.weight(.medium)).multilineTextAlignment(.center)
+                    PatternGridView(side: max(0, min(300, geometry.size.width - 48)), isEnabled: !busy, revision: revision, isDrawing: $isDrawing, completed: submit)
+                    if busy { ProgressView(String(localized: "Saving pattern…")) }
+                    if let error { Text(error).font(.subheadline).foregroundStyle(.red).multilineTextAlignment(.center) }
+                    if !proposed.isEmpty && !busy {
+                        Button(String(localized: "Start over")) { current = []; proposed = []; error = nil; revision += 1 }
+                    }
+                }.padding(24).frame(maxWidth: .infinity)
+            }
+            .scrollDisabled(isDrawing)
         }
-        .scrollDisabled(isDrawing)
         .background(AlbumTheme.background)
         .navigationTitle(title).navigationBarTitleDisplayMode(.inline)
         .interactiveDismissDisabled(busy)
@@ -79,26 +81,28 @@ struct PatternAuthorizationView: View {
     @State private var operation: Task<Void, Never>?
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                Text(detail).font(.subheadline).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
-                Text(String(localized: "Confirm your current pattern")).font(.headline)
-                PatternGridView(side: 300, isEnabled: !busy, revision: revision, isDrawing: $isDrawing) { pattern in
-                    guard !busy else { return }
-                    revision += 1
-                    guard PatternRules.isValid(pattern, gridSize: gridSize) else { error = String(localized: "Connect at least 4 different dots."); return }
-                    busy = true; error = nil
-                    operation = Task {
-                        do { try await completion(pattern); if !Task.isCancelled { dismiss() } }
-                        catch { if !Task.isCancelled { self.error = error.localizedDescription } }
-                        busy = false
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: 24) {
+                    Text(detail).font(.subheadline).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
+                    Text(String(localized: "Confirm your current pattern")).font(.headline)
+                    PatternGridView(side: max(0, min(300, geometry.size.width - 48)), isEnabled: !busy, revision: revision, isDrawing: $isDrawing) { pattern in
+                        guard !busy else { return }
+                        revision += 1
+                        guard PatternRules.isValid(pattern, gridSize: gridSize) else { error = String(localized: "Connect at least 4 different dots."); return }
+                        busy = true; error = nil
+                        operation = Task {
+                            do { try await completion(pattern); if !Task.isCancelled { dismiss() } }
+                            catch { if !Task.isCancelled { self.error = error.localizedDescription } }
+                            busy = false
+                        }
                     }
-                }
-                if busy { ProgressView() }
-                if let error { Text(error).foregroundStyle(.red).multilineTextAlignment(.center) }
-            }.padding(24).frame(maxWidth: .infinity)
+                    if busy { ProgressView() }
+                    if let error { Text(error).foregroundStyle(.red).multilineTextAlignment(.center) }
+                }.padding(24).frame(maxWidth: .infinity)
+            }
+            .scrollDisabled(isDrawing)
         }
-        .scrollDisabled(isDrawing)
         .background(AlbumTheme.background)
         .navigationTitle(title).navigationBarTitleDisplayMode(.inline)
         .interactiveDismissDisabled(busy)

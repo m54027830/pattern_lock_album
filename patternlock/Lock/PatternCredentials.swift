@@ -283,7 +283,7 @@ actor PatternAuthenticator: PatternAuthenticating {
             }
         }
         if source.requiresFaceID == true || requireFaceID || (target?.requiresFaceID == true && dummyVaultID != source.dummyVaultID) {
-            guard await faceID.authenticate(reason: String(localized: "Confirm Face ID to update vault access.")) == .authenticated else { throw VaultAccessError.faceIDRequired }
+            guard await faceID.authenticate(reason: String(localized: "Confirm \(DeviceBiometrics.name) to update vault access.")) == .authenticated else { throw VaultAccessError.faceIDRequired }
         }
         try Task.checkCancellation()
         guard var registry = try read(), let index = registry.vaults.firstIndex(where: { $0.vault.id == vaultID }) else { throw VaultAccessError.changed }
@@ -710,7 +710,7 @@ extension PatternAuthenticator {
             updated.vaults[index].pattern = try makeCredential(replacement.replacement)
         }
         if original.vaults.contains(where: { $0.requiresFaceID == true }) {
-            guard await faceID.authenticate(reason: String(localized: "Confirm Face ID to replace all vault patterns.")) == .authenticated else { throw VaultAccessError.faceIDRequired }
+            guard await faceID.authenticate(reason: String(localized: "Confirm \(DeviceBiometrics.name) to replace all vault patterns.")) == .authenticated else { throw VaultAccessError.faceIDRequired }
         }
         try Task.checkCancellation()
         guard let latest = try read(), sameConfiguration(latest, original) else { throw PatternConfigurationError.changed }

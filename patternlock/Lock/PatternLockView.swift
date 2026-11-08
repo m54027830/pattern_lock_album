@@ -27,7 +27,7 @@ struct PatternLockView: View {
         case .create: lock.isCreatingVault ? String(localized: "Choose a unique pattern for \(lock.vaultName).\nConnect at least 4 dots.") : String(localized: "Draw a pattern to lock your library.\nConnect at least 4 dots.")
         case .confirm: String(localized: "Draw the same pattern again\nto make sure you remember it.")
         case .locked: String(localized: "Draw a pattern to open its vault.")
-        case .faceID: String(localized: "Use Face ID to open your vault.")
+        case .faceID: String(localized: "Use \(DeviceBiometrics.name) to open your vault.")
         case .unavailable: String(localized: "We couldn’t access your saved pattern.")
         default: String(localized: "Getting your lock ready…")
         }
@@ -52,7 +52,7 @@ struct PatternLockView: View {
                     }
                     .padding(.top, 25).padding(.bottom, 35)
 
-                    Image(systemName: lock.stage == .faceID ? "faceid" : lock.stage == .confirm ? "checkmark.shield" : "lock")
+                    Image(systemName: lock.stage == .faceID ? DeviceBiometrics.symbol : lock.stage == .confirm ? "checkmark.shield" : "lock")
                         .font(.system(size: 23, weight: .light))
                         .foregroundStyle(AlbumTheme.accent)
                         .frame(width: 62, height: 62)
@@ -201,7 +201,7 @@ struct PatternLockView: View {
 
     @ViewBuilder private func status(remaining: Int) -> some View {
         if lock.isBusy {
-            HStack(spacing: 9) { ProgressView(); Text(lock.stage == .faceID ? String(localized: "Waiting for Face ID…") : lock.stage == .confirm ? String(localized: "Saving your pattern…") : String(localized: "Checking your pattern…")).font(.caption) }
+            HStack(spacing: 9) { ProgressView(); Text(lock.stage == .faceID ? String(localized: "Waiting for \(DeviceBiometrics.name)…") : lock.stage == .confirm ? String(localized: "Saving your pattern…") : String(localized: "Checking your pattern…")).font(.caption) }
                 .foregroundStyle(AlbumTheme.secondary)
         } else if remaining > 0 {
             VStack(spacing: 5) {

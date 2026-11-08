@@ -5,6 +5,9 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @State private var store: LibraryStore
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
+    @State private var compactColumn = NavigationSplitViewColumn.detail
 
     private let vaultName: String
     private let createVault: (() -> Void)?
@@ -51,12 +54,61 @@ struct ContentView: View {
     private var visibleItems: [MediaItem] { sort.sorted(scopedItems.filter { filter.includes($0) }) }
 
     var body: some View {
+        NavigationSplitView(columnVisibility: $columnVisibility, preferredCompactColumn: $compactColumn) {
+            folderSidebar
+                .navigationSplitViewColumnWidth(min: 220, ideal: 250, max: 320)
+        } detail: {
+            library
+        }
+        .navigationSplitViewStyle(.balanced)
+        .tint(AlbumTheme.accent)
+        .preferredColorScheme(.light)
+    }
+
+    private var folderSidebar: some View {
+        List(selection: Binding<LibraryLocation?>(get: {
+            currentFolderID.map(LibraryLocation.folder) ?? .library
+        }, set: { location in
+            guard let location else { return }
+            switch location {
+            case .library: currentFolderID = nil
+            case .folder(let id): currentFolderID = id
+            }
+            finishSelection()
+            filter = .all
+            compactColumn = .detail
+        })) {
+            NavigationLink(value: LibraryLocation.library) {
+                Label(String(localized: "Library"), systemImage: "photo.on.rectangle")
+            }
+            Section(String(localized: "Folders")) {
+                ForEach(store.snapshot.folders.sorted { $0.createdAt < $1.createdAt }) { folder in
+                    NavigationLink(value: LibraryLocation.folder(folder.id)) {
+                        Label(folder.name, systemImage: "folder")
+                    }
+                }
+                if !store.isReadOnly {
+                    Button { folderEditor = .init(folder: nil) } label: {
+                        Label(String(localized: "New folder"), systemImage: "folder.badge.plus")
+                    }
+                    .disabled(store.isBusy || !store.isLoaded)
+                }
+            }
+        }
+        .disabled(store.isBusy)
+        .navigationTitle(vaultName)
+        .toolbar(removing: .sidebarToggle)
+        .scrollContentBackground(.hidden)
+        .background(AlbumTheme.background)
+    }
+
+    private var library: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
                     header
                     filterBar
-                    if currentFolderID == nil && !isSelecting && (!store.isReadOnly || !store.snapshot.folders.isEmpty) { foldersSection }
+                    if currentFolderID == nil && !isSelecting && (horizontalSizeClass != .regular || columnVisibility == .detailOnly) && (!store.isReadOnly || !store.snapshot.folders.isEmpty) { foldersSection }
                     mediaSection
                 }
                 .padding(.horizontal, 24)
@@ -176,6 +228,14 @@ struct ContentView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 6) {
+                if horizontalSizeClass == .regular {
+                    Button {
+                        withAnimation { columnVisibility = columnVisibility == .detailOnly ? .all : .detailOnly }
+                    } label: {
+                        Image(systemName: "sidebar.left").frame(width: 44, height: 44)
+                    }
+                    .accessibilityLabel(String(localized: "Folders"))
+                }
                 if currentFolderID != nil {
                     Button { withAnimation { currentFolderID = nil; finishSelection(); filter = .all } } label: {
                         Label(String(localized: "Library"), systemImage: "arrow.left").font(.subheadline.weight(.medium))
@@ -418,12 +478,12 @@ struct ContentView: View {
                 HStack(spacing: 10) { ProgressView(); Text(store.progress.isEmpty ? String(localized: "Saving changes…") : store.progress).font(.caption) }
                     .padding(12).frame(maxWidth: .infinity).background(.regularMaterial)
             }
-            HStack(spacing: 16) {
+            HStack(spacing: 0) {
                 if isSelecting {
                     if store.allowsExport { selectionAction(String(localized: "Export"), icon: "square.and.arrow.up") { Task { await store.export(selected) } } }
-                    Spacer()
+                    Spacer(minLength: 0)
                     if !store.isReadOnly { selectionAction(String(localized: "Move"), icon: "folder") { showingMove = true }
-                    Spacer()
+                    Spacer(minLength: 0)
                     selectionAction(String(localized: "Delete"), icon: "trash", destructive: true) { showingDelete = true } }
                 } else if !store.isReadOnly {
                     Spacer()
@@ -441,7 +501,7 @@ struct ContentView: View {
     private func selectionAction(_ title: String, icon: String, destructive: Bool = false, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 6) { Image(systemName: icon).font(.system(size: 20)); Text(title).font(.caption.weight(.medium)) }
-                .frame(minWidth: 60, minHeight: 48)
+                .frame(minWidth: 44, maxWidth: .infinity, minHeight: 48)
         }
         .foregroundStyle(destructive ? Color.red : AlbumTheme.accent)
         .disabled(selected.isEmpty || store.isBusy)
@@ -455,5 +515,6 @@ struct ContentView: View {
 
 struct FolderEditorDestination: Identifiable { let id = UUID(); let folder: AlbumFolder? }
 struct ViewerDestination: Identifiable { let id: UUID }
+private enum LibraryLocation: Hashable { case library, folder(UUID) }
 
 #Preview { ContentView() }
