@@ -29,6 +29,8 @@ struct ContentView: View {
     @State private var cloud = VaultCloudService.shared
     @State private var currentFolderID: UUID?
     @State private var filter = MediaFilter.all
+    @State private var searchText = ""
+    @FocusState private var isSearchFocused: Bool
     @AppStorage("librarySort") private var sort = LibrarySort.newest
     @State private var isSelecting = false
     @State private var selected: Set<UUID> = []
@@ -51,7 +53,13 @@ struct ContentView: View {
     private var scopedItems: [MediaItem] {
         store.snapshot.items.filter { currentFolderID == nil || $0.folderID == currentFolderID }
     }
-    private var visibleItems: [MediaItem] { sort.sorted(scopedItems.filter { filter.includes($0) }) }
+    private var searchQuery: String { searchText.trimmingCharacters(in: .whitespacesAndNewlines) }
+    private var visibleItems: [MediaItem] {
+        let query = searchQuery
+        return sort.sorted(scopedItems.filter {
+            filter.includes($0) && (query.isEmpty || $0.originalName.localizedStandardContains(query))
+        })
+    }
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility, preferredCompactColumn: $compactColumn) {
@@ -107,7 +115,7 @@ struct ContentView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
                     header
-                    filterBar
+                    libraryToolbar
                     if currentFolderID == nil && !isSelecting && (horizontalSizeClass != .regular || columnVisibility == .detailOnly) && (!store.isReadOnly || !store.snapshot.folders.isEmpty) { foldersSection }
                     mediaSection
                 }
@@ -117,6 +125,7 @@ struct ContentView: View {
                 .frame(maxWidth: 900)
                 .frame(maxWidth: .infinity)
             }
+            .scrollDismissesKeyboard(.interactively)
             .background(AlbumTheme.background)
             .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
             .toolbar(.hidden, for: .navigationBar)
@@ -191,6 +200,12 @@ struct ContentView: View {
             } message: { Text(String(localized: "The items inside will stay in your library.")) }
             .task { await store.load(); scheduleCloudUpdate() }
             .onChange(of: store.snapshot) { _, _ in scheduleCloudUpdate() }
+            .onChange(of: filter) { _, _ in selected.removeAll() }
+            .onChange(of: searchText) { _, _ in selected.formIntersection(visibleItems.map(\.id)) }
+            .onChange(of: currentFolderID) { _, _ in
+                searchText = ""
+                isSearchFocused = false
+            }
             .onChange(of: vaultName) { _, _ in scheduleCloudUpdate() }
             .onDisappear { cloudTask?.cancel() }
         }
@@ -216,6 +231,8 @@ struct ContentView: View {
             try store.repository.purchaseAccess.checkMediaAddition(currentCount: store.snapshot.items.count)
             importFolderID = currentFolderID
             filter = .all
+            searchText = ""
+            isSearchFocused = false
             switch action {
             case .media: showingPicker = true
             case .document: showingDocuments = true
@@ -306,51 +323,93 @@ struct ContentView: View {
 
     private var selectionButton: some View {
         Button {
+            isSearchFocused = false
             withAnimation(.easeInOut(duration: 0.2)) {
                 if isSelecting { finishSelection() } else { isSelecting = true }
             }
         } label: {
-            Label(isSelecting ? String(localized: "Done") : String(localized: "Select"), systemImage: "checkmark")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(isSelecting ? .white : AlbumTheme.accent)
-                .padding(.horizontal, 16)
-                .frame(minHeight: 44)
-                .background(isSelecting ? AlbumTheme.accent : .white, in: Capsule())
+            toolbarIcon(isSelecting ? "checkmark.circle.fill" : "checkmark.circle", isActive: isSelecting)
         }
         .disabled((visibleItems.isEmpty && !isSelecting) || store.isBusy)
         .accessibilityLabel(isSelecting ? String(localized: "Done") : String(localized: "Select"))
         .accessibilityAddTraits(isSelecting ? [.isSelected] : [])
         .accessibilityRemoveTraits(isSelecting ? [] : [.isSelected])
         .accessibilityIdentifier("selectMedia")
+        .help(isSelecting ? String(localized: "Done") : String(localized: "Select"))
     }
 
-    private var filterBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 5) {
-                ForEach(MediaFilter.allCases) { choice in
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.18)) { filter = choice; selected.removeAll() }
-                    } label: {
-                        HStack(spacing: 7) {
-                            Text(choice.title).font(.subheadline.weight(.medium))
-                            if choice == filter {
-                                Text(String(localized: "\(scopedItems.filter { choice.includes($0) }.count)"))
-                                    .font(.system(size: 10, weight: .semibold, design: .rounded))
-                                    .padding(.horizontal, 6).padding(.vertical, 3)
-                                    .background(.white.opacity(0.17), in: Capsule())
-                            }
-                        }
-                        .padding(.horizontal, 14).padding(.vertical, 11)
-                        .foregroundStyle(choice == filter ? .white : AlbumTheme.secondary)
-                        .background(choice == filter ? AlbumTheme.ink : .clear, in: Capsule())
+    private var libraryToolbar: some View {
+        HStack(spacing: 8) {
+            searchField
+            Spacer(minLength: 0)
+            HStack(spacing: 4) {
+                Menu {
+                    Picker(String(localized: "Sort by"), selection: $sort) {
+                        ForEach(LibrarySort.allCases) { option in Text(option.title).tag(option) }
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityAddTraits(choice == filter ? [.isSelected] : [])
+                } label: {
+                    toolbarIcon("arrow.up.arrow.down")
                 }
+                .accessibilityLabel(String(localized: "Sort media, \(sort.title)"))
+                .accessibilityIdentifier("sortMedia")
+                .help(String(localized: "Sort by"))
+
+                Menu {
+                    Picker(String(localized: "Filter"), selection: $filter) {
+                        ForEach(MediaFilter.allCases) { choice in Text(choice.title).tag(choice) }
+                    }
+                } label: {
+                    toolbarIcon("line.3.horizontal.decrease", isActive: filter != .all)
+                }
+                .accessibilityLabel(String(localized: "Filter"))
+                .accessibilityValue(filter.title)
+                .accessibilityIdentifier("filterMedia")
+                .help(String(localized: "Filter"))
+
+                selectionButton
             }
-            .padding(5)
-            .background(AlbumTheme.track, in: Capsule())
+            .fixedSize(horizontal: true, vertical: false)
         }
+        .buttonStyle(.plain)
+        .disabled(store.isBusy)
+    }
+
+    private var searchField: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(AlbumTheme.secondary)
+                .accessibilityHidden(true)
+            TextField(String(localized: "Search"), text: $searchText)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .submitLabel(.search)
+                .focused($isSearchFocused)
+                .onSubmit { isSearchFocused = false }
+                .accessibilityLabel(String(localized: "Search by name"))
+                .accessibilityIdentifier("searchMedia")
+            if !searchText.isEmpty {
+                Button { searchText = "" } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(AlbumTheme.secondary)
+                        .frame(width: 44, height: 44)
+                }
+                .accessibilityLabel(String(localized: "Clear search"))
+            }
+        }
+        .font(.subheadline)
+        .foregroundStyle(AlbumTheme.ink)
+        .padding(.leading, 12)
+        .padding(.trailing, searchText.isEmpty ? 12 : 0)
+        .frame(maxWidth: 360, minHeight: 44)
+        .background(.white, in: RoundedRectangle(cornerRadius: 14))
+    }
+
+    private func toolbarIcon(_ symbol: String, isActive: Bool = false) -> some View {
+        Image(systemName: symbol)
+            .font(.system(size: 18, weight: .medium))
+            .foregroundStyle(isActive ? .white : AlbumTheme.accent)
+            .frame(width: 44, height: 44)
+            .background(isActive ? AlbumTheme.accent : .white, in: Circle())
     }
 
     private var foldersSection: some View {
@@ -406,21 +465,6 @@ struct ContentView: View {
 
     private var mediaSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Menu {
-                    Picker(String(localized: "Sort by"), selection: $sort) {
-                        ForEach(LibrarySort.allCases) { option in Text(option.title).tag(option) }
-                    }
-                } label: {
-                    HStack(spacing: 5) { Text(sort.title); Image(systemName: "arrow.up.arrow.down") }
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(AlbumTheme.secondary)
-                        .frame(minHeight: 44)
-                }
-                .accessibilityLabel(String(localized: "Sort media, \(sort.title)"))
-                Spacer()
-                selectionButton
-            }
             if isSelecting {
                 HStack {
                     Text(String(localized: "\(selected.count) selected"))
@@ -437,7 +481,10 @@ struct ContentView: View {
                     Button(String(localized: "Try again")) { Task { await store.load() } }
                 }.frame(maxWidth: .infinity).padding(.vertical, 60)
             } else if visibleItems.isEmpty {
-                if store.isReadOnly {
+                if !searchQuery.isEmpty || filter != .all {
+                    ContentUnavailableView(String(localized: "No matching items"), systemImage: "magnifyingglass",
+                                           description: Text(String(localized: "Try a different name or filter.")))
+                } else if store.isReadOnly {
                     ContentUnavailableView(String(localized: "This shared vault is empty"), systemImage: "photo.on.rectangle")
                 } else {
                     EmptyLibraryView(add: requestAdd).padding(.vertical, 8)
@@ -465,7 +512,7 @@ struct ContentView: View {
                     }
                 }
                 .disabled(store.isBusy)
-                Text(itemCount(scopedItems.count))
+                Text(itemCount(visibleItems.count))
                     .font(.caption).foregroundStyle(AlbumTheme.secondary)
                     .frame(maxWidth: .infinity).padding(.top, 12)
             }
