@@ -3,21 +3,49 @@ import SwiftUI
 import UIKit
 
 @MainActor enum AlbumTheme {
-    static let background = Color(red: 0.965, green: 0.961, blue: 0.945)
-    static let ink = Color(red: 0.14, green: 0.20, blue: 0.19)
-    static let accent = Color(red: 0.22, green: 0.38, blue: 0.32)
-    static let secondary = Color(red: 0.48, green: 0.51, blue: 0.48)
-    static let track = Color(red: 0.91, green: 0.92, blue: 0.89)
+    // Cool steel surfaces and navy controls echo the primary vault icon.
+    static let background = color(0xE8EDF3)
+    static let surface = color(0xF4F7FA)
+    static let ink = color(0x17273D)
+    static let accent = Color("AccentColor")
+    static let secondary = color(0x4E6179)
+    static let track = color(0xD5DFE9)
+    static let border = color(0xB3C3D4)
+    static let selectedSurface = color(0xDCE7F2)
+    static let accentGradient = LinearGradient(colors: [color(0x47678A), color(0x213751)], startPoint: .topLeading, endPoint: .bottomTrailing)
+    static let edgeGradient = LinearGradient(colors: [.white.opacity(0.95), border], startPoint: .topLeading, endPoint: .bottomTrailing)
     static let folderColors: [Color] = [
-        Color(red: 0.83, green: 0.88, blue: 0.79),
-        Color(red: 0.91, green: 0.83, blue: 0.71),
-        Color(red: 0.79, green: 0.85, blue: 0.90),
-        Color(red: 0.88, green: 0.80, blue: 0.80),
-        Color(red: 0.84, green: 0.80, blue: 0.90),
-        Color(red: 0.86, green: 0.86, blue: 0.81)
+        color(0xB3C3D6), color(0xD9E1EA), color(0xC3D9EF),
+        color(0x9DADC2), color(0xDDE9F2), color(0xAAB5C3)
     ]
-    static let colorNames = [String(localized: "Sage"), String(localized: "Sand"), String(localized: "Sky"), String(localized: "Rose"), String(localized: "Lilac"), String(localized: "Stone")]
+    // Keep the six persisted color indices; only their visual palette changes.
+    static let colorNames = [String(localized: "Steel"), String(localized: "Silver"), String(localized: "Sky"), String(localized: "Slate"), String(localized: "Ice"), String(localized: "Graphite")]
     static func folderColor(_ index: Int) -> Color { folderColors[max(0, min(index, folderColors.count - 1))] }
+
+    private static func color(_ hex: UInt32) -> Color {
+        Color(.sRGB, red: Double((hex >> 16) & 255) / 255, green: Double((hex >> 8) & 255) / 255, blue: Double(hex & 255) / 255, opacity: 1)
+    }
+}
+
+@MainActor extension View {
+    func vaultMetalSurface<S: InsettableShape>(in shape: S, tint: Color? = nil) -> some View {
+        background {
+            shape.fill(LinearGradient(colors: [.white, tint ?? AlbumTheme.surface], startPoint: .topLeading, endPoint: .bottomTrailing))
+                .overlay { shape.strokeBorder(AlbumTheme.edgeGradient, lineWidth: 1) }
+                .shadow(color: AlbumTheme.ink.opacity(0.06), radius: 5, y: 3)
+                .allowsHitTesting(false)
+        }
+    }
+
+    func vaultPrimarySurface<S: InsettableShape>(in shape: S, prominent: Bool = true) -> some View {
+        background {
+            if prominent {
+                shape.fill(AlbumTheme.accentGradient)
+                    .overlay { shape.strokeBorder(.white.opacity(0.2), lineWidth: 1) }
+                    .shadow(color: AlbumTheme.ink.opacity(0.16), radius: 4, y: 3)
+            }
+        }
+    }
 }
 
 struct PatternMark: View {
@@ -26,7 +54,7 @@ struct PatternMark: View {
             ForEach(0..<3) { row in
                 GridRow {
                     ForEach(0..<3) { col in
-                        Circle().fill(AlbumTheme.accent.opacity(row == col || col == 2 ? 1 : 0.23)).frame(width: 5, height: 5)
+                        Circle().fill(AlbumTheme.accent).frame(width: 5, height: 5)
                     }
                 }
             }
@@ -45,11 +73,11 @@ struct FolderCard: View {
                 Image(systemName: "arrow.up.right").font(.system(size: 12, weight: .medium)).opacity(0.5)
             }.padding(.bottom, 23)
             Text(folder.name).font(.subheadline.weight(.semibold)).lineLimit(1)
-            Text(String(localized: "\(count) items")).font(.caption).opacity(0.6).padding(.top, 5)
+            Text(String(localized: "\(count) items")).font(.caption).padding(.top, 5)
         }
         .foregroundStyle(AlbumTheme.ink)
         .padding(17).frame(width: 150, alignment: .leading)
-        .background(AlbumTheme.folderColor(folder.colorIndex).opacity(0.65), in: RoundedRectangle(cornerRadius: 20))
+        .vaultMetalSurface(in: RoundedRectangle(cornerRadius: 20), tint: AlbumTheme.folderColor(folder.colorIndex))
     }
 }
 
@@ -126,9 +154,9 @@ struct EmptyLibraryView: View {
     var body: some View {
         VStack(spacing: 14) {
             ZStack {
-                RoundedRectangle(cornerRadius: 17).fill(AlbumTheme.folderColor(0).opacity(0.5))
+                RoundedRectangle(cornerRadius: 17).fill(AlbumTheme.folderColor(0).gradient)
                     .frame(width: 78, height: 96).rotationEffect(.degrees(-14)).offset(x: -20, y: 0)
-                RoundedRectangle(cornerRadius: 17).fill(.white)
+                RoundedRectangle(cornerRadius: 17).fill(AlbumTheme.surface.gradient)
                     .frame(width: 78, height: 96).rotationEffect(.degrees(10)).offset(x: 18, y: 4)
                     .shadow(color: AlbumTheme.ink.opacity(0.06), radius: 14, y: 6)
                 Image(systemName: "photo.on.rectangle.angled").font(.system(size: 31, weight: .ultraLight))
@@ -158,12 +186,12 @@ struct FolderEditor: View {
             VStack(alignment: .leading, spacing: 25) {
                 Image(systemName: "folder.fill").font(.system(size: 45, weight: .light))
                     .foregroundStyle(AlbumTheme.accent).frame(width: 90, height: 90)
-                    .background(AlbumTheme.folderColor(colorIndex), in: RoundedRectangle(cornerRadius: 25))
+                    .vaultMetalSurface(in: RoundedRectangle(cornerRadius: 25), tint: AlbumTheme.folderColor(colorIndex))
                     .frame(maxWidth: .infinity).padding(.top, 15)
                 VStack(alignment: .leading, spacing: 10) {
                     Text(String(localized: "Folder name")).font(.subheadline.weight(.semibold))
                     TextField(String(localized: "e.g. Weekend escapes"), text: $name).focused($focused)
-                        .padding(16).background(.white, in: RoundedRectangle(cornerRadius: 14))
+                        .padding(16).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 14))
                         .submitLabel(.done).onSubmit { save() }
                         .accessibilityIdentifier("folderName")
                 }
@@ -172,7 +200,8 @@ struct FolderEditor: View {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 44), spacing: 8)], alignment: .leading, spacing: 8) {
                         ForEach(AlbumTheme.folderColors.indices, id: \.self) { index in
                             Button { colorIndex = index } label: {
-                                Circle().fill(AlbumTheme.folderColor(index)).frame(width: 37, height: 37)
+                                Circle().fill(AlbumTheme.folderColor(index).gradient).frame(width: 37, height: 37)
+                                    .overlay { Circle().strokeBorder(index == colorIndex ? AlbumTheme.accent : AlbumTheme.border, lineWidth: index == colorIndex ? 2 : 1) }
                                     .overlay { if index == colorIndex { Image(systemName: "checkmark").font(.subheadline.weight(.semibold)).foregroundStyle(AlbumTheme.ink) } }
                             }.frame(minWidth: 44, minHeight: 44)
                                 .accessibilityLabel(AlbumTheme.colorNames[index])
@@ -183,7 +212,7 @@ struct FolderEditor: View {
                 if let error { Text(error).font(.caption).foregroundStyle(.red) }
                 Button(action: save) {
                     Text(folder == nil ? String(localized: "Create folder") : String(localized: "Save changes")).font(.headline).foregroundStyle(.white)
-                        .frame(maxWidth: .infinity).padding(17).background(AlbumTheme.accent, in: Capsule())
+                        .frame(maxWidth: .infinity).padding(17).vaultPrimarySurface(in: Capsule())
                 }.disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || store.isBusy)
                     .accessibilityIdentifier("saveFolder")
                 Spacer(minLength: 0)

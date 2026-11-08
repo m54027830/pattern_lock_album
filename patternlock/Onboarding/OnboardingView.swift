@@ -148,7 +148,7 @@ struct OnboardingView: View {
         case .grid:
             if !compact {
                 GridIllustration(size: setup.gridSize).frame(width: 180, height: 180).padding(20)
-                    .background(.white.opacity(0.6), in: RoundedRectangle(cornerRadius: 32))
+                    .vaultMetalSurface(in: RoundedRectangle(cornerRadius: 32))
             }
             GridSizePicker(selection: $setup.gridSize)
             Text(String(localized: "You can change this in settings. Changing the grid means creating new patterns for all your vaults."))
@@ -157,7 +157,7 @@ struct OnboardingView: View {
             if setup.step == .pattern {
                 TextField(String(localized: "First vault name"), text: $setup.vaultName)
                     .textInputAutocapitalization(.words).submitLabel(.done)
-                    .padding(16).background(.white, in: RoundedRectangle(cornerRadius: 16))
+                    .padding(16).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 16))
                     .accessibilityIdentifier("firstVaultName")
             } else { Text(setup.vaultName).font(.subheadline.weight(.medium)).foregroundStyle(AlbumTheme.accent) }
             PatternGridView(side: width, gridSize: setup.gridSize, isEnabled: !setup.busy, revision: setup.revision, isDrawing: $drawing, completed: setup.submit)
@@ -170,7 +170,7 @@ struct OnboardingView: View {
             if setup.useCustomPhrase {
                 SecureField(String(localized: "At least 8 words and 40 characters"), text: $setup.customPhrase)
                     .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
-                    .padding(18).background(.white, in: RoundedRectangle(cornerRadius: 18))
+                    .padding(18).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 18))
                 Text(String(localized: "Choose unrelated, unpredictable words. A generated phrase is recommended."))
                     .font(.caption).foregroundStyle(AlbumTheme.secondary)
             } else {
@@ -181,7 +181,7 @@ struct OnboardingView: View {
                             Text(String(word)).font(.system(.subheadline, design: .monospaced))
                         }
                     }
-                }.padding(20).background(.white, in: RoundedRectangle(cornerRadius: 22)).privacySensitive()
+                }.padding(20).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 22)).privacySensitive()
                 Button(copied ? String(localized: "Copied") : String(localized: "Copy phrase"), systemImage: copied ? "checkmark" : "doc.on.doc") {
                     UIPasteboard.general.setItems([[UIPasteboard.typeAutomatic: setup.phrase]], options: [.localOnly: true, .expirationDate: Date().addingTimeInterval(60)])
                     copied = true
@@ -193,7 +193,7 @@ struct OnboardingView: View {
             Image(systemName: "key.horizontal").font(.system(size: 50, weight: .ultraLight)).foregroundStyle(AlbumTheme.accent).padding(20)
             SecureField(String(localized: "Repeat the whole recovery phrase"), text: $setup.confirmation)
                 .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
-                .padding(18).background(.white, in: RoundedRectangle(cornerRadius: 18))
+                .padding(18).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 18))
                 .accessibilityIdentifier("onboardingPhraseConfirmation")
             Toggle(String(localized: "I saved my phrase outside Pattern"), isOn: $setup.savedPhrase).font(.subheadline)
             Text(String(localized: "The phrase won’t be shown again after setup. Keep it to reset a forgotten pattern or open an iCloud backup. A phrase alone cannot restore photos after deleting the app."))
@@ -240,7 +240,7 @@ struct OnboardingView: View {
             }
             .multilineTextAlignment(.leading).padding(20)
             .foregroundStyle(AlbumTheme.accent)
-            .background(.white, in: RoundedRectangle(cornerRadius: 22))
+            .vaultMetalSurface(in: RoundedRectangle(cornerRadius: 22))
             .contentShape(RoundedRectangle(cornerRadius: 22))
         }.buttonStyle(.plain)
     }
@@ -249,7 +249,7 @@ struct OnboardingView: View {
         Button(action: action) {
             HStack { Text(title); Spacer(); Image(systemName: "arrow.right") }
                 .font(.subheadline.weight(.semibold)).padding(20).foregroundStyle(.white)
-                .background(AlbumTheme.accent, in: RoundedRectangle(cornerRadius: 20))
+                .vaultPrimarySurface(in: RoundedRectangle(cornerRadius: 20))
         }.accessibilityIdentifier("onboardingContinue")
     }
 }
@@ -265,7 +265,7 @@ struct GridSizePicker: View {
                         Text(String(localized: "\(size) × \(size)")).font(.subheadline.weight(.semibold))
                         Image(systemName: selection == size ? "checkmark.circle.fill" : "circle").font(.body)
                     }.frame(maxWidth: .infinity).padding(.vertical, 18)
-                        .background(selection == size ? AlbumTheme.accent.opacity(0.09) : .white, in: RoundedRectangle(cornerRadius: 18))
+                        .vaultMetalSurface(in: RoundedRectangle(cornerRadius: 18), tint: selection == size ? AlbumTheme.selectedSurface : AlbumTheme.surface)
                         .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(selection == size ? AlbumTheme.accent : .clear, lineWidth: 1.5))
                 }.buttonStyle(.plain).foregroundStyle(AlbumTheme.accent)
                     .accessibilityLabel(String(localized: "\(size) by \(size)")).accessibilityAddTraits(selection == size ? .isSelected : [])
@@ -303,18 +303,18 @@ private struct WelcomeArtwork: View {
             if page == 1 {
                 GridIllustration(size: 4, connected: true).frame(width: 175, height: 175)
                 Label(String(localized: "A space of its own"), systemImage: "lock.open")
-                    .font(.caption.weight(.medium)).padding(12).background(.white, in: Capsule()).offset(y: 108)
+                    .font(.caption.weight(.medium)).padding(12).vaultMetalSurface(in: Capsule()).offset(y: 108)
             } else {
-                RoundedRectangle(cornerRadius: 24).fill(AlbumTheme.folderColor(1)).frame(width: 156, height: 184).rotationEffect(.degrees(-13)).offset(x: -25, y: -8)
+                RoundedRectangle(cornerRadius: 24).fill(AlbumTheme.folderColor(1).gradient).frame(width: 156, height: 184).rotationEffect(.degrees(-13)).offset(x: -25, y: -8)
                 VStack(spacing: 18) {
                     Image(systemName: page == 0 ? "photo.on.rectangle.angled" : "icloud.and.arrow.up")
                         .font(.system(size: 52, weight: .ultraLight))
                     Text(page == 0 ? String(localized: "Your moments") : String(localized: "Your choice")).font(.caption.weight(.medium))
                 }.foregroundStyle(AlbumTheme.accent).frame(width: 160, height: 190)
-                    .background(AlbumTheme.folderColor(0), in: RoundedRectangle(cornerRadius: 24))
+                    .vaultMetalSurface(in: RoundedRectangle(cornerRadius: 24), tint: AlbumTheme.folderColor(0))
                     .rotationEffect(.degrees(8)).offset(x: 25, y: 8)
                 Image(systemName: page == 0 ? "lock.fill" : "key.fill").font(.title3)
-                    .foregroundStyle(.white).frame(width: 52, height: 52).background(AlbumTheme.accent, in: Circle()).offset(x: 98, y: 92)
+                    .foregroundStyle(.white).frame(width: 52, height: 52).vaultPrimarySurface(in: Circle()).offset(x: 98, y: 92)
             }
         }.accessibilityHidden(true)
     }

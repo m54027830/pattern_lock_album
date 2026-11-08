@@ -77,7 +77,7 @@ struct CaptureReviewView: View {
                     .accessibilityIdentifier("retakeCapture")
                 Button(String(localized: "Use"), action: use)
                     .frame(maxWidth: .infinity, minHeight: 50)
-                    .background(AlbumTheme.accent, in: Capsule())
+                    .vaultPrimarySurface(in: Capsule())
                     .accessibilityIdentifier("useCapture")
             }
             .font(.headline).disabled(isSaving)

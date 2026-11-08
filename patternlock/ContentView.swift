@@ -263,7 +263,7 @@ struct ContentView: View {
                     if let createVault {
                         Button(action: createVault) {
                             Image(systemName: "rectangle.stack.badge.plus")
-                                .font(.system(size: 18)).frame(width: 44, height: 44).background(.white, in: Circle())
+                                .font(.system(size: 18)).frame(width: 44, height: 44).vaultMetalSurface(in: Circle())
                         }
                         .disabled(store.isBusy)
                         .accessibilityLabel(String(localized: "New vault")).accessibilityIdentifier("newVault")
@@ -271,14 +271,14 @@ struct ContentView: View {
                     if let lockVault {
                         Button(action: lockVault) {
                             Image(systemName: "lock")
-                                .font(.system(size: 18)).frame(width: 44, height: 44).background(.white, in: Circle())
+                                .font(.system(size: 18)).frame(width: 44, height: 44).vaultMetalSurface(in: Circle())
                         }
                         .accessibilityLabel(String(localized: "Lock vault")).accessibilityIdentifier("lockVault")
                     }
                 }
                 if vault != nil {
                     Button { showingSettings = true } label: {
-                        Image(systemName: "gearshape").font(.system(size: 18)).frame(width: 44, height: 44).background(.white, in: Circle())
+                        Image(systemName: "gearshape").font(.system(size: 18)).frame(width: 44, height: 44).vaultMetalSurface(in: Circle())
                     }
                     .disabled(store.isBusy)
                     .accessibilityLabel(String(localized: "Vault settings")).accessibilityIdentifier("vaultSettings")
@@ -299,7 +299,7 @@ struct ContentView: View {
                     if !store.isReadOnly { Menu {
                         Button(String(localized: "Edit folder"), systemImage: "pencil") { folderEditor = .init(folder: currentFolder) }
                         Button(String(localized: "Delete folder"), systemImage: "trash", role: .destructive) { folderToDelete = currentFolder }
-                    } label: { Image(systemName: "ellipsis").font(.title3).padding(12).background(.white, in: Circle()) }
+                    } label: { Image(systemName: "ellipsis").font(.title3).padding(12).vaultMetalSurface(in: Circle()) }
                     .disabled(store.isBusy)
                     .accessibilityLabel(String(localized: "Folder options")) }
                 }
@@ -401,7 +401,7 @@ struct ContentView: View {
         .padding(.leading, 12)
         .padding(.trailing, searchText.isEmpty ? 12 : 0)
         .frame(maxWidth: 360, minHeight: 44)
-        .background(.white, in: RoundedRectangle(cornerRadius: 14))
+        .vaultMetalSurface(in: RoundedRectangle(cornerRadius: 14))
     }
 
     private func toolbarIcon(_ symbol: String, isActive: Bool = false) -> some View {
@@ -409,7 +409,8 @@ struct ContentView: View {
             .font(.system(size: 18, weight: .medium))
             .foregroundStyle(isActive ? .white : AlbumTheme.accent)
             .frame(width: 44, height: 44)
-            .background(isActive ? AlbumTheme.accent : .white, in: Circle())
+            .background(isActive ? .clear : AlbumTheme.surface, in: Circle())
+            .vaultPrimarySurface(in: Circle(), prominent: isActive)
     }
 
     private var foldersSection: some View {
@@ -436,7 +437,7 @@ struct ContentView: View {
                         Spacer(minLength: 0)
                         Image(systemName: "chevron.right").font(.caption.weight(.semibold))
                     }
-                    .padding(15).background(.white.opacity(0.8), in: RoundedRectangle(cornerRadius: 21))
+                    .padding(15).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 21))
                 }
                 .buttonStyle(.plain)
                 .disabled(store.isBusy || !store.isLoaded)

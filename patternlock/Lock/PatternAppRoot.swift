@@ -36,6 +36,7 @@ struct PatternAppRoot: View {
                 PatternLockView(lock: lock)
             }
         }
+        .tint(AlbumTheme.accent)
         .environment(\.patternGridSize, lock.gridSize)
         .onChange(of: lock.stage) { _, stage in
             if stage != .unlocked { VaultCloudService.shared.stopViewingSessions(scope: cloudSessionScope) }
