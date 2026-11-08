@@ -5,10 +5,16 @@ nonisolated enum AppIcon: String, CaseIterable, Identifiable, Sendable {
     case classic = "Classic", square = "Square", triangles = "Triangles", checker = "Checker"
     case stripes = "Stripes", rings = "Rings", diamonds = "Diamonds", waves = "Waves"
     case hexagons = "Hexagons", mosaic = "Mosaic"
+    case calculator = "Calculator", printer = "Printer", wifi = "WiFi", chatbot = "Chatbot"
+    case notes = "Notes", weather = "Weather", clock = "Clock", compass = "Compass"
+
+    static let utilityIcons: [AppIcon] = [.calculator, .printer, .wifi, .chatbot, .notes, .weather, .clock, .compass]
+    static let patternIcons: [AppIcon] = [.square, .triangles, .checker, .stripes, .rings, .diamonds, .waves, .hexagons, .mosaic]
 
     var id: String { rawValue }
     var alternateName: String? { self == .classic ? nil : "AppIcon" + rawValue }
     var previewAsset: String { "IconPreview" + rawValue }
+    var shortcutName: String { Self.utilityIcons.contains(self) ? title : "Pattern" }
     var title: String {
         switch self {
         case .classic: String(localized: "Classic")
@@ -21,6 +27,14 @@ nonisolated enum AppIcon: String, CaseIterable, Identifiable, Sendable {
         case .waves: String(localized: "Waves")
         case .hexagons: String(localized: "Hexagons")
         case .mosaic: String(localized: "Mosaic")
+        case .calculator: String(localized: "Calculator")
+        case .printer: String(localized: "Printer")
+        case .wifi: String(localized: "Wi-Fi")
+        case .chatbot: String(localized: "Chatbot")
+        case .notes: String(localized: "Notes")
+        case .weather: String(localized: "Weather")
+        case .clock: String(localized: "Clock")
+        case .compass: String(localized: "Compass")
         }
     }
 }

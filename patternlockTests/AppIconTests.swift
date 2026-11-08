@@ -1,14 +1,20 @@
 import UIKit
+import SwiftUI
+import CoreTransferable
+import UniformTypeIdentifiers
 import XCTest
 @testable import patternlock
 
 @MainActor final class AppIconTests: XCTestCase {
     func testEveryIconHasAPreviewAndAlternatesAreRegisteredForPhoneAndPad() throws {
         let alternatives = AppIcon.allCases.compactMap(\.alternateName)
-        XCTAssertEqual(alternatives.count, 9)
-        XCTAssertEqual(Set(alternatives).count, 9)
+        XCTAssertEqual(alternatives.count, 17)
+        XCTAssertEqual(Set(alternatives).count, 17)
+        XCTAssertEqual(Set(AppIcon.utilityIcons + AppIcon.patternIcons + [.classic]), Set(AppIcon.allCases))
         for icon in AppIcon.allCases {
-            XCTAssertNotNil(UIImage(named: icon.previewAsset), icon.rawValue)
+            let preview = try XCTUnwrap(UIImage(named: icon.previewAsset), icon.rawValue)
+            XCTAssertEqual(preview.cgImage?.width, 1024, "Shortcut exports need full-resolution artwork: \(icon.rawValue)")
+            XCTAssertEqual(preview.cgImage?.height, 1024)
         }
         for key in ["CFBundleIcons", "CFBundleIcons~ipad"] {
             let data = try Data(contentsOf: Bundle.main.bundleURL.appendingPathComponent("Info.plist"))
@@ -20,6 +26,59 @@ import XCTest
                 let entry = try XCTUnwrap(registered[name] as? [String: Any])
                 XCTAssertEqual(entry["CFBundleIconName"] as? String, name)
             }
+        }
+    }
+
+    func testUtilityChoicesPersistWithoutChangingTheBundledAppName() async {
+        let client = IconClient()
+        let store = AppIconStore(client: client)
+        for icon in AppIcon.utilityIcons {
+            await store.select(icon)
+            XCTAssertEqual(client.alternateIconName, icon.alternateName)
+            XCTAssertEqual(AppIconStore(client: client).selected, icon)
+            XCTAssertEqual(icon.shortcutName, icon.title)
+        }
+        XCTAssertEqual(client.calls.compactMap { $0 }, ["AppIconCalculator", "AppIconPrinter", "AppIconWiFi", "AppIconChatbot", "AppIconNotes", "AppIconWeather", "AppIconClock", "AppIconCompass"])
+        XCTAssertEqual(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String, "Pattern")
+    }
+
+    func testShortcutArtworkExportsAsAFullResolutionPNG() async throws {
+        for icon in AppIcon.utilityIcons + [.classic] {
+            let data = try await Image(icon.previewAsset).exported(as: .png)
+            XCTAssertEqual(Array(data.prefix(8)), [137, 80, 78, 71, 13, 10, 26, 10])
+            let image = try XCTUnwrap(UIImage(data: data)?.cgImage, icon.rawValue)
+            XCTAssertEqual(image.width, 1024, icon.rawValue)
+            XCTAssertEqual(image.height, 1024, icon.rawValue)
+        }
+    }
+
+    func testIconPickerRendersAtPhoneAndTabletWidths() async throws {
+        let client = IconClient()
+        client.alternateIconName = "AppIconChatbot"
+        let store = AppIconStore(client: client)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let host = UIHostingController(rootView: NavigationStack { AppIconSettingsView(icons: store) })
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = host
+        window.isHidden = false
+        defer { window.isHidden = true }
+        for size in [CGSize(width: 320, height: 852), CGSize(width: 834, height: 1194)] {
+            window.frame = CGRect(origin: .zero, size: size)
+            host.traitOverrides.horizontalSizeClass = size.width < 600 ? .compact : .regular
+            for _ in 0..<4 {
+                window.setNeedsLayout(); window.layoutIfNeeded()
+                host.view.setNeedsLayout(); host.view.layoutIfNeeded()
+                await Task.yield()
+            }
+            XCTAssertEqual(store.selected, .chatbot)
+            XCTAssertTrue(client.calls.isEmpty, "Showing or resizing the picker must not change the Home Screen icon")
+            let screenshot = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
+                window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+            }
+            let attachment = XCTAttachment(image: screenshot)
+            attachment.name = "AppIcons-\(Int(size.width))"
+            attachment.lifetime = .keepAlways
+            add(attachment)
         }
     }
 

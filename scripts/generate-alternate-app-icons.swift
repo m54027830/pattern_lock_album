@@ -3,9 +3,10 @@ import CoreGraphics
 import Foundation
 import ImageIO
 
-// Original abstract geometry for the alternate Pattern app icons.
-// App icons and picker previews use the same drawing at different resolutions.
-let names = ["Classic", "Square", "Triangles", "Checker", "Stripes", "Rings", "Diamonds", "Waves", "Hexagons", "Mosaic"]
+// Original utility illustrations and abstract geometry for alternate app icons.
+// App icons and full-resolution picker previews use the same drawing.
+let names = ["Classic", "Square", "Triangles", "Checker", "Stripes", "Rings", "Diamonds", "Waves", "Hexagons", "Mosaic",
+             "Calculator", "Printer", "WiFi", "Chatbot", "Notes", "Weather", "Clock", "Compass"]
 let space = CGColorSpace(name: CGColorSpace.sRGB)!
 func color(_ hex: UInt32, alpha: CGFloat = 1) -> CGColor {
     let rgb = [CGFloat((hex >> 16) & 255), CGFloat((hex >> 8) & 255), CGFloat(hex & 255)].map { $0 / 255 }
@@ -42,14 +43,72 @@ func render(_ name: String, pixels: Int) -> CGImage {
     }
     switch name {
     case "Classic":
-        let bg: [CGFloat] = [0.965, 0.961, 0.945], accent: [CGFloat] = [0.22, 0.38, 0.32]
-        c.setFillColor(CGColor(colorSpace: space, components: bg + [1])!); c.fill(CGRect(x: 0, y: 0, width: 1024, height: 1024))
+        // A heavy blue-steel vault with a recessed, unconnected nine-dot lock.
+        func rounded(_ x: CGFloat, _ y: CGFloat, _ w: CGFloat, _ h: CGFloat, _ r: CGFloat) -> CGPath {
+            CGPath(roundedRect: CGRect(x: x, y: y, width: w, height: h), cornerWidth: r, cornerHeight: r, transform: nil)
+        }
+        func disk(_ x: CGFloat, _ y: CGFloat, _ r: CGFloat) -> CGPath {
+            CGPath(ellipseIn: CGRect(x: x-r, y: y-r, width: r*2, height: r*2), transform: nil)
+        }
+        func metal(_ path: CGPath, _ palette: [UInt32], _ stops: [CGFloat], horizontal: Bool = false) {
+            let bounds = path.boundingBoxOfPath
+            let gradient = CGGradient(colorsSpace: space, colors: palette.map { color($0) } as CFArray, locations: stops)!
+            c.saveGState()
+            c.addPath(path); c.clip()
+            c.drawLinearGradient(gradient,
+                                 start: CGPoint(x: bounds.minX, y: bounds.minY),
+                                 end: CGPoint(x: bounds.maxX, y: horizontal ? bounds.minY : bounds.maxY),
+                                 options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
+            c.restoreGState()
+        }
+        func edge(_ path: CGPath, _ width: CGFloat, _ hex: UInt32, alpha: CGFloat = 1) {
+            c.addPath(path); c.setStrokeColor(color(hex, alpha: alpha)); c.setLineWidth(width); c.strokePath()
+        }
+
+        background(0x344B68, 0x101C30)
+        // The deep lower edge and thick chamfer give the door its weight.
+        c.saveGState()
+        c.setShadow(offset: CGSize(width: 8, height: -22), blur: 32, color: color(0x050D19, alpha: 0.55))
+        rect(178, 168, 678, 718, 88, 0x111E2E)
+        c.restoreGState()
+        metal(rounded(174, 146, 676, 710, 86), [0xEDF5FC, 0x8DA2BA, 0x3E526C, 0xA4B5C8], [0, 0.38, 0.68, 1])
+        edge(rounded(177, 149, 670, 704, 83), 3, 0xDDEAF6, alpha: 0.65)
+        rect(207, 179, 610, 644, 56, 0x172639)
+        metal(rounded(218, 190, 588, 622, 46), [0xADBED0, 0xDEE7EF, 0x8EA2B8, 0x6D829C], [0, 0.34, 0.6, 1])
+        edge(rounded(222, 194, 580, 614, 42), 3, 0xF0F6FC, alpha: 0.55)
+
+        // Broad cylindrical hinges with steel end caps.
+        for y: CGFloat in [282, 594] {
+            rect(146, y+7, 118, 148, 26, 0x1A2B40)
+            metal(rounded(144, y, 112, 140, 24), [0x526A85, 0xDCE8F4, 0x91A6BD, 0x405670], [0, 0.3, 0.58, 1], horizontal: true)
+            edge(rounded(146, y+2, 108, 136, 22), 2, 0xD5E3F0, alpha: 0.6)
+            line([CGPoint(x: 153, y: y+24), CGPoint(x: 247, y: y+24)], 4, 0x4A607A)
+            line([CGPoint(x: 153, y: y+116), CGPoint(x: 247, y: y+116)], 4, 0x4A607A)
+        }
+
+        circle(512, 510, 238, 0x526880)
+        metal(disk(512, 502, 234), [0xF3F8FC, 0x97AEC5, 0x415872, 0xCBD9E6, 0x6B829C], [0, 0.32, 0.53, 0.76, 1])
+        circle(512, 502, 203, 0x101E30)
+        metal(disk(512, 502, 194), [0x354D69, 0x17273D], [0, 1])
+        edge(disk(512, 502, 194), 3, 0x7892AE, alpha: 0.7)
+
+        // All nine dots stand alone; no drawn pattern or selected path.
         for row in 0..<3 { for col in 0..<3 {
-            let opacity: CGFloat = row == col || col == 2 ? 1 : 0.23
-            let rgb = zip(accent, bg).map { $0 * opacity + $1 * (1-opacity) }
-            c.setFillColor(CGColor(colorSpace: space, components: rgb + [1])!)
-            c.fillEllipse(in: CGRect(x: 192 + CGFloat(col)*256, y: 192 + CGFloat(row)*256, width: 128, height: 128))
+            let x = 410 + CGFloat(col)*102
+            let y = 400 + CGFloat(row)*102
+            circle(x, y+3, 27, 0x101D2E)
+            metal(disk(x, y, 23), [0xF6FAFF, 0xC3D8EC, 0x8CA9C7], [0, 0.55, 1])
+            edge(disk(x, y, 23), 2, 0xE6F2FF, alpha: 0.7)
         } }
+
+        // A solid side latch and recessed corner fasteners finish the hardware.
+        rect(775, 426, 76, 164, 25, 0x263A52)
+        metal(rounded(782, 422, 62, 158, 22), [0x748BA5, 0xF1F6FC, 0x9CB1C7, 0x4F6680], [0, 0.3, 0.62, 1], horizontal: true)
+        for p in [CGPoint(x: 280, y: 250), CGPoint(x: 744, y: 250), CGPoint(x: 280, y: 754), CGPoint(x: 744, y: 754)] {
+            circle(p.x, p.y+1, 17, 0x425870)
+            metal(disk(p.x, p.y, 13), [0xE6EEF6, 0x7B92AC], [0, 1])
+            line([CGPoint(x: p.x-5, y: p.y+5), CGPoint(x: p.x+5, y: p.y-5)], 3, 0x526A84)
+        }
     case "Square":
         background(0xEEEDE4)
         rect(232, 232, 560, 560, 0, 0x345C4D)
@@ -129,6 +188,94 @@ func render(_ name: String, pixels: Int) -> CGImage {
             circle(x + (corner == 1 || corner == 2 ? 256 : 0), y + (corner >= 2 ? 256 : 0), 256, palette[(index+1) % 4])
             c.restoreGState()
         } }
+    case "Calculator":
+        background(0x172E43, 0x2D4D64)
+        rect(210, 140, 604, 744, 78, 0xE9EEE8)
+        rect(266, 200, 492, 160, 26, 0xB7CDC7)
+        line([CGPoint(x: 610, y: 254), CGPoint(x: 696, y: 254), CGPoint(x: 696, y: 306)], 14, 0x36585D)
+        for row in 0..<3 { for col in 0..<3 {
+            rect(266 + CGFloat(col)*176, 410 + CGFloat(row)*142, 140, 110, 30, col == 2 ? 0xD9A65D : 0x486C79)
+        } }
+        line([CGPoint(x: 642, y: 452), CGPoint(x: 698, y: 452)], 12, 0xFFFFFF)
+        line([CGPoint(x: 642, y: 478), CGPoint(x: 698, y: 478)], 12, 0xFFFFFF)
+        line([CGPoint(x: 642, y: 607), CGPoint(x: 698, y: 607)], 12, 0xFFFFFF)
+        line([CGPoint(x: 670, y: 579), CGPoint(x: 670, y: 635)], 12, 0xFFFFFF)
+        line([CGPoint(x: 642, y: 749), CGPoint(x: 698, y: 749)], 12, 0xFFFFFF)
+    case "Printer":
+        background(0xE4EAE7, 0xBCD0CB)
+        rect(292, 146, 440, 340, 24, 0xFFFFFF)
+        line([CGPoint(x: 356, y: 234), CGPoint(x: 668, y: 234)], 20, 0xBCCEC8)
+        line([CGPoint(x: 356, y: 296), CGPoint(x: 598, y: 296)], 20, 0xBCCEC8)
+        rect(148, 364, 728, 376, 74, 0x365E58)
+        rect(202, 418, 620, 76, 26, 0x4F7A71)
+        circle(762, 456, 15, 0xE8BD78)
+        rect(254, 582, 516, 122, 28, 0x203F3D)
+        rect(292, 620, 440, 258, 20, 0xFFFFFF)
+        line([CGPoint(x: 358, y: 700), CGPoint(x: 666, y: 700)], 20, 0xA1B8AF)
+        line([CGPoint(x: 358, y: 764), CGPoint(x: 594, y: 764)], 20, 0xA1B8AF)
+    case "WiFi":
+        background(0x317B8D, 0x16465F)
+        c.setStrokeColor(color(0xFFFFFF)); c.setLineWidth(60); c.setLineCap(.round)
+        for (halfWidth, y, lift) in [(CGFloat(326), CGFloat(348), CGFloat(214)), (230, 498, 150), (126, 646, 82)] {
+            c.move(to: CGPoint(x: 512-halfWidth, y: y))
+            c.addCurve(to: CGPoint(x: 512+halfWidth, y: y), control1: CGPoint(x: 512-halfWidth/2, y: y-lift), control2: CGPoint(x: 512+halfWidth/2, y: y-lift))
+            c.strokePath()
+        }
+        circle(512, 790, 47, 0xFFFFFF)
+    case "Chatbot":
+        background(0x7560A7, 0x433D70)
+        line([CGPoint(x: 512, y: 202), CGPoint(x: 512, y: 288)], 24, 0xE2D9F5)
+        circle(512, 182, 32, 0xE2D9F5)
+        polygon([CGPoint(x: 302, y: 638), CGPoint(x: 306, y: 834), CGPoint(x: 480, y: 690)], 0xF5F2FB)
+        rect(182, 274, 660, 470, 140, 0xF5F2FB)
+        rect(266, 368, 492, 262, 86, 0xDAD4ED)
+        rect(358, 430, 52, 80, 26, 0x554B7D)
+        rect(614, 430, 52, 80, 26, 0x554B7D)
+        line([CGPoint(x: 460, y: 564), CGPoint(x: 564, y: 564)], 22, 0x554B7D)
+    case "Notes":
+        background(0xEAC774, 0xD99C56)
+        rect(182, 142, 660, 752, 52, 0xFFFCF0)
+        rect(182, 142, 660, 154, 52, 0xF7E8B5)
+        rect(182, 242, 660, 54, 0, 0xF7E8B5)
+        line([CGPoint(x: 320, y: 338), CGPoint(x: 320, y: 820)], 12, 0xD78971)
+        for y: CGFloat in [384, 488, 592, 696, 800] {
+            line([CGPoint(x: 382, y: y), CGPoint(x: y == 800 ? 622 : 746, y: y)], 18, 0xC1C8BA)
+        }
+    case "Weather":
+        background(0x6DA9CA, 0x356D9B)
+        for index in 0..<8 {
+            let angle = CGFloat(index)*CGFloat.pi/4
+            line([CGPoint(x: 370+cos(angle)*182, y: 372+sin(angle)*182), CGPoint(x: 370+cos(angle)*222, y: 372+sin(angle)*222)], 22, 0xF9D786)
+        }
+        circle(370, 372, 132, 0xF9D786)
+        circle(402, 608, 118, 0xEDF5F6)
+        circle(562, 540, 154, 0xEDF5F6)
+        circle(728, 626, 112, 0xEDF5F6)
+        rect(292, 608, 548, 130, 65, 0xEDF5F6)
+    case "Clock":
+        background(0xDCE5E6, 0xB4C9CF)
+        circle(512, 512, 344, 0x254650)
+        circle(512, 512, 314, 0xF5F5EC)
+        for index in 0..<12 {
+            let angle = CGFloat(index)*CGFloat.pi/6
+            let inner: CGFloat = index % 3 == 0 ? 254 : 270
+            line([CGPoint(x: 512+cos(angle)*inner, y: 512+sin(angle)*inner), CGPoint(x: 512+cos(angle)*288, y: 512+sin(angle)*288)], index % 3 == 0 ? 16 : 10, 0x33525B)
+        }
+        line([CGPoint(x: 380, y: 362), CGPoint(x: 512, y: 512), CGPoint(x: 712, y: 512)], 28, 0x254650)
+        line([CGPoint(x: 472, y: 590), CGPoint(x: 628, y: 286)], 10, 0xD58B5F)
+        circle(512, 512, 26, 0xD58B5F)
+    case "Compass":
+        background(0x233E4F, 0x122936)
+        circle(512, 512, 350, 0xA2BEC0)
+        circle(512, 512, 326, 0xE7ECE3)
+        for index in 0..<16 {
+            let angle = CGFloat(index)*CGFloat.pi/8
+            let inner: CGFloat = index % 4 == 0 ? 256 : 282
+            line([CGPoint(x: 512+cos(angle)*inner, y: 512+sin(angle)*inner), CGPoint(x: 512+cos(angle)*304, y: 512+sin(angle)*304)], 12, 0x5C7A7D)
+        }
+        polygon([CGPoint(x: 618, y: 244), CGPoint(x: 586, y: 542), CGPoint(x: 438, y: 482)], 0xC97B63)
+        polygon([CGPoint(x: 406, y: 780), CGPoint(x: 438, y: 482), CGPoint(x: 586, y: 542)], 0x3D6570)
+        circle(512, 512, 35, 0xFAFCF7)
     default: fatalError("Unknown artwork: \(name)")
     }
     return c.makeImage()!
@@ -144,16 +291,19 @@ func contents(_ images: [[String: String]], in directory: URL) throws {
     let data = try JSONSerialization.data(withJSONObject: ["images": images, "info": ["author": "xcode", "version": 1]], options: [.prettyPrinted, .sortedKeys])
     try data.write(to: directory.appending(path: "Contents.json"))
 }
-for name in names {
-    if name != "Classic" {
-        let directory = assets.appending(path: "AppIcon" + name + ".appiconset")
+let requestedNames = CommandLine.arguments.contains("--primary-only") ? ["Classic"] : names
+for name in requestedNames {
+    do {
+        let assetName = name == "Classic" ? "AppIcon" : "AppIcon" + name
+        let directory = assets.appending(path: assetName + ".appiconset")
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         try write(render(name, pixels: 1024), to: directory.appending(path: "AppIcon.png"))
         try contents([["filename": "AppIcon.png", "idiom": "universal", "platform": "ios", "size": "1024x1024"]], in: directory)
     }
     let preview = assets.appending(path: "IconPreview" + name + ".imageset")
     try FileManager.default.createDirectory(at: preview, withIntermediateDirectories: true)
-    try write(render(name, pixels: 256), to: preview.appending(path: "Preview.png"))
+    // Full-resolution previews also export cleanly for a named Home Screen shortcut.
+    try write(render(name, pixels: 1024), to: preview.appending(path: "Preview.png"))
     try contents([["filename": "Preview.png", "idiom": "universal"]], in: preview)
     print(name)
 }

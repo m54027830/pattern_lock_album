@@ -246,7 +246,7 @@ struct ContentView: View {
                     if let createVault {
                         Button(action: createVault) {
                             Image(systemName: "rectangle.stack.badge.plus")
-                                .font(.system(size: 18)).frame(width: 44, height: 44).background(.white, in: Circle())
+                                .font(.system(size: 18)).frame(width: 44, height: 44).vaultMetalSurface(in: Circle())
                         }
                         .disabled(store.isBusy)
                         .accessibilityLabel(String(localized: "New vault")).accessibilityIdentifier("newVault")
@@ -254,14 +254,14 @@ struct ContentView: View {
                     if let lockVault {
                         Button(action: lockVault) {
                             Image(systemName: "lock")
-                                .font(.system(size: 18)).frame(width: 44, height: 44).background(.white, in: Circle())
+                                .font(.system(size: 18)).frame(width: 44, height: 44).vaultMetalSurface(in: Circle())
                         }
                         .accessibilityLabel(String(localized: "Lock vault")).accessibilityIdentifier("lockVault")
                     }
                 }
                 if vault != nil {
                     Button { showingSettings = true } label: {
-                        Image(systemName: "gearshape").font(.system(size: 18)).frame(width: 44, height: 44).background(.white, in: Circle())
+                        Image(systemName: "gearshape").font(.system(size: 18)).frame(width: 44, height: 44).vaultMetalSurface(in: Circle())
                     }
                     .disabled(store.isBusy)
                     .accessibilityLabel(String(localized: "Vault settings")).accessibilityIdentifier("vaultSettings")
@@ -282,7 +282,7 @@ struct ContentView: View {
                     if !store.isReadOnly { Menu {
                         Button(String(localized: "Edit folder"), systemImage: "pencil") { folderEditor = .init(folder: currentFolder) }
                         Button(String(localized: "Delete folder"), systemImage: "trash", role: .destructive) { folderToDelete = currentFolder }
-                    } label: { Image(systemName: "ellipsis").font(.title3).padding(12).background(.white, in: Circle()) }
+                    } label: { Image(systemName: "ellipsis").font(.title3).padding(12).vaultMetalSurface(in: Circle()) }
                     .disabled(store.isBusy)
                     .accessibilityLabel(String(localized: "Folder options")) }
                 }
@@ -315,7 +315,8 @@ struct ContentView: View {
                 .foregroundStyle(isSelecting ? .white : AlbumTheme.accent)
                 .padding(.horizontal, 16)
                 .frame(minHeight: 44)
-                .background(isSelecting ? AlbumTheme.accent : .white, in: Capsule())
+                .background(isSelecting ? .clear : AlbumTheme.surface, in: Capsule())
+                .vaultPrimarySurface(in: Capsule(), prominent: isSelecting)
         }
         .disabled((visibleItems.isEmpty && !isSelecting) || store.isBusy)
         .accessibilityLabel(isSelecting ? String(localized: "Done") : String(localized: "Select"))
@@ -342,14 +343,14 @@ struct ContentView: View {
                         }
                         .padding(.horizontal, 14).padding(.vertical, 11)
                         .foregroundStyle(choice == filter ? .white : AlbumTheme.secondary)
-                        .background(choice == filter ? AlbumTheme.ink : .clear, in: Capsule())
+                        .vaultPrimarySurface(in: Capsule(), prominent: choice == filter)
                     }
                     .buttonStyle(.plain)
                     .accessibilityAddTraits(choice == filter ? [.isSelected] : [])
                 }
             }
             .padding(5)
-            .background(AlbumTheme.track, in: Capsule())
+            .background(AlbumTheme.track.gradient, in: Capsule())
         }
     }
 
@@ -377,7 +378,7 @@ struct ContentView: View {
                         Spacer(minLength: 0)
                         Image(systemName: "chevron.right").font(.caption.weight(.semibold))
                     }
-                    .padding(15).background(.white.opacity(0.8), in: RoundedRectangle(cornerRadius: 21))
+                    .padding(15).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 21))
                 }
                 .buttonStyle(.plain)
                 .disabled(store.isBusy || !store.isLoaded)

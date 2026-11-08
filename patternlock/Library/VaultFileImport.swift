@@ -84,7 +84,7 @@ nonisolated enum VaultFileThumbnail {
                                       space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue) else {
             throw LibraryError.invalidDocument
         }
-        context.setFillColor(CGColor(red: 0.94, green: 0.95, blue: 0.92, alpha: 1))
+        context.setFillColor(CGColor(red: 0.91, green: 0.93, blue: 0.96, alpha: 1))
         context.fill(CGRect(x: 0, y: 0, width: 480, height: 600))
         if kind == .document, url.pathExtension.lowercased() == "pdf",
            let document = CGPDFDocument(url as CFURL), let page = document.page(at: 1) {
@@ -95,7 +95,7 @@ nonisolated enum VaultFileThumbnail {
         } else {
             context.setFillColor(CGColor(gray: 1, alpha: 1))
             context.fill(CGRect(x: 70, y: 90, width: 340, height: 420))
-            context.setStrokeColor(CGColor(red: 0.50, green: 0.61, blue: 0.53, alpha: 1))
+            context.setStrokeColor(CGColor(red: 0.35, green: 0.44, blue: 0.56, alpha: 1))
             context.setLineWidth(8)
             for row in 0..<6 {
                 context.move(to: CGPoint(x: 115, y: 435 - row * 44))

@@ -36,7 +36,7 @@ struct VaultAddMenu: View {
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(prominent ? .white : AlbumTheme.accent)
                 .padding(.horizontal, 22).padding(.vertical, 16)
-                .background(prominent ? AlbumTheme.accent : .clear, in: Capsule())
+                .vaultPrimarySurface(in: Capsule(), prominent: prominent)
         }
         .menuOrder(.fixed)
         .accessibilityIdentifier(prominent ? "addMedia" : "addFirstItem")

@@ -56,7 +56,7 @@ struct PatternLockView: View {
                         .font(.system(size: 23, weight: .light))
                         .foregroundStyle(AlbumTheme.accent)
                         .frame(width: 62, height: 62)
-                        .background(AlbumTheme.accent.opacity(0.07), in: Circle())
+                        .vaultMetalSurface(in: Circle(), tint: AlbumTheme.track)
                         .padding(.bottom, 21)
                         .accessibilityHidden(true)
 
@@ -97,7 +97,7 @@ struct PatternLockView: View {
                                         .focused($nameFocused)
                                         .textInputAutocapitalization(.words)
                                         .submitLabel(.continue)
-                                        .padding(17).background(.white, in: RoundedRectangle(cornerRadius: 15))
+                                        .padding(17).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 15))
                                         .onSubmit { nameFocused = false; lock.continueWithVaultName() }
                                         .accessibilityIdentifier("newVaultName")
                                     Button {
@@ -107,7 +107,7 @@ struct PatternLockView: View {
                                         HStack { Text(String(localized: "Choose pattern")); Image(systemName: "arrow.right") }
                                             .font(.subheadline.weight(.semibold))
                                             .frame(maxWidth: .infinity).padding(17)
-                                            .foregroundStyle(.white).background(AlbumTheme.accent, in: Capsule())
+                                            .foregroundStyle(.white).vaultPrimarySurface(in: Capsule())
                                     }
                                     .disabled(lock.vaultName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                                     .accessibilityIdentifier("chooseVaultPattern")
@@ -261,7 +261,7 @@ struct PatternGridView: View {
                     ZStack {
                         Circle().fill(selected ? AlbumTheme.accent.opacity(0.10) : .clear).frame(width: 33, height: 33)
                         Circle().strokeBorder(selected ? AlbumTheme.accent.opacity(0.23) : .clear, lineWidth: 1).frame(width: 33, height: 33)
-                        Circle().fill(selected ? AlbumTheme.accent : AlbumTheme.ink.opacity(0.25))
+                        Circle().fill(selected ? AlbumTheme.accent : AlbumTheme.secondary)
                             .frame(width: selected ? 12 : 9, height: selected ? 12 : 9)
                     }.position(geometry.center(node))
                 }

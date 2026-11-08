@@ -29,7 +29,7 @@ struct PurchaseView: View {
                         comparison(String(localized: "Albums"), free: "3")
                         Divider()
                         comparison(String(localized: "Items per album"), free: "5")
-                    }.padding(20).background(.white, in: RoundedRectangle(cornerRadius: 22))
+                    }.padding(20).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 22))
                     Text(String(localized: "Each pattern opens one album. Folders share that album’s photo and video limit. All privacy features are included in the free version."))
                         .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
                     if purchases.isUnlimited {
@@ -44,7 +44,7 @@ struct PurchaseView: View {
                                 Text(purchases.product.map { String(localized: "Unlock once · \($0.displayPrice)") } ?? (purchases.loadingProduct ? String(localized: "Loading price…") : String(localized: "Purchase unavailable")))
                                     .font(.headline)
                             }.frame(maxWidth: .infinity).padding(20).foregroundStyle(.white)
-                                .background(AlbumTheme.accent, in: RoundedRectangle(cornerRadius: 20))
+                                .vaultPrimarySurface(in: RoundedRectangle(cornerRadius: 20))
                         }
                         .disabled(purchases.product == nil || purchases.busy || purchases.status == .checking)
                         .opacity(purchases.product == nil ? 0.5 : 1)
