@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Pattern icon concept: Dotted P">
+  <rect width="1024" height="1024" fill="#E6E9E9"/>
+  <circle cx="362" cy="312" r="28" fill="#65777C"/>
+    <circle cx="462" cy="312" r="28" fill="#65777C"/>
+    <circle cx="562" cy="312" r="28" fill="#65777C"/>
+    <circle cx="662" cy="312" r="28" fill="#D3DADB"/>
+    <circle cx="362" cy="412" r="28" fill="#65777C"/>
+    <circle cx="462" cy="412" r="28" fill="#D3DADB"/>
+    <circle cx="562" cy="412" r="28" fill="#D3DADB"/>
+    <circle cx="662" cy="412" r="28" fill="#65777C"/>
+    <circle cx="362" cy="512" r="28" fill="#65777C"/>
+    <circle cx="462" cy="512" r="28" fill="#65777C"/>
+    <circle cx="562" cy="512" r="28" fill="#65777C"/>
+    <circle cx="662" cy="512" r="28" fill="#D3DADB"/>
+    <circle cx="362" cy="612" r="28" fill="#65777C"/>
+    <circle cx="462" cy="612" r="28" fill="#D3DADB"/>
+    <circle cx="562" cy="612" r="28" fill="#D3DADB"/>
+    <circle cx="662" cy="612" r="28" fill="#D3DADB"/>
+    <circle cx="362" cy="712" r="28" fill="#65777C"/>
+    <circle cx="462" cy="712" r="28" fill="#D3DADB"/>
+    <circle cx="562" cy="712" r="28" fill="#D3DADB"/>
+    <circle cx="662" cy="712" r="28" fill="#D3DADB"/>
+</svg>

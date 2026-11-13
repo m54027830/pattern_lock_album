@@ -43,72 +43,35 @@ func render(_ name: String, pixels: Int) -> CGImage {
     }
     switch name {
     case "Classic":
-        // A heavy blue-steel vault with a recessed, unconnected nine-dot lock.
-        func rounded(_ x: CGFloat, _ y: CGFloat, _ w: CGFloat, _ h: CGFloat, _ r: CGFloat) -> CGPath {
-            CGPath(roundedRect: CGRect(x: x, y: y, width: w, height: h), cornerWidth: r, cornerHeight: r, transform: nil)
-        }
-        func disk(_ x: CGFloat, _ y: CGFloat, _ r: CGFloat) -> CGPath {
-            CGPath(ellipseIn: CGRect(x: x-r, y: y-r, width: r*2, height: r*2), transform: nil)
-        }
-        func metal(_ path: CGPath, _ palette: [UInt32], _ stops: [CGFloat], horizontal: Bool = false) {
-            let bounds = path.boundingBoxOfPath
-            let gradient = CGGradient(colorsSpace: space, colors: palette.map { color($0) } as CFArray, locations: stops)!
-            c.saveGState()
-            c.addPath(path); c.clip()
-            c.drawLinearGradient(gradient,
-                                 start: CGPoint(x: bounds.minX, y: bounds.minY),
-                                 end: CGPoint(x: bounds.maxX, y: horizontal ? bounds.minY : bounds.maxY),
-                                 options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
-            c.restoreGState()
-        }
-        func edge(_ path: CGPath, _ width: CGFloat, _ hex: UInt32, alpha: CGFloat = 1) {
-            c.addPath(path); c.setStrokeColor(color(hex, alpha: alpha)); c.setLineWidth(width); c.strokePath()
-        }
-
-        background(0x344B68, 0x101C30)
-        // The deep lower edge and thick chamfer give the door its weight.
+        // Layers / Atmosphere: overlapping tiles on a muted, flowing backdrop.
+        // Keep the Classic asset identifier for the existing default-icon picker.
+        let gradient = CGGradient(colorsSpace: space,
+                                  colors: [color(0x92A3A2), color(0x738B91), color(0x526A77)] as CFArray,
+                                  locations: [0, 0.5, 1])!
+        c.drawLinearGradient(gradient, start: CGPoint(x: 0, y: 0),
+                             end: CGPoint(x: 1024, y: 1024),
+                             options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
         c.saveGState()
-        c.setShadow(offset: CGSize(width: 8, height: -22), blur: 32, color: color(0x050D19, alpha: 0.55))
-        rect(178, 168, 678, 718, 88, 0x111E2E)
+        c.setAlpha(0.14)
+        fill(0xD0D8CF)
+        c.move(to: CGPoint(x: 0, y: 0))
+        c.addLine(to: CGPoint(x: 1024, y: 0))
+        c.addCurve(to: CGPoint(x: 0, y: 700), control1: CGPoint(x: 760, y: 270),
+                   control2: CGPoint(x: 180, y: 210))
+        c.closePath()
+        c.fillPath()
+        c.setAlpha(0.12)
+        fill(0x334F62)
+        c.move(to: CGPoint(x: 0, y: 1024))
+        c.addLine(to: CGPoint(x: 1024, y: 1024))
+        c.addLine(to: CGPoint(x: 1024, y: 440))
+        c.addCurve(to: CGPoint(x: 0, y: 1024), control1: CGPoint(x: 750, y: 810),
+                   control2: CGPoint(x: 360, y: 610))
+        c.closePath()
+        c.fillPath()
         c.restoreGState()
-        metal(rounded(174, 146, 676, 710, 86), [0xEDF5FC, 0x8DA2BA, 0x3E526C, 0xA4B5C8], [0, 0.38, 0.68, 1])
-        edge(rounded(177, 149, 670, 704, 83), 3, 0xDDEAF6, alpha: 0.65)
-        rect(207, 179, 610, 644, 56, 0x172639)
-        metal(rounded(218, 190, 588, 622, 46), [0xADBED0, 0xDEE7EF, 0x8EA2B8, 0x6D829C], [0, 0.34, 0.6, 1])
-        edge(rounded(222, 194, 580, 614, 42), 3, 0xF0F6FC, alpha: 0.55)
-
-        // Broad cylindrical hinges with steel end caps.
-        for y: CGFloat in [282, 594] {
-            rect(146, y+7, 118, 148, 26, 0x1A2B40)
-            metal(rounded(144, y, 112, 140, 24), [0x526A85, 0xDCE8F4, 0x91A6BD, 0x405670], [0, 0.3, 0.58, 1], horizontal: true)
-            edge(rounded(146, y+2, 108, 136, 22), 2, 0xD5E3F0, alpha: 0.6)
-            line([CGPoint(x: 153, y: y+24), CGPoint(x: 247, y: y+24)], 4, 0x4A607A)
-            line([CGPoint(x: 153, y: y+116), CGPoint(x: 247, y: y+116)], 4, 0x4A607A)
-        }
-
-        circle(512, 510, 238, 0x526880)
-        metal(disk(512, 502, 234), [0xF3F8FC, 0x97AEC5, 0x415872, 0xCBD9E6, 0x6B829C], [0, 0.32, 0.53, 0.76, 1])
-        circle(512, 502, 203, 0x101E30)
-        metal(disk(512, 502, 194), [0x354D69, 0x17273D], [0, 1])
-        edge(disk(512, 502, 194), 3, 0x7892AE, alpha: 0.7)
-
-        // All nine dots stand alone; no drawn pattern or selected path.
-        for row in 0..<3 { for col in 0..<3 {
-            let x = 410 + CGFloat(col)*102
-            let y = 400 + CGFloat(row)*102
-            circle(x, y+3, 27, 0x101D2E)
-            metal(disk(x, y, 23), [0xF6FAFF, 0xC3D8EC, 0x8CA9C7], [0, 0.55, 1])
-            edge(disk(x, y, 23), 2, 0xE6F2FF, alpha: 0.7)
-        } }
-
-        // A solid side latch and recessed corner fasteners finish the hardware.
-        rect(775, 426, 76, 164, 25, 0x263A52)
-        metal(rounded(782, 422, 62, 158, 22), [0x748BA5, 0xF1F6FC, 0x9CB1C7, 0x4F6680], [0, 0.3, 0.62, 1], horizontal: true)
-        for p in [CGPoint(x: 280, y: 250), CGPoint(x: 744, y: 250), CGPoint(x: 280, y: 754), CGPoint(x: 744, y: 754)] {
-            circle(p.x, p.y+1, 17, 0x425870)
-            metal(disk(p.x, p.y, 13), [0xE6EEF6, 0x7B92AC], [0, 1])
-            line([CGPoint(x: p.x-5, y: p.y+5), CGPoint(x: p.x+5, y: p.y-5)], 3, 0x526A84)
-        }
+        rect(280, 280, 360, 360, 58, 0xA6B4B5)
+        rect(384, 384, 360, 360, 58, 0xDBE0DB)
     case "Square":
         background(0xEEEDE4)
         rect(232, 232, 560, 560, 0, 0x345C4D)

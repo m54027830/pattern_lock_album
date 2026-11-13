@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Pattern icon concept: Layers / Atmosphere">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#92A3A2"/>
+      <stop offset=".5" stop-color="#738B91"/>
+      <stop offset="1" stop-color="#526A77"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#sky)"/>
+  <path d="M0 0H1024C760 270 180 210 0 700Z" fill="#D0D8CF" opacity=".14"/>
+  <path d="M0 1024H1024V440C750 810 360 610 0 1024Z" fill="#334F62" opacity=".12"/>
+  <rect x="280" y="280" width="360" height="360" rx="58" fill="#A6B4B5"/>
+  <rect x="384" y="384" width="360" height="360" rx="58" fill="#DBE0DB"/>
+</svg>

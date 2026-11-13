@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Pattern icon concept: Quiet grid">
+  <rect width="1024" height="1024" fill="#E6E9E9"/>
+  <g fill="#65777C">
+    <circle cx="336" cy="336" r="42"/>
+    <circle cx="512" cy="336" r="42"/>
+    <circle cx="688" cy="336" r="42"/>
+    <circle cx="336" cy="512" r="42"/>
+    <circle cx="512" cy="512" r="42"/>
+    <circle cx="688" cy="512" r="42"/>
+    <circle cx="336" cy="688" r="42"/>
+    <circle cx="512" cy="688" r="42"/>
+    <circle cx="688" cy="688" r="42"/>
+  </g>
+</svg>

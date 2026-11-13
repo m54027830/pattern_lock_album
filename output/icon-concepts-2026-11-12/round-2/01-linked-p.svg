@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Pattern icon concept: Linked P">
+  <rect width="1024" height="1024" fill="#E6E9E9"/>
+  <path d="M336 688V336H688V512H336" fill="none" stroke="#65777C" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="336" cy="336" r="36" fill="#65777C"/>
+    <circle cx="512" cy="336" r="36" fill="#65777C"/>
+    <circle cx="688" cy="336" r="36" fill="#65777C"/>
+    <circle cx="336" cy="512" r="36" fill="#65777C"/>
+    <circle cx="512" cy="512" r="36" fill="#65777C"/>
+    <circle cx="688" cy="512" r="36" fill="#65777C"/>
+    <circle cx="336" cy="688" r="36" fill="#65777C"/>
+    <circle cx="512" cy="688" r="36" fill="#BBC6C7"/>
+    <circle cx="688" cy="688" r="36" fill="#BBC6C7"/>
+</svg>
