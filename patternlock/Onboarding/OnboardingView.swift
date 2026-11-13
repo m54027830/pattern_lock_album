@@ -9,8 +9,9 @@ struct OnboardingView: View {
     @State private var showingRestore = false
     @State private var showingJoin = false
     @State private var drawing = false
-    @State private var copied = false
+    @State private var phraseShare: OnboardingPhraseShare?
     @State private var operation: Task<Void, Never>?
+    @FocusState private var confirmationFocused: Bool
 
     init(setup: OnboardingStore? = nil, onRestored: (() -> Void)? = nil,
          completion: @escaping @MainActor (String, [Int], Int, String) async throws -> Void) {
@@ -46,14 +47,14 @@ struct OnboardingView: View {
         case .pattern: String(localized: "Name your first vault, then connect at least 4 different dots.")
         case .confirm: String(localized: "Draw the same pattern again to confirm it.")
         case .recovery: String(localized: "Save a recovery phrase outside Pattern. It can reset this vault’s pattern if you forget it.")
-        case .verifyRecovery: String(localized: "Repeat your saved phrase to make sure you can recover your vault.")
+        case .verifyRecovery: String(localized: "Paste or type the phrase you saved, with every word in order.")
         }
     }
 
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
-                VStack(spacing: 24) {
+                VStack(spacing: setup.step == .recovery ? 16 : 24) {
                     header
                     if setup.step == .welcome {
                         WelcomeArtwork(page: setup.welcomePage).frame(height: 250).padding(.top, 20)
@@ -68,18 +69,24 @@ struct OnboardingView: View {
                         Text(subtitle).font(.subheadline).lineSpacing(4).foregroundStyle(AlbumTheme.secondary)
                     }.multilineTextAlignment(.center).frame(maxWidth: 440)
                     stepContent(width: min(320, geometry.size.width - 64), compact: geometry.size.height < 650)
-                    if let error = setup.error { Text(error).font(.subheadline).foregroundStyle(.red).multilineTextAlignment(.center) }
+                    if setup.step != .verifyRecovery { validationMessage }
                     if setup.busy { ProgressView(String(localized: "Preparing your vault…")) }
                 }
                 .padding(.horizontal, 24).padding(.top, 16).padding(.bottom, 28)
                 .frame(maxWidth: 560).frame(maxWidth: .infinity)
-            }.scrollDisabled(drawing)
+            }.scrollDisabled(drawing).id(setup.step)
         }
         .background(AlbumTheme.background.ignoresSafeArea())
         .safeAreaInset(edge: .bottom) { footer }
         .foregroundStyle(AlbumTheme.ink).tint(AlbumTheme.accent).preferredColorScheme(.light)
         .disabled(setup.busy)
         .onDisappear { operation?.cancel(); setup.clearSecrets() }
+        .sheet(item: $phraseShare) { share in
+            OnboardingPhraseShareSheet(phrase: share.phrase) { completed in
+                setup.recordPhraseShare(completed: completed, phraseID: share.id)
+                phraseShare = nil
+            }
+        }
         .sheet(isPresented: $showingJoin) {
             NavigationStack {
                 JoinSharedVaultView(onJoined: { showingJoin = false; onRestored?() })
@@ -171,7 +178,9 @@ struct OnboardingView: View {
                 SecureField(String(localized: "At least 8 words and 40 characters"), text: $setup.customPhrase)
                     .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
                     .padding(18).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 18))
-                Text(String(localized: "Choose unrelated, unpredictable words. A generated phrase is recommended."))
+                Text(setup.canSavePhrase
+                     ? String(localized: "Choose unrelated, unpredictable words. A generated phrase is recommended.")
+                     : String(localized: "Use at least 8 words and 40 characters, up to 1,024 characters. A generated phrase is recommended."))
                     .font(.caption).foregroundStyle(AlbumTheme.secondary)
             } else {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], alignment: .leading, spacing: 12) {
@@ -182,23 +191,50 @@ struct OnboardingView: View {
                         }
                     }
                 }.padding(20).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 22)).privacySensitive()
-                Button(copied ? String(localized: "Copied") : String(localized: "Copy phrase"), systemImage: copied ? "checkmark" : "doc.on.doc") {
-                    UIPasteboard.general.setItems([[UIPasteboard.typeAutomatic: setup.phrase]], options: [.localOnly: true, .expirationDate: Date().addingTimeInterval(60)])
-                    copied = true
-                }.font(.subheadline)
             }
-            Label(String(localized: "Write it down. Keep it safe. Keep it private."), systemImage: "key")
-                .font(.caption).foregroundStyle(AlbumTheme.secondary)
+            VStack(spacing: 10) {
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 16) { sharePhraseButton; copyPhraseButton }
+                        .fixedSize(horizontal: true, vertical: false)
+                    VStack(spacing: 8) { sharePhraseButton; copyPhraseButton }
+                }
+                .disabled(!setup.canSavePhrase)
+                Text(String(localized: "Tap Save to Notes, choose Notes, then save. Or copy the phrase into a password manager. You’ll need it on the next screen."))
+                    .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
+                if setup.sharedPhrase {
+                    Label(String(localized: "Phrase shared"), systemImage: "checkmark.circle")
+                        .font(.caption).foregroundStyle(AlbumTheme.accent)
+                }
+            }
         case .verifyRecovery:
             Image(systemName: "key.horizontal").font(.system(size: 50, weight: .ultraLight)).foregroundStyle(AlbumTheme.accent).padding(20)
             SecureField(String(localized: "Repeat the whole recovery phrase"), text: $setup.confirmation)
                 .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
+                .focused($confirmationFocused)
                 .padding(18).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 18))
                 .accessibilityIdentifier("onboardingPhraseConfirmation")
+            validationMessage
             Toggle(String(localized: "I saved my phrase outside Pattern"), isOn: $setup.savedPhrase).font(.subheadline)
             Text(String(localized: "The phrase won’t be shown again after setup. Keep it to reset a forgotten pattern or open an iCloud backup. A phrase alone cannot restore photos after deleting the app."))
                 .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
         }
+    }
+
+    private var sharePhraseButton: some View {
+        Button(String(localized: "Save to Notes"), systemImage: "square.and.arrow.up") {
+            phraseShare = OnboardingPhraseShare(id: setup.phraseID, phrase: setup.phrase)
+        }
+        .font(.subheadline).buttonStyle(.bordered).controlSize(.large)
+        .accessibilityIdentifier("onboardingSharePhrase")
+    }
+
+    private var copyPhraseButton: some View {
+        Button(setup.copiedPhrase ? String(localized: "Copied") : String(localized: "Copy phrase"), systemImage: setup.copiedPhrase ? "checkmark" : "doc.on.doc") {
+            UIPasteboard.general.setItems([[UIPasteboard.typeAutomatic: setup.phrase]], options: [.localOnly: true, .expirationDate: Date().addingTimeInterval(60)])
+            setup.markPhraseCopied()
+        }
+        .frame(minHeight: 44).font(.subheadline)
+        .accessibilityIdentifier("onboardingCopyPhrase")
     }
 
     private var footer: some View {
@@ -216,13 +252,35 @@ struct OnboardingView: View {
             case .grid: primary(String(localized: "Use \(setup.gridSize) × \(setup.gridSize) grid"), action: setup.chooseGrid)
             case .pattern: EmptyView()
             case .confirm: Button(String(localized: "Draw a different pattern"), action: setup.back).font(.subheadline).padding(10)
-            case .recovery: primary(String(localized: "I’ve saved my phrase"), action: setup.confirmRecovery)
+            case .recovery:
+                if !setup.canContinueRecovery {
+                    Text(String(localized: "Copy or share your phrase before continuing."))
+                        .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
+                }
+                primary(String(localized: "I’ve saved my phrase"), action: setup.confirmRecovery)
+                    .disabled(!setup.canContinueRecovery).opacity(setup.canContinueRecovery ? 1 : 0.45)
             case .verifyRecovery:
-                primary(String(localized: "Open my vault")) { operation = Task { await setup.finish(completion) } }
-                    .disabled(!setup.canFinish).opacity(setup.canFinish ? 1 : 0.45)
+                primary(String(localized: "Confirm my phrase")) {
+                    confirmationFocused = false
+                    operation = Task { await setup.finish(completion) }
+                }
             }
         }.padding(.horizontal, 24).padding(.top, 12).padding(.bottom, 12)
             .frame(maxWidth: 560).frame(maxWidth: .infinity).background(AlbumTheme.background)
+    }
+
+    @ViewBuilder private var validationMessage: some View {
+        if let error = setup.error {
+            VStack(spacing: 12) {
+                Text(error).font(.subheadline).foregroundStyle(.red).multilineTextAlignment(.center)
+                if setup.recoveryConfirmationMismatch {
+                    Button(String(localized: "Show my phrase"), action: setup.back)
+                        .buttonStyle(.bordered).controlSize(.large)
+                        .accessibilityIdentifier("onboardingShowPhrase")
+                }
+            }
+            .accessibilityIdentifier("onboardingError")
+        }
     }
 
     private func vaultChoice(_ title: String, detail: String, icon: String, action: @escaping () -> Void) -> some View {
@@ -252,6 +310,27 @@ struct OnboardingView: View {
                 .vaultPrimarySurface(in: RoundedRectangle(cornerRadius: 20))
         }.accessibilityIdentifier("onboardingContinue")
     }
+}
+
+private struct OnboardingPhraseShare: Identifiable {
+    let id: UUID
+    let phrase: String
+}
+
+struct OnboardingPhraseShareSheet: UIViewControllerRepresentable {
+    let phrase: String
+    let completion: @MainActor (Bool) -> Void
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: [phrase], applicationActivities: nil)
+        controller.completionWithItemsHandler = { _, completed, _, error in
+            let succeeded = completed && error == nil
+            Task { @MainActor in completion(succeeded) }
+        }
+        return controller
+    }
+
+    func updateUIViewController(_ controller: UIActivityViewController, context: Context) {}
 }
 
 struct GridSizePicker: View {

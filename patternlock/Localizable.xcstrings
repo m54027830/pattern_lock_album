@@ -1,6 +1,420 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Confirm that you saved your phrase outside Pattern before continuing." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestätige vor dem Fortfahren, dass du deine Phrase außerhalb von Pattern gespeichert hast."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm that you saved your phrase outside Pattern before continuing."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmez que vous avez enregistré votre phrase en dehors de Pattern avant de continuer."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conferma di aver salvato la frase al di fuori di Pattern prima di continuare."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "続ける前に、フレーズをPattern以外の場所に保存したことを確認してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계속하기 전에 문구를 Pattern 외부에 저장했는지 확인하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "继续前，请确认已将恢复短语保存在 Pattern 以外的地方。"
+          }
+        }
+      }
+    },
+    "That phrase doesn’t match. Go back to view and save your phrase, then return here to paste or type every word in order." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Phrase stimmt nicht überein. Gehe zurück, um deine Phrase anzusehen und zu speichern. Kehre dann hierher zurück und füge alle Wörter in der richtigen Reihenfolge ein oder gib sie ein."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That phrase doesn’t match. Go back to view and save your phrase, then return here to paste or type every word in order."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette phrase ne correspond pas. Revenez à l’écran précédent pour afficher et enregistrer votre phrase, puis revenez ici pour coller ou saisir tous les mots dans l’ordre."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La frase non corrisponde. Torna indietro per visualizzare e salvare la frase, poi torna qui per incollare o digitare tutte le parole in ordine."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フレーズが一致しません。前の画面に戻ってフレーズを確認・保存してから、この画面ですべての単語を順番どおりに貼り付けるか入力してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "문구가 일치하지 않습니다. 이전 화면으로 돌아가 문구를 확인하고 저장한 다음, 이 화면에서 모든 단어를 순서대로 붙여넣거나 입력하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "恢复短语不匹配。请返回查看并保存恢复短语，然后回到此处，按顺序粘贴或输入所有单词。"
+          }
+        }
+      }
+    },
+    "Tap Save to Notes, choose Notes, then save. Or copy the phrase into a password manager. You’ll need it on the next screen." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippe auf „In Notizen sichern“, wähle „Notizen“ und speichere die Phrase. Oder kopiere sie in einen Passwortmanager. Du brauchst sie auf dem nächsten Bildschirm."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap Save to Notes, choose Notes, then save. Or copy the phrase into a password manager. You’ll need it on the next screen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touchez « Enregistrer dans Notes », choisissez Notes, puis enregistrez. Vous pouvez aussi copier la phrase dans un gestionnaire de mots de passe. Elle vous sera demandée à l’écran suivant."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tocca «Salva in Note», scegli Note e salva. Oppure copia la frase in un gestore di password. Ti servirà nella schermata successiva."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「メモに保存」をタップし、「メモ」を選んで保存してください。パスワードマネージャーにコピーして保存することもできます。次の画面でこのフレーズが必要になります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「메모에 저장」을 탭하고 메모 앱을 선택한 다음 저장하세요. 또는 문구를 복사하여 비밀번호 관리자에 저장하세요. 다음 화면에서 이 문구가 필요합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "轻点“保存到备忘录”，选择“备忘录”并保存。也可以将恢复短语复制到密码管理器中。下一步需要使用这段恢复短语。"
+          }
+        }
+      }
+    },
+    "Paste or type the phrase you saved, with every word in order." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Füge die gespeicherte Phrase ein oder gib sie ein – mit allen Wörtern in der richtigen Reihenfolge."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste or type the phrase you saved, with every word in order."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collez ou saisissez la phrase enregistrée, en respectant l’ordre de tous les mots."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incolla o digita la frase salvata, con tutte le parole nello stesso ordine."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存したフレーズを貼り付けるか、すべての単語を順番どおりに入力してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장한 문구를 붙여넣거나 모든 단어를 순서대로 입력하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "粘贴或输入已保存的恢复短语，确保每个单词的顺序正确。"
+          }
+        }
+      }
+    },
+    "Copy or share your phrase before continuing." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopiere oder teile deine Phrase, bevor du fortfährst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy or share your phrase before continuing."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiez ou partagez votre phrase avant de continuer."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia o condividi la frase prima di continuare."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "続ける前にフレーズをコピーまたは共有してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "계속하기 전에 문구를 복사하거나 공유하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请先复制或分享恢复短语，再继续。"
+          }
+        }
+      }
+    },
+    "Show my phrase" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meine Phrase anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show my phrase"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher ma phrase"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostra la mia frase"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フレーズを表示"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내 문구 보기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示我的恢复短语"
+          }
+        }
+      }
+    },
+    "Confirm my phrase" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meine Phrase bestätigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm my phrase"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmer ma phrase"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conferma la mia frase"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フレーズを確認"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내 문구 확인"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认我的恢复短语"
+          }
+        }
+      }
+    },
+    "Phrase shared" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phrase geteilt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phrase shared"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phrase partagée"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frase condivisa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フレーズを共有しました"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "문구 공유됨"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "恢复短语已分享"
+          }
+        }
+      }
+    },
+    "Save to Notes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Notizen sichern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save to Notes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrer dans Notes"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salva in Note"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メモに保存"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메모에 저장"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存到备忘录"
+          }
+        }
+      }
+    },
     "\n\nKeep the originals, or delete the %lld originals from Photos? Your vault copies will stay. Deletion also applies to iCloud Photos and synced devices. Deleted items may remain in Recently Deleted for up to 30 days." : {
       "comment" : "Pluralize the entire message using the item count (or seconds for retry).",
       "localizations" : {

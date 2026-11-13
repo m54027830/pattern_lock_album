@@ -107,7 +107,7 @@ private final class GridStorage: PatternCredentialStorage, @unchecked Sendable {
             setup.startSetup(); setup.gridSize = size; setup.chooseGrid()
             setup.submit(newA); setup.submit(newA)
             let recoveryPhrase = setup.phrase
-            setup.confirmRecovery(); setup.confirmation = recoveryPhrase; setup.savedPhrase = true
+            setup.markPhraseCopied(); setup.confirmRecovery(); setup.confirmation = recoveryPhrase; setup.savedPhrase = true
             let view = OnboardingView(setup: setup) { name, pattern, gridSize, phrase in
                 try await lock.finishOnboarding(name: name, pattern: pattern, gridSize: gridSize, recoveryPhrase: phrase)
             }
@@ -146,6 +146,7 @@ private final class GridStorage: PatternCredentialStorage, @unchecked Sendable {
             setup.submit(newA); setup.submit(newA)
             setup.useCustomPhrase = custom
             if custom { setup.customPhrase = phrase }
+            setup.markPhraseCopied()
             let savedPhrase = setup.phrase
 
             for step in [OnboardingStep.recovery, .verifyRecovery] {
@@ -198,7 +199,7 @@ private final class GridStorage: PatternCredentialStorage, @unchecked Sendable {
         setup.gridSize = 4; setup.chooseGrid(); setup.submit(newA); setup.submit(newA)
         setup.useCustomPhrase = true; setup.customPhrase = "too short"; setup.confirmRecovery()
         XCTAssertEqual(setup.step, .recovery)
-        setup.customPhrase = phrase; setup.confirmRecovery()
+        setup.customPhrase = phrase; setup.markPhraseCopied(); setup.confirmRecovery()
         setup.savedPhrase = true; setup.confirmation = "wrong"
         XCTAssertFalse(setup.canFinish)
         setup.confirmation = phrase.uppercased()

@@ -10,10 +10,18 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, vaultChoice, 
     var vaultName = String(localized: "Personal")
     private(set) var pattern: [Int] = []
     private(set) var generatedPhrase = ""
-    var useCustomPhrase = false
-    var customPhrase = ""
+    var useCustomPhrase = false {
+        didSet { if oldValue != useCustomPhrase { resetPhraseSaving() } }
+    }
+    var customPhrase = "" {
+        didSet { if oldValue != customPhrase { resetPhraseSaving() } }
+    }
     var confirmation = ""
     var savedPhrase = false
+    private(set) var copiedPhrase = false
+    private(set) var sharedPhrase = false
+    private(set) var phraseID = UUID()
+    private(set) var recoveryConfirmationMismatch = false
     private(set) var error: String?
     private(set) var revision = 0
     private(set) var busy = false
@@ -24,7 +32,9 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, vaultChoice, 
     deinit {}
 
     var phrase: String { useCustomPhrase ? RecoveryPhrase.normalized(customPhrase) : generatedPhrase }
-    var canFinish: Bool { savedPhrase && !phrase.isEmpty && RecoveryPhrase.normalized(confirmation) == phrase }
+    var canSavePhrase: Bool { (try? RecoveryPhrase.validate(phrase)) != nil }
+    var canContinueRecovery: Bool { canSavePhrase && (copiedPhrase || sharedPhrase) }
+    var canFinish: Bool { canContinueRecovery && savedPhrase && RecoveryPhrase.normalized(confirmation) == phrase }
 
     func showVaultChoices() { step = .vaultChoice; error = nil }
     func startSetup() { step = .grid; error = nil }
@@ -42,18 +52,34 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, vaultChoice, 
         guard nodes == pattern else { error = String(localized: "Those patterns didn’t match. Try again."); return }
         do {
             generatedPhrase = try RecoveryPhrase.generate()
+            resetPhraseSaving()
             step = .recovery
         } catch { self.error = error.localizedDescription }
     }
     func confirmRecovery() {
+        guard step == .recovery, !busy else { return }
         do {
             try RecoveryPhrase.validate(phrase)
-            confirmation = ""; savedPhrase = false; error = nil; step = .verifyRecovery
+            guard canContinueRecovery else {
+                error = String(localized: "Copy or share your phrase before continuing.")
+                return
+            }
+            confirmation = ""; savedPhrase = false; recoveryConfirmationMismatch = false; error = nil; step = .verifyRecovery
         } catch { self.error = error.localizedDescription }
+    }
+    func markPhraseCopied() {
+        guard step == .recovery, canSavePhrase, !busy else { return }
+        copiedPhrase = true; error = nil
+    }
+    func recordPhraseShare(completed: Bool, phraseID: UUID) {
+        // A dismissed share sheet or a completion for an earlier phrase cannot
+        // unlock the next step for the current phrase.
+        guard completed, phraseID == self.phraseID, step == .recovery, canSavePhrase, !busy else { return }
+        sharedPhrase = true; error = nil
     }
     func back() {
         guard !busy else { return }
-        error = nil; revision += 1
+        error = nil; recoveryConfirmationMismatch = false; revision += 1
         switch step {
         case .welcome: welcomePage = max(0, welcomePage - 1)
         case .vaultChoice: step = .welcome
@@ -65,7 +91,22 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, vaultChoice, 
         }
     }
     func finish(_ save: @MainActor (String, [Int], Int, String) async throws -> Void) async {
-        guard step == .verifyRecovery, canFinish, !busy else { return }
+        guard step == .verifyRecovery, !busy else { return }
+        error = nil; recoveryConfirmationMismatch = false
+        guard canContinueRecovery else {
+            step = .recovery
+            error = String(localized: "Copy or share your phrase before continuing.")
+            return
+        }
+        guard RecoveryPhrase.normalized(confirmation) == phrase else {
+            recoveryConfirmationMismatch = true
+            error = String(localized: "That phrase doesn’t match. Go back to view and save your phrase, then return here to paste or type every word in order.")
+            return
+        }
+        guard savedPhrase else {
+            error = String(localized: "Confirm that you saved your phrase outside Pattern before continuing.")
+            return
+        }
         busy = true; error = nil
         defer { busy = false }
         do {
@@ -74,5 +115,13 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, vaultChoice, 
         } catch { if !Task.isCancelled { self.error = error.localizedDescription } }
     }
     func clearSecrets() { pattern = []; clearRecovery() }
-    private func clearRecovery() { generatedPhrase = ""; customPhrase = ""; confirmation = ""; savedPhrase = false }
+    private func resetPhraseSaving() {
+        phraseID = UUID()
+        copiedPhrase = false; sharedPhrase = false
+        confirmation = ""; savedPhrase = false; recoveryConfirmationMismatch = false; error = nil
+    }
+    private func clearRecovery() {
+        generatedPhrase = ""; customPhrase = ""; useCustomPhrase = false
+        resetPhraseSaving()
+    }
 }

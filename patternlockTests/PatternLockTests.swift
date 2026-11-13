@@ -207,6 +207,7 @@ private actor TestAuthenticator: PatternAuthenticating {
         XCTAssertEqual(registrations, 0)
         setup.submit(pattern)
         XCTAssertEqual(setup.step, .recovery)
+        setup.markPhraseCopied()
         setup.confirmRecovery()
         await setup.finish { name, pattern, size, phrase in
             try await lock.finishOnboarding(name: name, pattern: pattern, gridSize: size, recoveryPhrase: phrase)
