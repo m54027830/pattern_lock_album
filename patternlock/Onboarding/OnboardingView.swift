@@ -11,6 +11,8 @@ struct OnboardingView: View {
     @State private var drawing = false
     @State private var phraseShare: OnboardingPhraseShare?
     @State private var operation: Task<Void, Never>?
+    @State private var purchases = PurchaseStore.shared
+    @State private var showingProOffer = false
     @FocusState private var confirmationFocused: Bool
 
     init(setup: OnboardingStore? = nil, onRestored: (() -> Void)? = nil,
@@ -47,7 +49,7 @@ struct OnboardingView: View {
         case .pattern: String(localized: "Name your first vault, then connect at least 4 different dots.")
         case .confirm: String(localized: "Draw the same pattern again to confirm it.")
         case .recovery: String(localized: "Save a recovery phrase outside Pattern. It can reset this vault’s pattern if you forget it.")
-        case .verifyRecovery: String(localized: "Paste or type the phrase you saved, with every word in order.")
+        case .verifyRecovery: String(localized: "Paste the whole recovery phrase")
         }
     }
 
@@ -81,8 +83,9 @@ struct OnboardingView: View {
         .foregroundStyle(AlbumTheme.ink).tint(AlbumTheme.accent).preferredColorScheme(.light)
         .disabled(setup.busy)
         .onDisappear { operation?.cancel(); setup.clearSecrets() }
+        .purchaseOffer(isPresented: $showingProOffer, onDismiss: finishSetup)
         .sheet(item: $phraseShare) { share in
-            OnboardingPhraseShareSheet(phrase: share.phrase) { completed in
+            OnboardingNotesShareGuide(phrase: share.phrase) { completed in
                 setup.recordPhraseShare(completed: completed, phraseID: share.id)
                 phraseShare = nil
             }
@@ -178,6 +181,7 @@ struct OnboardingView: View {
                 SecureField(String(localized: "At least 8 words and 40 characters"), text: $setup.customPhrase)
                     .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
                     .padding(18).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 18))
+                    .clipboardPasteButton(text: $setup.customPhrase, belowField: true)
                 Text(setup.canSavePhrase
                      ? String(localized: "Choose unrelated, unpredictable words. A generated phrase is recommended.")
                      : String(localized: "Use at least 8 words and 40 characters, up to 1,024 characters. A generated phrase is recommended."))
@@ -208,11 +212,12 @@ struct OnboardingView: View {
             }
         case .verifyRecovery:
             Image(systemName: "key.horizontal").font(.system(size: 50, weight: .ultraLight)).foregroundStyle(AlbumTheme.accent).padding(20)
-            SecureField(String(localized: "Repeat the whole recovery phrase"), text: $setup.confirmation)
+            SecureField(String(localized: "Paste the whole recovery phrase"), text: $setup.confirmation)
                 .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
                 .focused($confirmationFocused)
                 .padding(18).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 18))
                 .accessibilityIdentifier("onboardingPhraseConfirmation")
+                .clipboardPasteButton(text: $setup.confirmation, belowField: true)
             validationMessage
             Toggle(String(localized: "I saved my phrase outside Pattern"), isOn: $setup.savedPhrase).font(.subheadline)
             Text(String(localized: "The phrase won’t be shown again after setup. Keep it to reset a forgotten pattern or open an iCloud backup. A phrase alone cannot restore photos after deleting the app."))
@@ -262,11 +267,17 @@ struct OnboardingView: View {
             case .verifyRecovery:
                 primary(String(localized: "Confirm my phrase")) {
                     confirmationFocused = false
-                    operation = Task { await setup.finish(completion) }
+                    guard setup.confirmRecoveryPhrase() else { return }
+                    if purchases.isUnlimited { finishSetup() }
+                    else { showingProOffer = true }
                 }
             }
         }.padding(.horizontal, 24).padding(.top, 12).padding(.bottom, 12)
             .frame(maxWidth: 560).frame(maxWidth: .infinity).background(AlbumTheme.background)
+    }
+
+    private func finishSetup() {
+        operation = Task { await setup.finish(completion) }
     }
 
     @ViewBuilder private var validationMessage: some View {

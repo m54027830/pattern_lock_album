@@ -1,0 +1,18 @@
+{
+  "products": [
+    {
+      "id": "jp.gm.patternlock.pro",
+      "file": "pro-1024.png"
+    },
+    {
+      "id": "jp.gm.patternlock.special",
+      "file": "pro-special-offer-1024.png"
+    }
+  ],
+  "width": 1024,
+  "height": 1024,
+  "format": "PNG",
+  "alpha": false,
+  "colorSpace": "sRGB",
+  "source": "scripts/generate-alternate-app-icons.swift --purchase-icons"
+}

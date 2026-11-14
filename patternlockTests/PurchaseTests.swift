@@ -8,6 +8,8 @@ import UIKit
     var entitlements: [PurchaseVerification] = []
     var outcome = LifetimePurchaseResult.cancelled
     var product: LifetimeProduct? = .init(id: PurchaseConfiguration.productID, displayName: "Pattern Unlimited", displayPrice: "$9.99")
+    var specialProduct: LifetimeProduct? = .init(id: PurchaseConfiguration.specialProductID, displayName: "Pro Special Offer", displayPrice: "$4.99")
+    var purchasedProductIDs: [String] = []
     var productFails = false
     var restoreFails = false
     var synchronizations = 0
@@ -18,12 +20,17 @@ import UIKit
     var deferredSnapshot: CheckedContinuation<[PurchaseVerification], Never>?
     var deferNextSnapshot = false
     var willFinish: (() -> Void)?
-    func loadProduct() async throws -> LifetimeProduct? { if productFails { throw PurchaseError.unavailable }; return product }
+    func loadProduct(id: String) async throws -> LifetimeProduct? {
+        if productFails { throw PurchaseError.unavailable }
+        return id == PurchaseConfiguration.specialProductID ? specialProduct : product
+    }
     func currentEntitlements() async -> [PurchaseVerification] {
         if deferNextSnapshot { deferNextSnapshot = false; return await withCheckedContinuation { deferredSnapshot = $0 } }
         return entitlements
     }
-    func purchase(in scene: UIWindowScene?) async throws -> LifetimePurchaseResult { purchases += 1; return outcome }
+    func purchase(productID: String, in scene: UIWindowScene?) async throws -> LifetimePurchaseResult {
+        purchases += 1; purchasedProductIDs.append(productID); return outcome
+    }
     func synchronize() async throws { synchronizations += 1; if restoreFails { throw PurchaseError.unavailable } }
     func updates() -> AsyncStream<PurchaseVerification> {
         listenerCount += 1
@@ -179,9 +186,217 @@ import UIKit
         XCTAssertEqual(store.product?.displayPrice, "¥600")
         XCTAssertNil(store.error)
     }
+
+    func testSpecialPurchaseUsesItsOwnProductAndGrantsTheSameAccess() async throws {
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: UUID().uuidString))
+        let offers = SpecialOfferStore(defaults: defaults)
+        let client = TestPurchaseClient(), access = PurchaseAccess()
+        let store = PurchaseStore(client: client, access: access, specialOffers: offers)
+        await store.start(); await store.loadProduct(); await store.loadSpecialProduct()
+        XCTAssertEqual(store.product?.displayPrice, "$9.99")
+        XCTAssertEqual(store.specialProduct?.displayPrice, "$4.99")
+        XCTAssertTrue(store.beginSpecialOffer())
+        client.outcome = .success(.verified(transaction(product: PurchaseConfiguration.specialProductID)))
+        await store.purchase(in: nil, offer: .special)
+        XCTAssertTrue(store.isUnlimited)
+        XCTAssertTrue(access.isUnlimited)
+        XCTAssertEqual(client.purchasedProductIDs, [PurchaseConfiguration.specialProductID])
+        XCTAssertEqual(offers.remainingSeconds(), 0)
+        XCTAssertFalse(offers.showsBanner())
+        XCTAssertFalse(store.beginSpecialOffer())
+        await store.purchase(in: nil)
+        XCTAssertEqual(client.purchases, 1)
+    }
+
+    func testExpiredOrUnstartedSpecialNeverStartsAStoreKitPurchase() async throws {
+        let offers = SpecialOfferStore(defaults: try XCTUnwrap(UserDefaults(suiteName: UUID().uuidString)))
+        let client = TestPurchaseClient()
+        let subject = PurchaseStore(client: client, access: PurchaseAccess(), specialOffers: offers)
+        await subject.start(); await subject.loadSpecialProduct()
+        await subject.purchase(in: nil, offer: .special)
+        XCTAssertEqual(client.purchases, 0)
+        let now = Date()
+        XCTAssertTrue(subject.beginSpecialOffer(at: now))
+        await subject.purchase(in: nil, offer: .special, now: now.addingTimeInterval(600))
+        XCTAssertEqual(client.purchases, 0)
+        XCTAssertFalse(subject.isUnlimited)
+    }
+
+    func testSpecialEntitlementRestoresAndRefundRetainsOtherValidProduct() async {
+        let client = TestPurchaseClient()
+        let subject = PurchaseStore(client: client, access: PurchaseAccess())
+        client.entitlements = [.verified(transaction(product: PurchaseConfiguration.specialProductID))]
+        await subject.start()
+        XCTAssertTrue(subject.isUnlimited)
+        await subject.restore()
+        XCTAssertTrue(subject.isUnlimited)
+        client.entitlements = [.verified(transaction(id: 2))]
+        client.continuation?.yield(.verified(transaction(product: PurchaseConfiguration.specialProductID, revoked: .now)))
+        for _ in 0..<100 where !client.finishes.contains(2) { await Task.yield() }
+        XCTAssertTrue(subject.isUnlimited)
+        client.entitlements = []
+        client.continuation?.yield(.verified(transaction(id: 2, revoked: .now)))
+        for _ in 0..<100 where subject.isUnlimited { await Task.yield() }
+        XCTAssertFalse(subject.isUnlimited)
+    }
+
+    func testSpecialPriceRefreshClearsStalePriceWithoutClearingRegularProduct() async {
+        let client = TestPurchaseClient()
+        let subject = PurchaseStore(client: client, access: PurchaseAccess())
+        await subject.loadProduct(); await subject.loadSpecialProduct()
+        client.specialProduct = .init(id: PurchaseConfiguration.specialProductID, displayName: "Pro Special Offer", displayPrice: "¥400")
+        await subject.loadSpecialProduct()
+        XCTAssertEqual(subject.specialProduct?.displayPrice, "¥400")
+        client.productFails = true
+        await subject.loadSpecialProduct()
+        XCTAssertNil(subject.specialProduct)
+        XCTAssertNotNil(subject.specialProductError)
+        XCTAssertNotNil(subject.product)
+    }
+
+    func testOfferFlowShowsSpecialThenBannerAndDoesNotRenewTheSameDay() async throws {
+        let offers = SpecialOfferStore(defaults: try XCTUnwrap(UserDefaults(suiteName: UUID().uuidString)))
+        let subject = PurchaseStore(client: TestPurchaseClient(), access: PurchaseAccess(), specialOffers: offers)
+        await subject.start()
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        let flow = PurchaseFlow()
+        flow.close(purchases: subject)
+        XCTAssertNil(flow.offer, "The regular sheet must leave the screen before the special is presented.")
+        XCTAssertEqual(offers.remainingSeconds(at: now), 0, "The timer starts after dismissal, not during it.")
+        XCTAssertFalse(flow.presentationDidDismiss(purchases: subject, now: now))
+        XCTAssertEqual(flow.offer, .special)
+        XCTAssertEqual(offers.remainingSeconds(at: now), 600)
+        XCTAssertFalse(offers.showsBanner(at: now))
+        flow.close(purchases: subject)
+        XCTAssertNil(flow.offer)
+        XCTAssertTrue(flow.presentationDidDismiss(purchases: subject, now: now.addingTimeInterval(30)))
+        XCTAssertTrue(offers.showsBanner(at: now.addingTimeInterval(30)))
+        let reopened = PurchaseFlow(offer: .special)
+        reopened.close(purchases: subject)
+        XCTAssertTrue(reopened.presentationDidDismiss(purchases: subject, now: now.addingTimeInterval(40)))
+        XCTAssertEqual(offers.remainingSeconds(at: now.addingTimeInterval(40)), 560)
+        let sameDay = PurchaseFlow()
+        sameDay.close(purchases: subject)
+        XCTAssertTrue(sameDay.presentationDidDismiss(purchases: subject, now: now.addingTimeInterval(601)))
+        let nextDay = PurchaseFlow()
+        nextDay.close(purchases: subject)
+        XCTAssertFalse(nextDay.presentationDidDismiss(purchases: subject, now: now.addingTimeInterval(86_400)))
+        XCTAssertEqual(offers.remainingSeconds(at: now.addingTimeInterval(86_400)), 600)
+    }
+
+    func testPaidUserClosesRegularOfferWithoutSpecialOrBanner() async throws {
+        let client = TestPurchaseClient()
+        client.entitlements = [.verified(transaction(product: PurchaseConfiguration.specialProductID))]
+        let offers = SpecialOfferStore(defaults: try XCTUnwrap(UserDefaults(suiteName: UUID().uuidString)))
+        let subject = PurchaseStore(client: client, access: PurchaseAccess(), specialOffers: offers)
+        await subject.start()
+        let flow = PurchaseFlow()
+        flow.close(purchases: subject)
+        XCTAssertNil(flow.offer)
+        XCTAssertTrue(flow.presentationDidDismiss(purchases: subject))
+        XCTAssertEqual(offers.remainingSeconds(), 0)
+        XCTAssertFalse(offers.showsBanner())
+    }
+
+    func testPurchaseWhileRegularSheetDismissesCancelsSpecialPresentation() async throws {
+        let client = TestPurchaseClient()
+        let offers = SpecialOfferStore(defaults: try XCTUnwrap(UserDefaults(suiteName: UUID().uuidString)))
+        let subject = PurchaseStore(client: client, access: PurchaseAccess(), specialOffers: offers)
+        await subject.start()
+        let flow = PurchaseFlow()
+        flow.close(purchases: subject)
+        XCTAssertNil(flow.offer)
+        client.entitlements = [.verified(transaction())]
+        await subject.refreshEntitlements()
+        XCTAssertTrue(flow.presentationDidDismiss(purchases: subject))
+        XCTAssertNil(flow.offer)
+        XCTAssertEqual(offers.remainingSeconds(), 0)
+    }
+
+    func testCancellingPresentationDoesNotOpenQueuedSpecial() async throws {
+        let offers = SpecialOfferStore(defaults: try XCTUnwrap(UserDefaults(suiteName: UUID().uuidString)))
+        let subject = PurchaseStore(client: TestPurchaseClient(), access: PurchaseAccess(), specialOffers: offers)
+        await subject.start()
+        let flow = PurchaseFlow()
+        flow.close(purchases: subject)
+        flow.cancel()
+        XCTAssertTrue(flow.presentationDidDismiss(purchases: subject))
+        XCTAssertNil(flow.offer)
+        XCTAssertEqual(offers.remainingSeconds(), 0)
+    }
+
+    func testExpiredSpecialDismissesBeforeShowingRegularOffer() async throws {
+        let subject = PurchaseStore(client: TestPurchaseClient(), access: PurchaseAccess())
+        await subject.start()
+        let flow = PurchaseFlow(offer: .special)
+        flow.showRegularOffer()
+        XCTAssertNil(flow.offer)
+        XCTAssertFalse(flow.presentationDidDismiss(purchases: subject))
+        XCTAssertEqual(flow.offer, .standard)
+    }
+
+    func testPendingSpecialApprovalUnlocksEvenAfterOfferExpires() async throws {
+        let client = TestPurchaseClient()
+        let offers = SpecialOfferStore(defaults: try XCTUnwrap(UserDefaults(suiteName: UUID().uuidString)))
+        let subject = PurchaseStore(client: client, access: PurchaseAccess(), specialOffers: offers)
+        await subject.start(); await subject.loadSpecialProduct()
+        XCTAssertTrue(subject.beginSpecialOffer())
+        client.outcome = .pending
+        await subject.purchase(in: nil, offer: .special)
+        XCTAssertFalse(subject.isUnlimited)
+        offers.end()
+        client.entitlements = [.verified(transaction(product: PurchaseConfiguration.specialProductID))]
+        client.continuation?.yield(.verified(transaction(product: PurchaseConfiguration.specialProductID)))
+        for _ in 0..<100 where !subject.isUnlimited { await Task.yield() }
+        XCTAssertTrue(subject.isUnlimited)
+        XCTAssertFalse(offers.showsBanner())
+    }
+
+    func testSpecialRejectsUnverifiedAndUnexpectedProductResults() async throws {
+        let client = TestPurchaseClient()
+        let offers = SpecialOfferStore(defaults: try XCTUnwrap(UserDefaults(suiteName: UUID().uuidString)))
+        let subject = PurchaseStore(client: client, access: PurchaseAccess(), specialOffers: offers)
+        await subject.start(); await subject.loadSpecialProduct()
+        XCTAssertTrue(subject.beginSpecialOffer())
+        for verification in [PurchaseVerification.unverified(productID: PurchaseConfiguration.specialProductID), .verified(transaction())] {
+            client.outcome = .success(verification)
+            await subject.purchase(in: nil, offer: .special)
+            XCTAssertFalse(subject.isUnlimited)
+            XCTAssertNotNil(subject.error)
+            XCTAssertTrue(client.finishes.isEmpty)
+        }
+    }
 }
 
 @MainActor final class StoreKitIntegrationTests: XCTestCase {
+    func testSpecialProductPurchaseRestoreAndRefundUseVerifiedStoreKitEntitlement() async throws {
+        let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "Pattern", withExtension: "storekit"))
+        let session = try SKTestSession(contentsOf: url)
+        session.resetToDefaultState(); session.disableDialogs = true; session.clearTransactions()
+        defer { session.clearTransactions() }
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first { $0.activationState == .foregroundActive })
+        let offers = SpecialOfferStore(defaults: try XCTUnwrap(UserDefaults(suiteName: UUID().uuidString)))
+        let subject = PurchaseStore(client: StoreKitPurchaseClient(), access: PurchaseAccess(), specialOffers: offers)
+        await subject.start(); await subject.loadProduct(); await subject.loadSpecialProduct()
+        let products = try await Product.products(for: [PurchaseConfiguration.specialProductID])
+        let appleProduct = try XCTUnwrap(products.first)
+        XCTAssertEqual(subject.specialProduct?.id, PurchaseConfiguration.specialProductID)
+        XCTAssertEqual(subject.specialProduct?.displayPrice, appleProduct.displayPrice)
+        XCTAssertEqual(subject.specialProduct?.price, appleProduct.price)
+        XCTAssertEqual(subject.specialProduct?.currencyCode, appleProduct.priceFormatStyle.currencyCode)
+        XCTAssertTrue(subject.beginSpecialOffer())
+        await subject.purchase(in: scene, offer: .special)
+        XCTAssertTrue(subject.isUnlimited, subject.error ?? "Special purchase did not unlock")
+        let restarted = PurchaseStore(client: StoreKitPurchaseClient(), access: PurchaseAccess())
+        await restarted.start(); await restarted.restore()
+        XCTAssertTrue(restarted.isUnlimited)
+        let record = try XCTUnwrap(session.allTransactions().first)
+        try session.refundTransaction(identifier: record.identifier)
+        let deadline = ContinuousClock.now.advanced(by: .seconds(5))
+        while restarted.isUnlimited && ContinuousClock.now < deadline { try await Task.sleep(for: .milliseconds(20)) }
+        XCTAssertFalse(restarted.isUnlimited)
+    }
+
     func testPurchaseEntryPointVerifiesAndFinishesTheLocalNonConsumable() async throws {
         let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "Pattern", withExtension: "storekit"))
         let session = try SKTestSession(contentsOf: url)
@@ -194,6 +409,8 @@ import UIKit
         let appleProduct = try XCTUnwrap(appleProducts.first)
         XCTAssertEqual(store.product?.id, "jp.gm.patternlock.pro")
         XCTAssertEqual(store.product?.displayPrice, appleProduct.displayPrice, "Display StoreKit’s localized price verbatim")
+        XCTAssertEqual(store.product?.price, appleProduct.price)
+        XCTAssertEqual(store.product?.currencyCode, appleProduct.priceFormatStyle.currencyCode)
         await store.purchase(in: scene)
         XCTAssertTrue(store.isUnlimited, store.error ?? "Purchase did not unlock access")
         XCTAssertNil(store.error)

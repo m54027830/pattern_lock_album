@@ -59,6 +59,7 @@ struct BackupExportView: View {
                 Label(String(localized: "Encrypted backup"), systemImage: "lock.doc")
                 Text(String(localized: "Your photos, videos, folders, and vault name are encrypted before saving. Choose iCloud Drive in Files to keep the backup in iCloud."))
                 SecureField(String(localized: "This vault’s recovery phrase"), text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
+                    .clipboardPasteButton(text: $phrase, belowField: true)
             } footer: { Text(String(localized: "Save the phrase separately and wait for iCloud Drive to finish uploading before deleting Pattern. Deleting the app removes local vaults. Restoration needs both the backup file and its original phrase.")) }
             Section {
                 Button(String(localized: "Export backup file"), systemImage: "arrow.up.doc", action: createBackup).disabled(phrase.isEmpty || busy || store.isBusy)
@@ -184,6 +185,7 @@ struct RestoreVaultView: View {
                         Button(String(localized: "Refresh backups")) { Task { await listBackups() } }.disabled(listing)
                     }
                     SecureField(String(localized: "Phrase used for this backup"), text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
+                        .clipboardPasteButton(text: $phrase, belowField: true)
                     Button(String(localized: "Open encrypted backup"), action: prepare).disabled((source == .file ? url == nil : selectedBackup == nil) || phrase.isEmpty || busy)
                     if busy { ProgressView(String(localized: "Opening backup…")) }
                     if let error { Text(error).foregroundStyle(.red) }
@@ -267,6 +269,7 @@ struct RecoverPatternView: View {
             } else {
                 Section {
                     SecureField(String(localized: "Recovery phrase"), text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
+                        .clipboardPasteButton(text: $phrase, belowField: true)
                 } footer: { Text(String(localized: "This resets a pattern for a vault still on this device. After reinstalling Pattern, use Restore from iCloud with a completed backup and its recovery phrase.")) }
                 Section {
                     NavigationLink(String(localized: "Choose a new pattern")) {

@@ -148,6 +148,26 @@ import XCTest
         XCTAssertFalse(setup.useCustomPhrase)
     }
 
+    func testPhraseConfirmationKeepsSetupReadyWhilePurchaseOfferIsPresented() async {
+        let setup = recoverySetup()
+        setup.markPhraseCopied(); setup.confirmRecovery()
+        XCTAssertFalse(setup.confirmRecoveryPhrase())
+        setup.confirmation = setup.phrase; setup.savedPhrase = true
+        let phrase = setup.phrase
+        XCTAssertTrue(setup.confirmRecoveryPhrase())
+        XCTAssertEqual(setup.step, .verifyRecovery)
+        XCTAssertEqual(setup.phrase, phrase)
+        XCTAssertFalse(setup.busy)
+        XCTAssertTrue(setup.canFinish)
+        var registrations = 0
+        await setup.finish { _, _, _, recovery in
+            registrations += 1
+            XCTAssertEqual(recovery, phrase)
+        }
+        XCTAssertEqual(registrations, 1)
+        XCTAssertTrue(setup.phrase.isEmpty)
+    }
+
     func testShareSheetOnlyRecordsSuccessfulCompletion() async throws {
         let setup = recoverySetup()
         let phraseID = setup.phraseID

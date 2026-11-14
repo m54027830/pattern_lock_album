@@ -335,14 +335,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APS_ENVIRONMENT = development;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIconSquare AppIconTriangles AppIconChecker AppIconStripes AppIconRings AppIconDiamonds AppIconWaves AppIconHexagons AppIconMosaic";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIconSquare AppIconTriangles AppIconChecker AppIconStripes AppIconRings AppIconDiamonds AppIconWaves AppIconHexagons AppIconMosaic AppIconCalculator AppIconPrinter AppIconWiFi AppIconChatbot AppIconNotes AppIconWeather AppIconClock AppIconCompass";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLOUDKIT_ENVIRONMENT = Development;
 				CODE_SIGN_ENTITLEMENTS = patternlock/patternlock.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = K9VR4GV3NX;
 				ENABLE_PREVIEWS = YES;
@@ -382,14 +382,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APS_ENVIRONMENT = production;
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIconSquare AppIconTriangles AppIconChecker AppIconStripes AppIconRings AppIconDiamonds AppIconWaves AppIconHexagons AppIconMosaic";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIconSquare AppIconTriangles AppIconChecker AppIconStripes AppIconRings AppIconDiamonds AppIconWaves AppIconHexagons AppIconMosaic AppIconCalculator AppIconPrinter AppIconWiFi AppIconChatbot AppIconNotes AppIconWeather AppIconClock AppIconCompass";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLOUDKIT_ENVIRONMENT = Production;
 				CODE_SIGN_ENTITLEMENTS = patternlock/patternlock.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = K9VR4GV3NX;
 				ENABLE_PREVIEWS = YES;

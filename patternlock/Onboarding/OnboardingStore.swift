@@ -90,23 +90,29 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, vaultChoice, 
         case .verifyRecovery: confirmation = ""; savedPhrase = false; step = .recovery
         }
     }
-    func finish(_ save: @MainActor (String, [Int], Int, String) async throws -> Void) async {
-        guard step == .verifyRecovery, !busy else { return }
+    @discardableResult
+    func confirmRecoveryPhrase() -> Bool {
+        guard step == .verifyRecovery, !busy else { return false }
         error = nil; recoveryConfirmationMismatch = false
         guard canContinueRecovery else {
             step = .recovery
             error = String(localized: "Copy or share your phrase before continuing.")
-            return
+            return false
         }
         guard RecoveryPhrase.normalized(confirmation) == phrase else {
             recoveryConfirmationMismatch = true
             error = String(localized: "That phrase doesn’t match. Go back to view and save your phrase, then return here to paste or type every word in order.")
-            return
+            return false
         }
         guard savedPhrase else {
             error = String(localized: "Confirm that you saved your phrase outside Pattern before continuing.")
-            return
+            return false
         }
+        return true
+    }
+
+    func finish(_ save: @MainActor (String, [Int], Int, String) async throws -> Void) async {
+        guard confirmRecoveryPhrase() else { return }
         busy = true; error = nil
         defer { busy = false }
         do {

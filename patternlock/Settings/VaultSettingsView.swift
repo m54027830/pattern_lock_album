@@ -19,7 +19,6 @@ struct VaultSettingsView: View {
     @State private var hasPendingRecovery = false
     @State private var isLoaded = false
     @State private var error: String?
-    @State private var name = ""
     @State private var renaming = false
     @State private var showDuressInfo = false
     @State private var revision = 0
@@ -28,7 +27,7 @@ struct VaultSettingsView: View {
         NavigationStack {
             Form {
                 Section {
-                    Button { name = vault.name; renaming = true } label: { valueRow(String(localized: "Vault name"), value: vault.name) }
+                    Button { renaming = true } label: { valueRow(String(localized: "Vault name"), value: vault.name) }
                     valueRow(String(localized: "Files"), value: String(localized: "\(store.snapshot.items.count)"))
                     valueRow(String(localized: "Storage used"), value: storageBytes.map { ByteCountFormatter.string(fromByteCount: $0, countStyle: .file) } ?? String(localized: "Calculating…"))
                 } header: { Text(String(localized: "Details")) }
@@ -145,18 +144,15 @@ struct VaultSettingsView: View {
             }
             .disabled(!isLoaded || store.isBusy)
             .scrollContentBackground(.hidden).background(AlbumTheme.background)
+            .safeAreaInset(edge: .bottom, spacing: 0) { SpecialOfferBanner() }
             .navigationTitle(String(localized: "Vault settings")).navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button(String(localized: "Done")) { dismiss() } } }
-            .sheet(isPresented: $showingPurchase) { PurchaseView() }
+            .purchaseOffer(isPresented: $showingPurchase)
             .task(id: revision) { await load() }
-            .alert(String(localized: "Rename vault"), isPresented: $renaming) {
-                TextField(String(localized: "Vault name"), text: $name)
-                Button(String(localized: "Cancel"), role: .cancel) {}
-                Button(String(localized: "Save")) {
-                    Task {
-                        do { vault = try await authenticator.renameVault(vault.id, name: name); onVaultChanged(vault) }
-                        catch { self.error = error.localizedDescription }
-                    }
+            .sheet(isPresented: $renaming) {
+                RenameVaultView(name: vault.name) { name in
+                    vault = try await authenticator.renameVault(vault.id, name: name)
+                    onVaultChanged(vault)
                 }
             }
             .alert(String(localized: "Duress vault"), isPresented: $showDuressInfo) {
@@ -190,6 +186,44 @@ struct VaultSettingsView: View {
             storageBytes = try await store.repository.storageUsed()
             isLoaded = true
         } catch { self.error = error.localizedDescription }
+    }
+}
+
+private struct RenameVaultView: View {
+    @State var name: String
+    let save: @MainActor (String) async throws -> Void
+    @Environment(\.dismiss) private var dismiss
+    @State private var busy = false
+    @State private var error: String?
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                TextField(String(localized: "Vault name"), text: $name)
+                if let error { Text(error).foregroundStyle(.red) }
+            }
+            .disabled(busy)
+            .scrollContentBackground(.hidden).background(AlbumTheme.background)
+            .navigationTitle(String(localized: "Rename vault")).navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(String(localized: "Cancel")) { dismiss() }.disabled(busy)
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(String(localized: "Save")) {
+                        busy = true; error = nil
+                        Task {
+                            do { try await save(name); dismiss() }
+                            catch { self.error = error.localizedDescription }
+                            busy = false
+                        }
+                    }.disabled(busy || name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+        }
+        .tint(AlbumTheme.accent)
+        .presentationDetents([.medium, .large])
+        .interactiveDismissDisabled(busy)
     }
 }
 

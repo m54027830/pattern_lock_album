@@ -40,7 +40,7 @@ struct PatternSetupView: View {
         .background(AlbumTheme.background)
         .navigationTitle(title).navigationBarTitleDisplayMode(.inline)
         .interactiveDismissDisabled(busy)
-        .sheet(item: $purchaseLimit) { PurchaseView(reason: $0) }
+        .purchaseOffer(item: $purchaseLimit)
         .onDisappear { operation?.cancel(); current = []; proposed = [] }
     }
 
@@ -131,6 +131,7 @@ struct RecoveryPhraseSettingsView: View {
                 } else {
                     SecureField(String(localized: "At least 8 words and 40 characters"), text: $phrase)
                         .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
+                        .clipboardPasteButton(text: $phrase, belowField: true)
                 }
             } header: { Text(generated ? String(localized: "New recovery phrase") : String(localized: "Custom recovery phrase")) } footer: {
                 Text(String(localized: "Keep this phrase somewhere safe outside Pattern. Anyone with it can reset this vault’s pattern and open backups made with it. Custom phrases are only as strong as the words you choose."))
@@ -138,6 +139,7 @@ struct RecoveryPhraseSettingsView: View {
             Section {
                 SecureField(String(localized: "Repeat the whole phrase"), text: $confirmation)
                     .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
+                    .clipboardPasteButton(text: $confirmation, belowField: true)
                 Toggle(String(localized: "I saved it somewhere safe"), isOn: $savedPhrase)
             } footer: {
                 Text(String(localized: "The old phrase stops working for local recovery immediately. Your cloud backup uses the new phrase after the next successful backup. Exported files always need their original phrases."))
@@ -194,6 +196,7 @@ struct PendingRecoveryPhraseView: View {
                 Section {
                     SecureField(String(localized: "Repeat the whole phrase"), text: $confirmation)
                         .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()
+                        .clipboardPasteButton(text: $confirmation, belowField: true)
                     Toggle(String(localized: "I saved it somewhere safe"), isOn: $saved)
                     Button(String(localized: "Done")) {
                         busy = true

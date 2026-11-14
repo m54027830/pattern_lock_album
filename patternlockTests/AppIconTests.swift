@@ -160,10 +160,62 @@ import XCTest
         XCTAssertEqual(store.selected, .mosaic)
         XCTAssertFalse(store.isChanging)
     }
+
+    func testTemporarySystemBusyErrorRetriesAndKeepsSelectionUntilConfirmed() async {
+        let client = IconClient()
+        client.failures = [POSIXError(.EAGAIN), POSIXError(.EAGAIN)]
+        var waits: [Duration] = []
+        let store = AppIconStore(client: client, retryDelay: { waits.append($0) })
+        await store.select(.calculator)
+        XCTAssertEqual(client.calls, Array(repeating: "AppIconCalculator", count: 3))
+        XCTAssertEqual(waits, [.milliseconds(500), .seconds(1)])
+        XCTAssertEqual(store.selected, .calculator)
+        XCTAssertNil(store.errorMessage)
+        XCTAssertFalse(store.isChanging)
+    }
+
+    func testPersistentBusyErrorStopsAfterThreeAttemptsWithHelpfulMessage() async {
+        let client = IconClient()
+        client.failures = Array(repeating: POSIXError(.EAGAIN), count: 4)
+        let store = AppIconStore(client: client, retryDelay: { _ in })
+        await store.select(.notes)
+        XCTAssertEqual(client.calls.count, 3)
+        XCTAssertEqual(store.selected, .classic)
+        XCTAssertNotNil(store.errorMessage)
+        XCTAssertNotEqual(store.errorMessage, POSIXError(.EAGAIN).localizedDescription)
+        XCTAssertFalse(store.isChanging)
+    }
+
+    func testBackgroundingOrCancellationDuringRetryDoesNotSendAnotherRequest() async {
+        for cancel in [false, true] {
+            let client = IconClient()
+            client.failures = [POSIXError(.EAGAIN)]
+            let store = AppIconStore(client: client, retryDelay: { _ in
+                if cancel { throw CancellationError() }
+                client.isApplicationActive = false
+            })
+            await store.select(.clock)
+            XCTAssertEqual(client.calls.count, 1)
+            XCTAssertEqual(store.selected, .classic)
+            XCTAssertFalse(store.isChanging)
+            if cancel { XCTAssertNil(store.errorMessage) }
+        }
+    }
+
+    func testDelayedSystemSuccessDoesNotTriggerAnotherChange() async {
+        let client = IconClient()
+        client.failures = [POSIXError(.EAGAIN)]
+        let store = AppIconStore(client: client, retryDelay: { _ in client.alternateIconName = AppIcon.printer.alternateName })
+        await store.select(.printer)
+        XCTAssertEqual(client.calls.count, 1)
+        XCTAssertEqual(store.selected, .printer)
+        XCTAssertNil(store.errorMessage)
+    }
 }
 
 @MainActor private final class IconClient: AppIconChanging {
     var supportsAlternateIcons = true
+    var isApplicationActive = true
     var alternateIconName: String?
     var calls: [String?] = []
     var shouldFail = false
@@ -171,9 +223,11 @@ import XCTest
     var suspend = false
     var continuation: CheckedContinuation<Void, Never>?
     var onStart: (() -> Void)?
+    var failures: [Error] = []
 
     func setAlternateIconName(_ name: String?) async throws {
         calls.append(name)
+        if !failures.isEmpty { throw failures.removeFirst() }
         if suspend {
             await withCheckedContinuation { continuation in
                 self.continuation = continuation

@@ -26,6 +26,7 @@ struct CloudBackupSettingsView: View {
                 } else {
                     SecureField(String(localized: "This vault’s recovery phrase"), text: $phrase)
                         .textInputAutocapitalization(.never).autocorrectionDisabled()
+                        .clipboardPasteButton(text: $phrase, belowField: true)
                         .disabled(!hasRecovery)
                     Button(String(localized: "Enable iCloud backup"), systemImage: "icloud.and.arrow.up") {
                         run { try await cloud.enableBackup(vault: vault, store: store, phrase: phrase); phrase = "" }
@@ -160,7 +161,7 @@ struct VaultSharingSettingsView: View {
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
         .navigationTitle(String(localized: "Sharing")).navigationBarTitleDisplayMode(.inline)
         .task { await reload() }
-        .sheet(isPresented: $showingPurchase) { PurchaseView() }
+        .purchaseOffer(isPresented: $showingPurchase)
         .confirmationDialog(String(localized: "Revoke this person’s access?"), isPresented: Binding(get: { revoking != nil }, set: { if !$0 { revoking = nil } }), titleVisibility: .visible) {
             if let share = revoking {
                 Button(String(localized: "Revoke access"), role: .destructive) { run { try await cloud.revoke(vaultID: vault.id, shareID: share.id); phrase = nil } }
@@ -217,6 +218,7 @@ struct JoinSharedVaultView: View {
                 Section {
                     Text(String(localized: "Enter the sharing phrase from the vault’s owner. This is different from a recovery phrase. Claiming ties the invitation to your current Apple Account."))
                     SecureField(String(localized: "Sharing phrase"), text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
+                        .clipboardPasteButton(text: $phrase, belowField: true)
                     Button(String(localized: "Join shared vault"), systemImage: "person.badge.plus") {
                         busy = true; error = nil
                         Task {

@@ -4,6 +4,8 @@ import UIKit
 
 nonisolated enum PurchaseConfiguration {
     static let productID = "jp.gm.patternlock.pro"
+    static let specialProductID = "jp.gm.patternlock.special"
+    static let productIDs: Set<String> = [productID, specialProductID]
     static let bundleID = "jp.gm.patternlock"
 }
 
@@ -11,6 +13,31 @@ nonisolated struct LifetimeProduct: Equatable, Sendable {
     let id: String
     let displayName: String
     let displayPrice: String
+    var price: Decimal? = nil
+    var currencyCode: String? = nil
+}
+
+nonisolated struct SpecialOfferDiscount: Equatable, Sendable {
+    let regularDisplayPrice: String
+    let percent: Decimal
+
+    init?(regular: LifetimeProduct?, special: LifetimeProduct?) {
+        guard let regular, let special,
+              let currency = regular.currencyCode, !currency.isEmpty, currency == special.currencyCode,
+              let regularPrice = regular.price, let specialPrice = special.price,
+              regularPrice > 0, specialPrice >= 0, specialPrice < regularPrice else { return nil }
+        // Round down to one decimal place so the displayed saving is never overstated.
+        var percentage = (regularPrice - specialPrice) / regularPrice * 100
+        var rounded = Decimal()
+        NSDecimalRound(&rounded, &percentage, 1, .down)
+        guard rounded > 0 else { return nil }
+        regularDisplayPrice = regular.displayPrice
+        percent = rounded
+    }
+
+    var formattedPercentage: String {
+        (percent / 100).formatted(.percent.precision(.fractionLength(0...1)))
+    }
 }
 
 nonisolated struct PurchaseTransaction: Equatable, Sendable {
@@ -23,7 +50,7 @@ nonisolated struct PurchaseTransaction: Equatable, Sendable {
     let isUpgraded: Bool
 
     var grantsUnlimited: Bool {
-        productID == PurchaseConfiguration.productID && bundleID == PurchaseConfiguration.bundleID
+        PurchaseConfiguration.productIDs.contains(productID) && bundleID == PurchaseConfiguration.bundleID
             && isNonConsumable && revocationDate == nil && expirationDate == nil && !isUpgraded
     }
 }
@@ -43,21 +70,22 @@ nonisolated enum PurchaseVerification: Sendable {
 nonisolated enum LifetimePurchaseResult: Sendable { case success(PurchaseVerification), pending, cancelled }
 
 @MainActor protocol LifetimePurchaseClient {
-    func loadProduct() async throws -> LifetimeProduct?
+    func loadProduct(id: String) async throws -> LifetimeProduct?
     func currentEntitlements() async -> [PurchaseVerification]
-    func purchase(in scene: UIWindowScene?) async throws -> LifetimePurchaseResult
+    func purchase(productID: String, in scene: UIWindowScene?) async throws -> LifetimePurchaseResult
     func synchronize() async throws
     func updates() -> AsyncStream<PurchaseVerification>
     func finish(transactionID: UInt64) async
 }
 
 nonisolated enum PurchaseError: LocalizedError {
-    case unavailable, unverified, noScene
+    case unavailable, unverified, noScene, offerExpired
     var errorDescription: String? {
         switch self {
         case .unavailable: String(localized: "The purchase is currently unavailable. Try again when the App Store is available.")
         case .unverified: String(localized: "The App Store purchase couldn’t be verified. Try Restore purchases.")
         case .noScene: String(localized: "Return to Pattern and try the purchase again.")
+        case .offerExpired: String(localized: "This special offer has ended. You can still unlock Pro at the regular price.")
         }
     }
 }
@@ -68,22 +96,28 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
     static let shared = PurchaseStore()
     private(set) var status = PurchaseStatus.checking
     private(set) var product: LifetimeProduct?
+    private(set) var specialProduct: LifetimeProduct?
     private(set) var loadingProduct = false
+    private(set) var loadingSpecialProduct = false
+    private(set) var specialProductError: String?
     private(set) var isPurchasing = false
     private(set) var isRestoring = false
     private(set) var message: String?
     private(set) var error: String?
     var isUnlimited: Bool { status == .unlimited }
     var busy: Bool { isPurchasing || isRestoring }
+    var specialDiscount: SpecialOfferDiscount? { SpecialOfferDiscount(regular: product, special: specialProduct) }
     let access: PurchaseAccess
+    let specialOffers: SpecialOfferStore
     @ObservationIgnored private let client: any LifetimePurchaseClient
     @ObservationIgnored private var listener: Task<Void, Never>?
     @ObservationIgnored private var started = false
     @ObservationIgnored private var refreshRevision = 0
 
-    init(client: (any LifetimePurchaseClient)? = nil, access: PurchaseAccess = .shared) {
+    init(client: (any LifetimePurchaseClient)? = nil, access: PurchaseAccess = .shared, specialOffers: SpecialOfferStore? = nil) {
         self.client = client ?? StoreKitPurchaseClient()
         self.access = access
+        self.specialOffers = specialOffers ?? SpecialOfferStore()
     }
 
     func start() async {
@@ -119,24 +153,49 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
         defer { loadingProduct = false }
         error = nil
         do {
-            let loaded = try await client.loadProduct()
+            let loaded = try await client.loadProduct(id: PurchaseConfiguration.productID)
             guard loaded?.id == PurchaseConfiguration.productID else { product = nil; throw PurchaseError.unavailable }
             product = loaded
         } catch { self.error = error.localizedDescription }
     }
 
-    func purchase(in scene: UIWindowScene?) async {
+    func loadSpecialProduct() async {
+        guard !loadingSpecialProduct else { return }
+        loadingSpecialProduct = true
+        specialProduct = nil
+        specialProductError = nil
+        defer { loadingSpecialProduct = false }
+        do {
+            let loaded = try await client.loadProduct(id: PurchaseConfiguration.specialProductID)
+            guard loaded?.id == PurchaseConfiguration.specialProductID else { throw PurchaseError.unavailable }
+            specialProduct = loaded
+        } catch { specialProductError = error.localizedDescription }
+    }
+
+    @discardableResult
+    func beginSpecialOffer(at now: Date = .now, calendar: Calendar = .current) -> Bool {
+        guard status == .free, !busy else { return false }
+        return specialOffers.begin(at: now, calendar: calendar)
+    }
+
+    func clearFeedback() { message = nil; error = nil }
+
+    func purchase(in scene: UIWindowScene?, offer: PurchaseOffer = .standard, now: Date = .now) async {
         guard !busy, !isUnlimited else { return }
-        guard product != nil else { error = PurchaseError.unavailable.localizedDescription; return }
+        if offer == .special, specialOffers.remainingSeconds(at: now) == 0 {
+            error = PurchaseError.offerExpired.localizedDescription; return
+        }
+        guard (offer == .standard ? product : specialProduct) != nil else { error = PurchaseError.unavailable.localizedDescription; return }
         isPurchasing = true; message = nil; error = nil
         defer { isPurchasing = false }
         do {
-            switch try await client.purchase(in: scene) {
+            switch try await client.purchase(productID: offer.productID, in: scene) {
             case .cancelled: break
             case .pending:
                 message = String(localized: "Your purchase is awaiting approval. Unlimited access will unlock when the App Store confirms it.")
             case .success(let verification):
-                guard case .verified(let transaction) = verification, transaction.grantsUnlimited else { throw PurchaseError.unverified }
+                guard case .verified(let transaction) = verification, transaction.grantsUnlimited,
+                      transaction.productID == offer.productID else { throw PurchaseError.unverified }
                 // Grant only the signed, verified entitlement, then acknowledge delivery.
                 refreshRevision += 1
                 setAccess(true)
@@ -159,7 +218,7 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
     }
 
     private func receive(_ verification: PurchaseVerification) async {
-        guard verification.productID == PurchaseConfiguration.productID else { return }
+        guard PurchaseConfiguration.productIDs.contains(verification.productID) else { return }
         // Rebuild from current entitlements so refunds/revocations and other
         // devices are reflected, including any remaining valid shared purchase.
         await refreshEntitlements()
@@ -178,6 +237,7 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
         }
         access.update(isUnlimited: unlimited)
         status = unlimited ? .unlimited : .free
+        if unlimited { specialOffers.end() }
     }
 
     deinit { listener?.cancel() }

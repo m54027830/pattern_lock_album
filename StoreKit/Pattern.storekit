@@ -16,6 +16,21 @@
       "productID" : "jp.gm.patternlock.pro",
       "referenceName" : "Pattern Unlimited — One-Time Unlock",
       "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "45488DD2-5D40-45FC-865B-2EFB8567AE4A",
+      "localizations" : [
+        {
+          "description" : "The same unlimited albums, photos, and videos. One-time purchase. No subscription.",
+          "displayName" : "Pro Special Offer",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "jp.gm.patternlock.special",
+      "referenceName" : "Pro Special Offer — One-Time Unlock",
+      "type" : "NonConsumable"
     }
   ],
   "settings" : {
@@ -29,5 +44,8 @@
     "_storeKitErrors" : []
   },
   "subscriptionGroups" : [],
-  "version" : { "major" : 3, "minor" : 0 }
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
 }

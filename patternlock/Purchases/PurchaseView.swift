@@ -2,73 +2,191 @@ import SwiftUI
 import UIKit
 
 struct PurchaseView: View {
-    var reason: FreeTierLimit?
-    @State private var purchases = PurchaseStore.shared
+    let offer: PurchaseOffer
+    let purchases: PurchaseStore
+    let close: () -> Void
+    let showRegularOffer: () -> Void
     @State private var scene: UIWindowScene?
-    @Environment(\.dismiss) private var dismiss
+
+    private var isSpecial: Bool { offer == .special }
+    private var product: LifetimeProduct? { isSpecial ? purchases.specialProduct : purchases.product }
+    private var loadingPrice: Bool { isSpecial ? purchases.loadingSpecialProduct : purchases.loadingProduct }
+    private var ink: Color { isSpecial ? .white : AlbumTheme.ink }
+    private var secondary: Color { isSpecial ? .white.opacity(0.78) : AlbumTheme.secondary }
+    private var accent: Color { isSpecial ? SpecialOfferStyle.gold : AlbumTheme.accent }
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 26) {
-                    Image(systemName: purchases.isUnlimited ? "checkmark.seal" : "sparkles.rectangle.stack")
-                        .font(.system(size: 50, weight: .ultraLight)).foregroundStyle(AlbumTheme.accent).padding(.top, 16)
-                    VStack(spacing: 12) {
-                        Text(purchases.isUnlimited ? String(localized: "All yours.") : String(localized: "More room.\nOne purchase."))
-                            .font(.system(size: 32, weight: .semibold, design: .rounded)).multilineTextAlignment(.center)
-                        Text(purchases.isUnlimited ? String(localized: "Pattern Unlimited is unlocked.") : String(localized: "Unlimited albums and items.\nPay once. No subscription."))
-                            .font(.subheadline).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
-                    }
-                    if let reason, !purchases.isUnlimited {
-                        Text(reason.localizedDescription).font(.subheadline).multilineTextAlignment(.center)
-                            .padding(16).frame(maxWidth: .infinity).background(AlbumTheme.track, in: RoundedRectangle(cornerRadius: 18))
-                    }
-                    VStack(spacing: 18) {
-                        HStack { Text(String(localized: "Included")); Spacer(); Text(String(localized: "Free")); Text(String(localized: "Unlimited")).frame(width: 88) }
-                            .font(.caption.weight(.semibold)).foregroundStyle(AlbumTheme.secondary)
-                        comparison(String(localized: "Albums"), free: "3")
-                        Divider()
-                        comparison(String(localized: "Items per album"), free: "5")
-                    }.padding(20).vaultMetalSurface(in: RoundedRectangle(cornerRadius: 22))
-                    Text(String(localized: "Each pattern opens one album. Folders share that album’s photo and video limit. All privacy features are included in the free version."))
-                        .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
-                    if purchases.isUnlimited {
-                        Label(String(localized: "One-time purchase"), systemImage: "checkmark.circle.fill").foregroundStyle(AlbumTheme.accent)
-                        Button(String(localized: "Done")) { dismiss() }.buttonStyle(.borderedProminent)
-                    } else {
-                        Button {
-                            Task { await purchases.purchase(in: scene) }
-                        } label: {
-                            HStack {
-                                if purchases.isPurchasing { ProgressView().tint(.white) }
-                                Text(purchases.product.map { String(localized: "Unlock once · \($0.displayPrice)") } ?? (purchases.loadingProduct ? String(localized: "Loading price…") : String(localized: "Purchase unavailable")))
-                                    .font(.headline)
-                            }.frame(maxWidth: .infinity).padding(20).foregroundStyle(.white)
-                                .vaultPrimarySurface(in: RoundedRectangle(cornerRadius: 20))
-                        }
-                        .disabled(purchases.product == nil || purchases.busy || purchases.status == .checking)
-                        .opacity(purchases.product == nil ? 0.5 : 1)
-                        .accessibilityIdentifier("buyUnlimited")
-                        if purchases.loadingProduct { ProgressView(String(localized: "Loading App Store price…")) }
-                        if purchases.product == nil && !purchases.loadingProduct {
-                            Button(String(localized: "Try loading price again")) { Task { await purchases.loadProduct() } }
-                        }
-                    }
-                    if let message = purchases.message { Text(message).font(.subheadline).multilineTextAlignment(.center) }
-                    if let error = purchases.error { Text(error).font(.subheadline).foregroundStyle(.red).multilineTextAlignment(.center) }
+                VStack(spacing: 24) {
+                    hero
+                    purchaseControls
+                    if isSpecial, !purchases.isUnlimited { countdown }
+                    comparisonCard
+                    feedback
                     Button(purchases.isRestoring ? String(localized: "Restoring…") : String(localized: "Restore purchases")) {
                         Task { await purchases.restore() }
                     }.disabled(purchases.busy).accessibilityIdentifier("restorePurchases")
                     Text(String(localized: "Your purchase is tied to your Apple Account. Restoring a purchase restores Unlimited access; your photos are restored separately from your saved backup."))
-                        .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
+                        .font(.caption).foregroundStyle(secondary).multilineTextAlignment(.center)
                 }.padding(24).frame(maxWidth: 540).frame(maxWidth: .infinity)
             }
-            .background(AlbumTheme.background)
-            .navigationTitle("Pattern Unlimited").navigationBarTitleDisplayMode(.inline)
-            .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Close")) { dismiss() } } }
+            .foregroundStyle(ink)
+            .background {
+                if isSpecial { SpecialOfferBackdrop() }
+                else { AlbumTheme.background.ignoresSafeArea() }
+            }
+            .navigationTitle(isSpecial ? String(localized: "Pro Special Offer") : "Pattern Unlimited")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(isSpecial ? SpecialOfferStyle.plum : AlbumTheme.background, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(isSpecial ? .dark : .light, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(String(localized: "Close"), action: close)
+                        .disabled(purchases.busy || purchases.status == .checking)
+                        .accessibilityIdentifier("closePurchaseOffer")
+                }
+            }
             .background(PurchaseSceneReader { scene = $0 })
-            .task { await purchases.start(); if !purchases.isUnlimited { await purchases.loadProduct() } }
-        }.tint(AlbumTheme.accent).preferredColorScheme(.light)
+            .task {
+                await purchases.start()
+                if purchases.isUnlimited { close(); return }
+                async let regular: Void = purchases.loadProduct()
+                async let special: Void = purchases.loadSpecialProduct()
+                _ = await (regular, special)
+            }
+            .onChange(of: purchases.isUnlimited) { _, purchased in
+                // PurchaseStore finishes the verified transaction before enabling Close.
+                if purchased && !purchases.busy { close() }
+            }
+            .onChange(of: purchases.busy) { _, busy in
+                if !busy && purchases.isUnlimited { close() }
+            }
+        }
+        .tint(accent).preferredColorScheme(isSpecial ? .dark : .light)
+        .interactiveDismissDisabled()
+        .presentationDragIndicator(.hidden)
+    }
+
+    private var hero: some View {
+        VStack(spacing: 16) {
+            if isSpecial {
+                SpecialOfferArtwork().frame(height: 96)
+            } else {
+                Image(systemName: purchases.isUnlimited ? "checkmark.seal" : "sparkles.rectangle.stack")
+                    .font(.system(size: 50, weight: .ultraLight)).foregroundStyle(accent).padding(.top, 12)
+            }
+            Text(purchases.isUnlimited ? String(localized: "All yours.") : (isSpecial ? String(localized: "A special price.\nAll of Pro.") : String(localized: "More room.\nOne purchase.")))
+                .font(.system(size: 32, weight: .semibold, design: .rounded)).multilineTextAlignment(.center)
+            Text(purchases.isUnlimited ? String(localized: "Pattern Unlimited is unlocked.") : String(localized: "Unlimited albums and items.\nPay once. No subscription."))
+                .font(.subheadline).foregroundStyle(secondary).multilineTextAlignment(.center)
+        }
+    }
+
+    @ViewBuilder private var purchaseControls: some View {
+        if purchases.isUnlimited {
+            Label(String(localized: "One-time purchase"), systemImage: "checkmark.circle.fill").foregroundStyle(accent)
+            Button(String(localized: "Done"), action: close).buttonStyle(.borderedProminent)
+        } else {
+            VStack(spacing: 14) {
+                TimelineView(.periodic(from: .now, by: 1)) { context in
+                    let expired = isSpecial && purchases.specialOffers.remainingSeconds(at: context.date) == 0
+                    if isSpecial, !expired, let discount = purchases.specialDiscount {
+                        ViewThatFits(in: .horizontal) {
+                            HStack(spacing: 12) { regularPrice(discount); savingsBadge(discount) }
+                            VStack(spacing: 8) { regularPrice(discount); savingsBadge(discount) }
+                        }
+                        .accessibilityIdentifier("specialOfferDiscount")
+                    }
+                    Button {
+                        Task { await purchases.purchase(in: scene, offer: offer) }
+                    } label: {
+                        HStack(spacing: 10) {
+                            if purchases.isPurchasing { ProgressView().tint(.white) }
+                            Text(expired ? String(localized: "Special offer ended") : (product.map { String(localized: "Unlock once · \($0.displayPrice)") } ?? (loadingPrice ? String(localized: "Loading price…") : String(localized: "Purchase unavailable"))))
+                                .font(.headline)
+                            if isSpecial && !expired { Image(systemName: "sparkles").accessibilityHidden(true) }
+                        }
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 22).padding(.vertical, 20)
+                        .frame(maxWidth: .infinity, minHeight: 60)
+                        .foregroundStyle(.white)
+                        .background {
+                            Capsule().fill(LinearGradient(colors: [SpecialOfferStyle.red, SpecialOfferStyle.deepRed], startPoint: .topLeading, endPoint: .bottomTrailing))
+                        }
+                        .overlay { Capsule().strokeBorder(.white.opacity(0.3), lineWidth: 1) }
+                        .shadow(color: SpecialOfferStyle.red.opacity(isSpecial ? 0.4 : 0.18), radius: isSpecial ? 18 : 8, y: 6)
+                        .contentShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(expired || product == nil || purchases.busy || purchases.status == .checking)
+                    .opacity(expired || product == nil ? 0.5 : 1)
+                    .accessibilityIdentifier(isSpecial ? "buySpecialOffer" : "buyUnlimited")
+                    if expired {
+                        Button(String(localized: "View regular offer"), action: showRegularOffer).disabled(purchases.busy)
+                    }
+                }
+                if loadingPrice { ProgressView(String(localized: "Loading App Store price…")) }
+                if product == nil && !loadingPrice {
+                    Button(String(localized: "Try loading price again")) {
+                        Task {
+                            if isSpecial { await purchases.loadSpecialProduct() }
+                            else { await purchases.loadProduct() }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func regularPrice(_ discount: SpecialOfferDiscount) -> some View {
+        Text(discount.regularDisplayPrice).strikethrough()
+            .font(.subheadline).foregroundStyle(secondary)
+            .accessibilityLabel(String(localized: "Regular price: \(discount.regularDisplayPrice)"))
+    }
+
+    private func savingsBadge(_ discount: SpecialOfferDiscount) -> some View {
+        Text(String(localized: "Save \(discount.formattedPercentage)"))
+            .font(.subheadline.weight(.bold)).foregroundStyle(SpecialOfferStyle.plum)
+            .padding(.horizontal, 12).padding(.vertical, 6)
+            .background(SpecialOfferStyle.gold, in: Capsule())
+    }
+
+    private var countdown: some View {
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            let remaining = purchases.specialOffers.remainingSeconds(at: context.date)
+            Label(remaining > 0 ? String(localized: "Offer ends in \(SpecialOfferStore.countdown(remaining))") : String(localized: "Special offer ended"), systemImage: "timer")
+                .font(.subheadline.weight(.semibold).monospacedDigit()).foregroundStyle(accent)
+                .padding(.horizontal, 18).padding(.vertical, 10)
+                .background(accent.opacity(0.1), in: Capsule())
+                .overlay { Capsule().strokeBorder(accent.opacity(0.3), lineWidth: 1) }
+                .accessibilityIdentifier("specialOfferCountdown")
+        }
+    }
+
+    private var comparisonCard: some View {
+        VStack(spacing: 18) {
+            HStack { Text(String(localized: "Included")); Spacer(); Text(String(localized: "Free")); Text(String(localized: "Unlimited")).frame(width: 88) }
+                .font(.caption.weight(.semibold)).foregroundStyle(secondary)
+            comparison(String(localized: "Albums"), free: "3")
+            Divider().overlay(ink.opacity(0.12))
+            comparison(String(localized: "Items per album"), free: "5")
+        }.padding(20)
+            .background {
+                if isSpecial {
+                    RoundedRectangle(cornerRadius: 22).fill(.white.opacity(0.08))
+                        .overlay { RoundedRectangle(cornerRadius: 22).strokeBorder(SpecialOfferStyle.gold.opacity(0.25), lineWidth: 1) }
+                } else {
+                    Color.clear.vaultMetalSurface(in: RoundedRectangle(cornerRadius: 22))
+                }
+            }
+    }
+
+    @ViewBuilder private var feedback: some View {
+        if let message = purchases.message { Text(message).font(.subheadline).multilineTextAlignment(.center) }
+        if let error = purchases.error { Text(error).font(.subheadline).foregroundStyle(isSpecial ? Color(red: 1, green: 0.72, blue: 0.72) : .red).multilineTextAlignment(.center) }
+        if isSpecial, let error = purchases.specialProductError { Text(error).font(.subheadline).foregroundStyle(Color(red: 1, green: 0.72, blue: 0.72)).multilineTextAlignment(.center) }
     }
 
     private func comparison(_ title: String, free: String) -> some View {
@@ -76,7 +194,7 @@ struct PurchaseView: View {
             Text(title).font(.subheadline)
             Spacer()
             Text(free).font(.subheadline.monospacedDigit())
-            Image(systemName: "infinity").font(.title3).foregroundStyle(AlbumTheme.accent).frame(width: 88)
+            Image(systemName: "infinity").font(.title3).foregroundStyle(accent).frame(width: 88)
                 .accessibilityLabel(String(localized: "Unlimited"))
         }
     }

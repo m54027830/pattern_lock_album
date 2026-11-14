@@ -147,8 +147,8 @@ struct ContentView: View {
                 if destination == .memo { MemoComposer(store: store, folderID: importFolderID) }
             }
             .fullScreenCover(isPresented: $showingCamera) { VaultCameraView(store: store, folderID: importFolderID) }
-            .sheet(isPresented: $showingUpgrade) { PurchaseView(reason: .media) }
-            .sheet(item: $store.purchaseLimit) { PurchaseView(reason: $0) }
+            .purchaseOffer(isPresented: $showingUpgrade)
+            .purchaseOffer(item: $store.purchaseLimit)
             .sheet(item: $folderEditor) { destination in
                 FolderEditor(folder: destination.folder, store: store)
             }
@@ -533,10 +533,15 @@ struct ContentView: View {
                     if !store.isReadOnly { selectionAction(String(localized: "Move"), icon: "folder") { showingMove = true }
                     Spacer(minLength: 0)
                     selectionAction(String(localized: "Delete"), icon: "trash", destructive: true) { showingDelete = true } }
-                } else if !store.isReadOnly {
-                    Spacer()
-                    VaultAddMenu(action: requestAdd)
-                    .disabled(store.isBusy || !store.isLoaded)
+                } else {
+                    // Share a row so the promotion never covers the Add menu.
+                    SpecialOfferBanner(isStandalone: false)
+                    Spacer(minLength: 12)
+                    if !store.isReadOnly {
+                        VaultAddMenu(action: requestAdd)
+                            .fixedSize()
+                            .disabled(store.isBusy || !store.isLoaded)
+                    }
                 }
             }
             .padding(.horizontal, 27).padding(.vertical, 15)

@@ -42,11 +42,14 @@ func render(_ name: String, pixels: Int) -> CGImage {
         }
     }
     switch name {
-    case "Classic":
+    case "Classic", "ProPurchase", "SpecialPurchase":
         // Layers / Atmosphere: overlapping tiles on a muted, flowing backdrop.
         // Keep the Classic asset identifier for the existing default-icon picker.
+        let isPurchase = name != "Classic"
+        let isSpecial = name == "SpecialPurchase"
+        let palette: [UInt32] = isPurchase ? [0x344C69, 0x223953, 0x14273E] : [0x92A3A2, 0x738B91, 0x526A77]
         let gradient = CGGradient(colorsSpace: space,
-                                  colors: [color(0x92A3A2), color(0x738B91), color(0x526A77)] as CFArray,
+                                  colors: palette.map { color($0) } as CFArray,
                                   locations: [0, 0.5, 1])!
         c.drawLinearGradient(gradient, start: CGPoint(x: 0, y: 0),
                              end: CGPoint(x: 1024, y: 1024),
@@ -70,8 +73,24 @@ func render(_ name: String, pixels: Int) -> CGImage {
         c.closePath()
         c.fillPath()
         c.restoreGState()
-        rect(280, 280, 360, 360, 58, 0xA6B4B5)
-        rect(384, 384, 360, 360, 58, 0xDBE0DB)
+        rect(280, 280, 360, 360, 58, isPurchase ? (isSpecial ? 0xBA965B : 0x70889E) : 0xA6B4B5)
+        rect(384, 384, 360, 360, 58, isPurchase ? (isSpecial ? 0xF8E7BE : 0xE0E6EA) : 0xDBE0DB)
+        if isPurchase {
+            // Both products unlock the same unlimited access: the same infinity mark.
+            c.setStrokeColor(color(0x223953)); c.setLineWidth(24); c.setLineCap(.round)
+            c.move(to: CGPoint(x: 564, y: 564))
+            c.addCurve(to: CGPoint(x: 460, y: 564), control1: CGPoint(x: 510, y: 482), control2: CGPoint(x: 460, y: 504))
+            c.addCurve(to: CGPoint(x: 564, y: 564), control1: CGPoint(x: 460, y: 624), control2: CGPoint(x: 510, y: 646))
+            c.addCurve(to: CGPoint(x: 668, y: 564), control1: CGPoint(x: 618, y: 482), control2: CGPoint(x: 668, y: 504))
+            c.addCurve(to: CGPoint(x: 564, y: 564), control1: CGPoint(x: 668, y: 624), control2: CGPoint(x: 618, y: 646))
+            c.strokePath()
+        }
+        if isSpecial {
+            // A price-tag badge identifies the offer without embedding a price or deadline.
+            polygon([CGPoint(x: 710, y: 268), CGPoint(x: 788, y: 268), CGPoint(x: 842, y: 322),
+                     CGPoint(x: 748, y: 416), CGPoint(x: 672, y: 340)], 0xEBC778)
+            circle(758, 308, 13, 0x223953)
+        }
     case "Square":
         background(0xEEEDE4)
         rect(232, 232, 560, 560, 0, 0x345C4D)
@@ -253,6 +272,15 @@ func write(_ image: CGImage, to url: URL) throws {
 func contents(_ images: [[String: String]], in directory: URL) throws {
     let data = try JSONSerialization.data(withJSONObject: ["images": images, "info": ["author": "xcode", "version": 1]], options: [.prettyPrinted, .sortedKeys])
     try data.write(to: directory.appending(path: "Contents.json"))
+}
+if CommandLine.arguments.contains("--purchase-icons") {
+    let directory = root.appending(path: "output/app-store-purchases")
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    for (name, filename) in [("ProPurchase", "pro-1024.png"), ("SpecialPurchase", "pro-special-offer-1024.png")] {
+        try write(render(name, pixels: 1024), to: directory.appending(path: filename))
+        print(directory.appending(path: filename).path)
+    }
+    exit(0)
 }
 let requestedNames = CommandLine.arguments.contains("--primary-only") ? ["Classic"] : names
 for name in requestedNames {

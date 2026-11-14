@@ -37,6 +37,9 @@ struct PatternAppRoot: View {
             }
         }
         .tint(AlbumTheme.accent)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if lock.stage != .loading && lock.stage != .onboarding && lock.stage != .unlocked { SpecialOfferBanner() }
+        }
         .environment(\.patternGridSize, lock.gridSize)
         .onChange(of: lock.stage) { _, stage in
             if stage != .unlocked { VaultCloudService.shared.stopViewingSessions(scope: cloudSessionScope) }
@@ -59,7 +62,7 @@ struct PatternAppRoot: View {
             @unknown default: lock.becameInactive()
             }
         }
-        .sheet(item: $purchaseLimit) { PurchaseView(reason: $0) }
+        .purchaseOffer(item: $purchaseLimit)
         .task { await purchases.start() }
         .task {
             VaultFileDraft.cleanTemporaryFilesOnce()

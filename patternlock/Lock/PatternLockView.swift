@@ -163,7 +163,7 @@ struct PatternLockView: View {
         .tint(AlbumTheme.accent)
         .preferredColorScheme(.light)
         .sensoryFeedback(.error, trigger: lock.failureRevision)
-        .sheet(item: $lock.purchaseLimit) { PurchaseView(reason: $0) }
+        .purchaseOffer(item: $lock.purchaseLimit)
         .sheet(isPresented: $showingRecovery) {
             NavigationStack {
                 RecoverPatternView { showingRecovery = false; lock.lock(); Task { await lock.activate() } }
