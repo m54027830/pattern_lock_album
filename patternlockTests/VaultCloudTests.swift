@@ -250,7 +250,7 @@ import XCTest
     }
 }
 
-private actor TestCloudTransport: VaultCloudTransport {
+actor TestCloudTransport: VaultCloudTransport {
     struct Record: Sendable {
         let archive: Data
         let metadata: Data

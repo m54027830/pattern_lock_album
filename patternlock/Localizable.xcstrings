@@ -7709,6 +7709,52 @@
         }
       }
     },
+    "Create and share vaults" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tresore erstellen und teilen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create and share vaults"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créer et partager des coffres"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crea e condividi casseforti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保管庫を共有"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보관함 공유 만들기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建并共享保险库"
+          }
+        }
+      }
+    },
     "Create another vault from the library’s vault menu, then choose it here." : {
       "localizations" : {
         "de" : {
@@ -11945,6 +11991,144 @@
         }
       }
     },
+    "Free: 3 vaults with 5 items each. Pattern Unlimited removes both limits and unlocks vault sharing. One purchase. No subscription." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kostenlos: 3 Tresore mit je 5 Inhalten. Pattern Unlimited hebt beide Limits auf und schaltet das Teilen frei. Einmaliger Kauf. Kein Abo."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free: 3 vaults with 5 items each. Pattern Unlimited removes both limits and unlocks vault sharing. One purchase. No subscription."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gratuit : 3 coffres de 5 éléments chacun. Pattern Unlimited supprime ces deux limites et débloque le partage. Un seul achat. Sans abonnement."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gratis: 3 casseforti con 5 elementi ciascuna. Pattern Unlimited elimina entrambi i limiti e sblocca la condivisione. Un solo acquisto. Nessun abbonamento."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無料版は保管庫3個、各5アイテムまで。Pattern Unlimitedで両方の制限がなくなり、保管庫の共有も利用できます。一度の購入で、サブスクリプションはありません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "무료: 보관함 3개, 각 항목 5개. Pattern Unlimited는 두 제한을 해제하고 보관함 공유를 제공합니다. 일회성 구매이며 구독이 아닙니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免费版：3 个保险库，每个可存 5 个项目。Pattern Unlimited 解除这两项限制并解锁保险库共享。一次购买，无需订阅。"
+          }
+        }
+      }
+    },
+    "Free: 3 vaults." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kostenlos: 3 Tresore."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free: 3 vaults."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gratuit : 3 coffres."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gratis: 3 casseforti."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無料版：保管庫3個まで。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "무료: 보관함 3개."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免费版：3 个保险库。"
+          }
+        }
+      }
+    },
+    "Free: 5 items per vault." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kostenlos: 5 Inhalte pro Tresor."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free: 5 items per vault."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gratuit : 5 éléments par coffre."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gratis: 5 elementi per cassaforte."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無料版：保管庫1個につき5アイテムまで。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "무료: 보관함당 항목 5개."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免费版：每个保险库 5 个项目。"
+          }
+        }
+      }
+    },
     "Generate recovery phrase" : {
       "localizations" : {
         "de" : {
@@ -13334,6 +13518,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在 iOS 上，更改图标后，应用名称仍为 Pattern。快捷指令可以使用其他名称及相应图标。"
+          }
+        }
+      }
+    },
+    "Included with Pattern Unlimited" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Pattern Unlimited enthalten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Included with Pattern Unlimited"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inclus avec Pattern Unlimited"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incluso in Pattern Unlimited"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Unlimitedに含まれる機能"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Unlimited에 포함된 기능"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Unlimited 包含的功能"
           }
         }
       }
@@ -16969,6 +17199,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "打开“快捷指令”，创建快捷指令并添加“打开 App”操作，然后选择 Pattern。"
+          }
+        }
+      }
+    },
+    "Opening a shared vault is free." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Öffnen geteilter Tresore ist kostenlos."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opening a shared vault is free."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’ouverture d’un coffre partagé est gratuite."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprire una cassaforte condivisa è gratuito."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有された保管庫を開くのは無料です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유받은 보관함은 무료로 열 수 있습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开收到的共享保险库是免费的。"
           }
         }
       }
@@ -22223,6 +22499,52 @@
         }
       }
     },
+    "Share over iCloud with a private phrase. Set expiration dates, open limits, export permissions, and locking on screen capture." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teile über iCloud mit einer privaten Phrase. Lege Ablaufdatum, Öffnungslimit, Exportrechte und die Sperre bei Bildschirmaufnahmen fest."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share over iCloud with a private phrase. Set expiration dates, open limits, export permissions, and locking on screen capture."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partagez via iCloud avec une phrase privée. Définissez une expiration, une limite d’ouvertures, les autorisations d’exportation et le verrouillage lors d’une capture d’écran."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Condividi tramite iCloud con una frase privata. Imposta scadenza, limite di aperture, permessi di esportazione e blocco in caso di acquisizione dello schermo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "専用のフレーズでiCloud経由の共有が可能。有効期限、開く回数の上限、書き出しの許可、画面キャプチャ時のロックを設定できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비공개 문구로 iCloud를 통해 공유하세요. 만료일, 열기 횟수 제한, 내보내기 권한, 화면 캡처 시 잠금을 설정할 수 있습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通过私密短语使用 iCloud 共享。可设置到期时间、打开次数上限、导出权限和截屏时锁定。"
+          }
+        }
+      }
+    },
     "Share this vault" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -22501,6 +22823,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "共享短语"
+          }
+        }
+      }
+    },
+    "Sharing requires Pattern Unlimited" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teilen erfordert Pattern Unlimited"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sharing requires Pattern Unlimited"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le partage nécessite Pattern Unlimited"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La condivisione richiede Pattern Unlimited"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有にはPattern Unlimitedが必要です"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유하려면 Pattern Unlimited가 필요합니다"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共享需要 Pattern Unlimited"
           }
         }
       }
@@ -27456,6 +27824,144 @@
         }
       }
     },
+    "Unlimited items per vault" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unbegrenzte Inhalte pro Tresor"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlimited items per vault"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éléments illimités par coffre"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elementi illimitati per cassaforte"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保管庫内のアイテム数が無制限"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보관함당 항목 무제한"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每个保险库的项目数量不限"
+          }
+        }
+      }
+    },
+    "Unlimited vaults" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unbegrenzte Tresore"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlimited vaults"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coffres illimités"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casseforti illimitate"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保管庫の数が無制限"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "무제한 보관함"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无限保险库"
+          }
+        }
+      }
+    },
+    "Unlimited vaults, items, and sharing.\nPay once. No subscription." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unbegrenzte Tresore und Inhalte, inklusive Teilen.\nEinmal kaufen. Kein Abo."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlimited vaults, items, and sharing.\nPay once. No subscription."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coffres et éléments illimités, avec partage.\nUn seul achat. Sans abonnement."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casseforti ed elementi illimitati, con condivisione.\nUn solo acquisto. Nessun abbonamento."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保管庫もアイテムも無制限。共有も利用可能。\n一度の購入で、サブスクリプションなし。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "무제한 보관함과 항목, 보관함 공유까지.\n한 번만 구매하세요. 구독이 아닙니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保险库和项目不限量，还可共享。\n一次购买，无需订阅。"
+          }
+        }
+      }
+    },
     "Unlock Unlimited" : {
       "localizations" : {
         "de" : {
@@ -27498,6 +28004,98 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "解锁无限版"
+          }
+        }
+      }
+    },
+    "Unlock sharing" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teilen freischalten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock sharing"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Débloquer le partage"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sblocca la condivisione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有機能を購入"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 기능 잠금 해제"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解锁共享"
+          }
+        }
+      }
+    },
+    "Unlock vault sharing with a one-time purchase. Opening a shared vault is free." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schalte das Teilen von Tresoren mit einem einmaligen Kauf frei. Das Öffnen geteilter Tresore ist kostenlos."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock vault sharing with a one-time purchase. Opening a shared vault is free."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Débloquez le partage de coffres avec un achat unique. L’ouverture d’un coffre partagé est gratuite."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sblocca la condivisione delle casseforti con un acquisto unico. Aprire una cassaforte condivisa è gratuito."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一度の購入で保管庫の共有を利用できます。共有された保管庫を開くのは無料です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일회성 구매로 보관함 공유를 이용하세요. 공유받은 보관함은 무료로 열 수 있습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一次购买即可解锁保险库共享。打开收到的共享保险库是免费的。"
           }
         }
       }
@@ -28798,6 +29396,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "视频"
+          }
+        }
+      }
+    },
+    "View Pattern Unlimited" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Unlimited ansehen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View Pattern Unlimited"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir Pattern Unlimited"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scopri Pattern Unlimited"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Unlimitedを見る"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Unlimited 보기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看 Pattern Unlimited"
           }
         }
       }

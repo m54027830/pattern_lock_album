@@ -85,8 +85,8 @@ struct CloudBackupSettingsView: View {
 struct VaultSharingSettingsView: View {
     let vault: Vault
     let store: LibraryStore
-    @State private var cloud = VaultCloudService.shared
-    @State private var purchases = PurchaseStore.shared
+    var cloud = VaultCloudService.shared
+    var purchases = PurchaseStore.shared
     @State private var shares: [OwnedVaultShare] = []
     @State private var label = ""
     @State private var expires = false
@@ -103,6 +103,15 @@ struct VaultSharingSettingsView: View {
 
     var body: some View {
         Form {
+            if purchases.status == .free {
+                Section {
+                    Label(String(localized: "Sharing requires Pattern Unlimited"), systemImage: "lock.fill")
+                        .font(.headline).foregroundStyle(AlbumTheme.ink)
+                    Text(String(localized: "Unlock vault sharing with a one-time purchase. Opening a shared vault is free."))
+                        .font(.subheadline).foregroundStyle(AlbumTheme.secondary)
+                    Button(String(localized: "View Pattern Unlimited")) { showingPurchase = true }
+                }.accessibilityIdentifier("sharingPurchaseNotice")
+            }
             Section {
                 Text(String(localized: "Give one person read-only access with a separate sharing phrase. They need Pattern and an iCloud account. Your pattern and recovery phrase stay private."))
                 TextField(String(localized: "Recipient label (only on this device)"), text: $label)
@@ -112,7 +121,8 @@ struct VaultSharingSettingsView: View {
                 if limitsOpens { Stepper(String(localized: "Maximum opens: \(maximumOpens)"), value: $maximumOpens, in: 1...1000) }
                 Toggle(String(localized: "Allow export"), isOn: $allowsExport)
                 Toggle(String(localized: "Lock on screen capture"), isOn: $blocksCapture)
-                Button(String(localized: "Create sharing phrase"), systemImage: "person.badge.plus") {
+                Button(purchases.isUnlimited ? String(localized: "Create sharing phrase") : String(localized: "Unlock sharing"),
+                       systemImage: purchases.isUnlimited ? "person.badge.plus" : "lock.fill") {
                     if !purchases.isUnlimited { showingPurchase = true }
                     else {
                         run {
@@ -120,7 +130,7 @@ struct VaultSharingSettingsView: View {
                                 policy: VaultSharePolicy(expiresAt: expires ? expiry : nil, maximumOpens: limitsOpens ? maximumOpens : nil, allowsExport: allowsExport, blocksCapture: blocksCapture))
                         }
                     }
-                }
+                }.disabled(purchases.status == .checking)
             } header: { Text(String(localized: "Share this vault")) } footer: {
                 Text(String(localized: "Creating shares requires Pattern Unlimited. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person."))
             }
@@ -160,8 +170,8 @@ struct VaultSharingSettingsView: View {
         .disabled(busy || cloud.busyVaults.contains(vault.id))
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
         .navigationTitle(String(localized: "Sharing")).navigationBarTitleDisplayMode(.inline)
-        .task { await reload() }
-        .purchaseOffer(isPresented: $showingPurchase)
+        .task { await purchases.start(); await reload() }
+        .purchaseOffer(isPresented: $showingPurchase, purchases: purchases)
         .confirmationDialog(String(localized: "Revoke this person’s access?"), isPresented: Binding(get: { revoking != nil }, set: { if !$0 { revoking = nil } }), titleVisibility: .visible) {
             if let share = revoking {
                 Button(String(localized: "Revoke access"), role: .destructive) { run { try await cloud.revoke(vaultID: vault.id, shareID: share.id); phrase = nil } }

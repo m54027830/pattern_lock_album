@@ -20,9 +20,9 @@ struct PurchaseView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     hero
+                    benefitsCard
                     purchaseControls
                     if isSpecial, !purchases.isUnlimited { countdown }
-                    comparisonCard
                     feedback
                     Button(purchases.isRestoring ? String(localized: "Restoring…") : String(localized: "Restore purchases")) {
                         Task { await purchases.restore() }
@@ -64,7 +64,10 @@ struct PurchaseView: View {
                 if !busy && purchases.isUnlimited { close() }
             }
         }
-        .tint(accent).preferredColorScheme(isSpecial ? .dark : .light)
+        .tint(accent)
+        // Scope the offer's appearance to its own content. A presentation-level
+        // preference can leave the presenting settings sheet in dark appearance.
+        .environment(\.colorScheme, isSpecial ? .dark : .light)
         .interactiveDismissDisabled()
         .presentationDragIndicator(.hidden)
     }
@@ -79,7 +82,7 @@ struct PurchaseView: View {
             }
             Text(purchases.isUnlimited ? String(localized: "All yours.") : (isSpecial ? String(localized: "A special price.\nAll of Pro.") : String(localized: "More room.\nOne purchase.")))
                 .font(.system(size: 32, weight: .semibold, design: .rounded)).multilineTextAlignment(.center)
-            Text(purchases.isUnlimited ? String(localized: "Pattern Unlimited is unlocked.") : String(localized: "Unlimited albums and items.\nPay once. No subscription."))
+            Text(purchases.isUnlimited ? String(localized: "Pattern Unlimited is unlocked.") : String(localized: "Unlimited vaults, items, and sharing.\nPay once. No subscription."))
                 .font(.subheadline).foregroundStyle(secondary).multilineTextAlignment(.center)
         }
     }
@@ -165,14 +168,23 @@ struct PurchaseView: View {
         }
     }
 
-    private var comparisonCard: some View {
-        VStack(spacing: 18) {
-            HStack { Text(String(localized: "Included")); Spacer(); Text(String(localized: "Free")); Text(String(localized: "Unlimited")).frame(width: 88) }
-                .font(.caption.weight(.semibold)).foregroundStyle(secondary)
-            comparison(String(localized: "Albums"), free: "3")
+    private var benefitsCard: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Text(String(localized: "Included with Pattern Unlimited"))
+                .font(.headline)
+            benefit(String(localized: "Unlimited vaults"), icon: "rectangle.stack",
+                    detail: String(localized: "Free: 3 vaults."))
             Divider().overlay(ink.opacity(0.12))
-            comparison(String(localized: "Items per album"), free: "5")
+            benefit(String(localized: "Unlimited items per vault"), icon: "photo.stack",
+                    detail: String(localized: "Free: 5 items per vault."))
+            Divider().overlay(ink.opacity(0.12))
+            benefit(String(localized: "Create and share vaults"), icon: "person.2",
+                    detail: String(localized: "Share over iCloud with a private phrase. Set expiration dates, open limits, export permissions, and locking on screen capture."))
+            Text(String(localized: "Opening a shared vault is free."))
+                .font(.caption).foregroundStyle(secondary)
         }.padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityIdentifier("unlimitedBenefits")
             .background {
                 if isSpecial {
                     RoundedRectangle(cornerRadius: 22).fill(.white.opacity(0.08))
@@ -189,14 +201,15 @@ struct PurchaseView: View {
         if isSpecial, let error = purchases.specialProductError { Text(error).font(.subheadline).foregroundStyle(Color(red: 1, green: 0.72, blue: 0.72)).multilineTextAlignment(.center) }
     }
 
-    private func comparison(_ title: String, free: String) -> some View {
-        HStack {
-            Text(title).font(.subheadline)
-            Spacer()
-            Text(free).font(.subheadline.monospacedDigit())
-            Image(systemName: "infinity").font(.title3).foregroundStyle(accent).frame(width: 88)
-                .accessibilityLabel(String(localized: "Unlimited"))
-        }
+    private func benefit(_ title: String, icon: String, detail: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon).font(.title3).foregroundStyle(accent)
+                .frame(width: 28).accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title).font(.subheadline.weight(.semibold))
+                Text(detail).font(.caption).foregroundStyle(secondary)
+            }.fixedSize(horizontal: false, vertical: true)
+        }.accessibilityElement(children: .combine)
     }
 }
 

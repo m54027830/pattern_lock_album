@@ -1,0 +1,134 @@
+Pattern documentation — editorial and implementation notes
+Reviewed: 15 November 2026
+App: Pattern 1.0.0
+Source revision: see publisher.json. No application source was changed for this documentation.
+
+DELIVERY
+docs/site contains the uploadable static website. English lives at the root;
+Other languages live under ja/, ko/, fr/, de/, it/, and zh-Hans/. There are 35
+HTML files: four documents plus a home page in each language. Each includes its
+own CSS and a seven-language header menu. FAQ pages include
+a small local search script. No build runtime, external fonts, cookies, analytics,
+CDN, account, or backend is required. Native FAQ disclosures work without JavaScript.
+Relative paths support hosting in a subdirectory or opening index.html locally.
+
+EDIT AND REBUILD
+1. Edit publisher.json with the actual developer/company name, public support
+   email, and developer country. Green Monster (company) and Studio M. (developer)
+   and Japan (country) were supplied by the user. Public support email remains TBD.
+   Keep support_email null until the real mailbox is provided; no placeholder
+   mailto link is generated.
+2. Edit content_*.py for copy changes. Keep all seven versions and section IDs
+   aligned. UI text is in locales.json (English/Japanese) and add_locales.py.
+   Language codes are checked against the app string catalog by verify.py.
+3. Run from the repository root:
+   python3 docs/site-source/build.py --require-publisher
+   python3 docs/site-source/verify.py
+   node --check docs/site-source/faq.js
+   node --check docs/site-source/language.js
+   python3 docs/site-source/package.py
+The ordinary build command without --require-publisher intentionally allows drafts.
+Missing support email produces a localized TBD placeholder and a draft banner. Supplying
+all three fields removes that banner on the next build. Do not upload the source
+directory as public site content.
+
+PUBLISHER REVIEW
+The Privacy Policy and Terms are implementation-informed drafts, not a legal
+compliance certification. Confirm the developer identity, support correspondence
+practices and service providers, purpose-based retention wording, and the statement
+about no sale/targeted advertising before publishing. These are business practices,
+not facts that source code alone can establish. No particular retention period,
+governing jurisdiction, arbitration clause, legal entity, address, or age threshold
+has been invented. Obtain appropriate legal review for your business and markets.
+
+Terms assume Apple's standard app license applies unless you have configured a
+custom EULA in App Store Connect. This App Store setting cannot be established from
+the app repository. The page supplements the applicable app license; it is not a
+replacement custom EULA. Confirm against your actual App Store configuration.
+
+These files do not themselves log visitors. Your future server, CDN, security
+service, or analytics may process IP addresses and request logs. Review that host's
+actual collection, recipients, purpose, retention, and international handling, and
+add website disclosures where appropriate. Do not promise a log-free website based
+on these static files. The privacy page currently scopes itself to the app/support.
+
+IMPORTANT DISTINCTIONS FROM MARKETING COPY
+- Local media uses iOS complete file protection; its content-encryption key is not
+  derived from the unlock pattern. Additional AES-256-GCM protects the credential
+  record and encrypted backup/shared archives. Do not imply pattern-derived
+  encryption for each local media file unless the implementation changes.
+- Local vault files and the installation key are excluded from ordinary device
+  backups. Recovery after deletion requires a completed Pattern backup AND the
+  phrase protecting that backup. A recovery phrase contains no media.
+- iCloud backup retains one latest completed archive, runs with the vault open,
+  and is not automatic bidirectional synchronization across personal devices.
+- Shared vaults require online authorization at opening and while open. Open
+  counts are local to an installation, not a global tamper-resistant lifetime cap.
+- Duress removes other local credentials, leaves their file bytes on disk, rotates
+  the survivor's recovery phrase, suppresses backup/sharing persistently, and
+  queues owned-share revocation. Earlier personal cloud backups can remain. A
+  biometric fallback to a dummy vault does not itself trigger duress.
+- Current purchase implementation is one-time, non-consumable Unlimited. Free
+  limits are three owned vaults and five combined items per owned vault. Received
+  shares do not count toward these owned-vault limits. Prices are not hard-coded
+  in public copy; Apple's purchase sheet controls the displayed price.
+
+SOURCE MAP
+README.md and docs/CLOUDKIT.md: orientation, then checked against implementation.
+patternlock/Library/LibraryRepository.swift: local files, manifest, thumbnails,
+  file-protection attributes, exclusion from ordinary backups, import and deletion.
+patternlock/Library/LibraryStore.swift and library views: search, filters, sorting,
+  folders, memos/documents, exports, Photos deletion, camera integration.
+patternlock/Lock/PatternCredentials.swift: pattern/recovery verification, cooldown,
+  vault registry, biometric settings, duress activation, recovery rotation.
+patternlock/Lock/InstallationCredentialStorage.swift: installation-bound encrypted
+  credential persistence and reset behavior after loss of the installation key.
+patternlock/Lock/PatternAppRoot.swift and PatternLockView.swift: onboarding, lock
+  lifecycle, recovery, new-vault routing, imports and shared-vault access.
+patternlock/Lock/FaceIDAuthenticator.swift: biometric-only policy and results.
+patternlock/Settings/RecoveryPhrase.swift: generated/custom phrase rules.
+patternlock/Settings/BackupSettingsViews.swift: encrypted backup file workflow.
+patternlock/Settings/GridSizeSettingsView.swift: atomic grid migration.
+patternlock/Settings/FaceIDSettingsView.swift and VaultSettingsView.swift: dummy
+  configuration, duress confirmation, settings and destructive actions.
+patternlock/Cloud/CloudKitVaultTransport.swift: private cloud archives, public
+  encrypted invitations, CKShare authorization and cleanup.
+patternlock/Cloud/VaultCloudService.swift: encryption, foreground scheduling,
+  phrase wrapping, restore, authorization checks and queued removal.
+patternlock/Cloud/CloudSettingsViews.swift and VaultCloudModels.swift: backup,
+  share, expiry, open-limit and export/capture controls.
+patternlock/Purchases/PurchaseAccess.swift and StoreKitPurchaseClient.swift:
+  entitlements, limits, non-consumable products, restore and debug diagnostics.
+patternlock/Localizable.xcstrings: checked all seven supported locale codes and
+  localized interface labels for recovery, backup, sharing, settings and deletion.
+  Translations preserve section coverage and material behavior; wording is adapted
+  naturally rather than being sentence-for-sentence identical. The new translations
+  have not been reviewed by an independent legal translator.
+patternlock.xcodeproj/project.pbxproj: version, deployment target, permissions.
+
+PRIMARY EXTERNAL REFERENCES
+Apple standard EULA:
+https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Apple App Review Guidelines, privacy:
+https://developer.apple.com/app-store/review/guidelines/#privacy
+Apple privacy policy (linked for Apple's own processing):
+https://www.apple.com/legal/privacy/
+iCloud terms:
+https://www.apple.com/legal/internet-services/icloud/en/terms.html
+Apple App Analytics & Privacy:
+https://www.apple.com/legal/privacy/data/en/app-analytics/
+Apple App Store refund process:
+https://support.apple.com/en-us/118223
+
+WHEN THE APP CHANGES
+Recheck storage encryption, backup exclusions and restore behavior, purchase type
+and quotas, SDKs/data flows, sharing limits, duress, camera and permissions. Update
+all seven languages, the public revision date, app version, and source revision. Keep
+an archived copy of the policy users previously saw.
+
+LANGUAGE NAVIGATION
+The native details menu and links work without JavaScript. language.js preserves
+the current section hash on switching and adds Escape/outside-click dismissal.
+The current document is retained in all 49 source/destination language pairs.
+No language preference is stored and no browser-language redirect is imposed.
+Every page includes all seven hreflang alternates plus the English x-default.

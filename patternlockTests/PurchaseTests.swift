@@ -4,7 +4,7 @@ import StoreKitTest
 import UIKit
 @testable import patternlock
 
-@MainActor private final class TestPurchaseClient: LifetimePurchaseClient {
+@MainActor final class TestPurchaseClient: LifetimePurchaseClient {
     var entitlements: [PurchaseVerification] = []
     var outcome = LifetimePurchaseResult.cancelled
     var product: LifetimeProduct? = .init(id: PurchaseConfiguration.productID, displayName: "Pattern Unlimited", displayPrice: "$9.99")

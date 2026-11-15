@@ -1,0 +1,48 @@
+Pattern static documentation verification — 15 November 2026
+
+Current package: Pattern-HTML-Pages-All-Languages.zip
+Languages match the app catalog: en, ja, ko, fr, de, it, zh-Hans.
+Publisher: Green Monster (developer: Studio M.). Country: Japan.
+Public support email remains TBD at the user's request; no fake mailbox is linked.
+
+PASS: 35 HTML files: Privacy Policy, Terms, Manual, FAQ and home in all 7 languages.
+PASS: HTML nesting, unique IDs, one H1, language attributes and ARIA references.
+PASS: 1,547 local links/anchors resolve and use portable relative paths.
+PASS: All 245 language-menu links keep the document and point to the correct locale.
+PASS: Every page declares 7 hreflang alternates and English x-default.
+PASS: All language versions have matching section IDs and 31 FAQ questions.
+PASS: Shared UI labels exist in all 7 languages; no document-level English fallback.
+PASS: No external assets or form-submission endpoints; scripts/styles are inline.
+PASS: Python compilation and JavaScript syntax checks.
+PASS: All 35 pages rendered at 375 px with no document overflow and 7 language links.
+PASS: German privacy page and menu at 320 px; heading and navigation fit.
+PASS: Visual desktop review of the language menu, English privacy and German home.
+PASS: Visual mobile review of Korean/Japanese manuals and Simplified Chinese FAQ.
+PASS: English, Japanese, Korean, French, German, Italian and Chinese FAQ searches
+      show localized counts, expand matches, show an empty state and reset to 31.
+      Detailed counts are saved in faq-checks.json.
+PASS: German manual #recovery switches to French manual #recovery through the menu.
+PASS: Korean manual switches to Japanese manual through the menu.
+PASS: Escape closes the language menu.
+PASS: No console errors/warnings observed during final browser checks.
+PASS: Temporary browser viewport override reset after verification.
+PASS: ZIP integrity and 36 entries (35 HTML files plus upload instructions).
+
+Native details/links provide language navigation and FAQ disclosure without
+JavaScript; the section-preserving language enhancement and FAQ search require JS.
+No independent legal translation review was performed. Implementation references
+and business-practice review notes are in docs/site-source/IMPLEMENTATION-NOTES.txt.
+
+Current evidence:
+  language-switcher-desktop.jpg   Header menu, publisher identity and Japan
+  manual-korean-mobile.jpg        Korean manual at 375 px
+  manual-japanese-mobile.jpg      Japanese manual at 375 px
+  mobile-checks.json              All 35 mobile page measurements
+  faq-checks.json                 Search/reset/empty-state checks in all locales
+
+Rebuild and package:
+  python3 docs/site-source/package.py
+  node --check docs/site-source/faq.js
+  node --check docs/site-source/language.js
+Use package.py --require-publisher after setting the real support address.
+No files have been published or uploaded.

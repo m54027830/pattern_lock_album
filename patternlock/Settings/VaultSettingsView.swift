@@ -72,7 +72,7 @@ struct VaultSettingsView: View {
                     }
                     Section {
                         NavigationLink { VaultSharingSettingsView(vault: vault, store: store) } label: {
-                            Label(String(localized: "Share this vault"), systemImage: "person.2")
+                            valueRow(String(localized: "Share this vault"), value: purchases.isUnlimited ? "" : String(localized: "Unlimited"), icon: "person.2")
                         }.disabled(backupsDisabled)
                         NavigationLink { JoinSharedVaultView() } label: {
                             Label(String(localized: "Join shared vault"), systemImage: "person.badge.plus")
@@ -133,7 +133,7 @@ struct VaultSettingsView: View {
                         valueRow(String(localized: "Free album usage"), value: String(localized: "\(store.snapshot.items.count) / 5 items"))
                     }
                 } header: { Text(String(localized: "Purchase")) } footer: {
-                    Text(String(localized: "Free: 3 albums with 5 items each. One purchase removes both limits. No subscription."))
+                    Text(String(localized: "Free: 3 vaults with 5 items each. Pattern Unlimited removes both limits and unlocks vault sharing. One purchase. No subscription."))
                 }
 
                 Section {

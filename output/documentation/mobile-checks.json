@@ -1,0 +1,282 @@
+[
+  {
+    "code": "en",
+    "page": "index",
+    "documentWidth": 375,
+    "lang": "en",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "en",
+    "page": "privacy-policy",
+    "documentWidth": 375,
+    "lang": "en",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "en",
+    "page": "terms-of-use",
+    "documentWidth": 375,
+    "lang": "en",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "en",
+    "page": "manual",
+    "documentWidth": 375,
+    "lang": "en",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "en",
+    "page": "faq",
+    "documentWidth": 375,
+    "lang": "en",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "ja",
+    "page": "index",
+    "documentWidth": 375,
+    "lang": "ja",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "ja",
+    "page": "privacy-policy",
+    "documentWidth": 375,
+    "lang": "ja",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "ja",
+    "page": "terms-of-use",
+    "documentWidth": 375,
+    "lang": "ja",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "ja",
+    "page": "manual",
+    "documentWidth": 375,
+    "lang": "ja",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "ja",
+    "page": "faq",
+    "documentWidth": 375,
+    "lang": "ja",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "ko",
+    "page": "index",
+    "documentWidth": 375,
+    "lang": "ko",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "ko",
+    "page": "privacy-policy",
+    "documentWidth": 375,
+    "lang": "ko",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "ko",
+    "page": "terms-of-use",
+    "documentWidth": 375,
+    "lang": "ko",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "ko",
+    "page": "manual",
+    "documentWidth": 375,
+    "lang": "ko",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "ko",
+    "page": "faq",
+    "documentWidth": 375,
+    "lang": "ko",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "fr",
+    "page": "index",
+    "documentWidth": 375,
+    "lang": "fr",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "fr",
+    "page": "privacy-policy",
+    "documentWidth": 375,
+    "lang": "fr",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "fr",
+    "page": "terms-of-use",
+    "documentWidth": 375,
+    "lang": "fr",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "fr",
+    "page": "manual",
+    "documentWidth": 375,
+    "lang": "fr",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "fr",
+    "page": "faq",
+    "documentWidth": 375,
+    "lang": "fr",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "de",
+    "page": "index",
+    "documentWidth": 375,
+    "lang": "de",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "de",
+    "page": "privacy-policy",
+    "documentWidth": 375,
+    "lang": "de",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "de",
+    "page": "terms-of-use",
+    "documentWidth": 375,
+    "lang": "de",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "de",
+    "page": "manual",
+    "documentWidth": 375,
+    "lang": "de",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "de",
+    "page": "faq",
+    "documentWidth": 375,
+    "lang": "de",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "it",
+    "page": "index",
+    "documentWidth": 375,
+    "lang": "it",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "it",
+    "page": "privacy-policy",
+    "documentWidth": 375,
+    "lang": "it",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "it",
+    "page": "terms-of-use",
+    "documentWidth": 375,
+    "lang": "it",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "it",
+    "page": "manual",
+    "documentWidth": 375,
+    "lang": "it",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "it",
+    "page": "faq",
+    "documentWidth": 375,
+    "lang": "it",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "zh-Hans",
+    "page": "index",
+    "documentWidth": 375,
+    "lang": "zh-Hans",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "zh-Hans",
+    "page": "privacy-policy",
+    "documentWidth": 375,
+    "lang": "zh-Hans",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "zh-Hans",
+    "page": "terms-of-use",
+    "documentWidth": 375,
+    "lang": "zh-Hans",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "zh-Hans",
+    "page": "manual",
+    "documentWidth": 375,
+    "lang": "zh-Hans",
+    "languageLinks": 7,
+    "width": 375
+  },
+  {
+    "code": "zh-Hans",
+    "page": "faq",
+    "documentWidth": 375,
+    "lang": "zh-Hans",
+    "languageLinks": 7,
+    "width": 375
+  }
+]

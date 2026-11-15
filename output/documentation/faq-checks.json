@@ -1,0 +1,58 @@
+[
+  {
+    "code": "en",
+    "count": 8,
+    "open": 8,
+    "status": "8 of 31 questions shown",
+    "noMatch": true,
+    "cleared": 31
+  },
+  {
+    "code": "ja",
+    "count": 8,
+    "open": 8,
+    "status": "31件中 8件の質問を表示",
+    "noMatch": true,
+    "cleared": 31
+  },
+  {
+    "code": "ko",
+    "count": 6,
+    "open": 6,
+    "status": "전체 31개 중 6개 질문 표시",
+    "noMatch": true,
+    "cleared": 31
+  },
+  {
+    "code": "fr",
+    "count": 7,
+    "open": 7,
+    "status": "7 questions affichées sur 31",
+    "noMatch": true,
+    "cleared": 31
+  },
+  {
+    "code": "de",
+    "count": 6,
+    "open": 6,
+    "status": "6 von 31 Fragen angezeigt",
+    "noMatch": true,
+    "cleared": 31
+  },
+  {
+    "code": "it",
+    "count": 7,
+    "open": 7,
+    "status": "7 domande visualizzate su 31",
+    "noMatch": true,
+    "cleared": 31
+  },
+  {
+    "code": "zh-Hans",
+    "count": 6,
+    "open": 6,
+    "status": "显示 6 个问题，共 31 个",
+    "noMatch": true,
+    "cleared": 31
+  }
+]
