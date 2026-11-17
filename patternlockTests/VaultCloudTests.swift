@@ -12,12 +12,12 @@ import XCTest
     private func truth(_ value: Bool, file: StaticString = #filePath, line: UInt = #line) { XCTAssertTrue(value, file: file, line: line) }
     private func falsity(_ value: Bool, file: StaticString = #filePath, line: UInt = #line) { XCTAssertFalse(value, file: file, line: line) }
 
-    private func fixture(unlimited: Bool = true) async throws -> (PatternAuthenticator, Vault, LibraryStore, TestCloudTransport, VaultCloudService, URL) {
+    private func fixture(unlimited: Bool = true, proForTesting: Bool = false) async throws -> (PatternAuthenticator, Vault, LibraryStore, TestCloudTransport, VaultCloudService, URL) {
         let root = FileManager.default.temporaryDirectory.appending(path: "CloudTests-" + UUID().uuidString)
         try LocalVaultStorage.prepareDirectory(root)
         addTeardownBlock { try? FileManager.default.removeItem(at: root) }
         let security = VaultSecurityState()
-        let purchases = PurchaseAccess(); purchases.update(isUnlimited: unlimited)
+        let purchases = PurchaseAccess(proForTesting: proForTesting); purchases.update(isUnlimited: unlimited)
         let auth = PatternAuthenticator(storage: MemoryPatternStorage(), security: security, purchaseAccess: purchases, directory: root)
         let vault = try await auth.registerFirstVault(name: "Secret name", pattern: pattern, gridSize: 5, recoveryPhrase: phrase)
         let store = LibraryStore(root: vault.root(in: root), security: security, purchaseAccess: purchases)
@@ -105,6 +105,16 @@ import XCTest
         equal(try await auth.pendingCloudDeletions().count, 1)
         equal(await transport.backupRecords.count, 1)
     }
+
+    #if DEBUG
+    func testDebugProCanCreateAShareWithoutAPurchasedEntitlement() async throws {
+        let (auth, vault, store, transport, service, _) = try await fixture(unlimited: false, proForTesting: true)
+        let phrase = try await service.createShare(vault: vault, store: store, label: "Testing", policy: VaultSharePolicy())
+        XCTAssertFalse(phrase.isEmpty)
+        equal(try await auth.settings(for: vault.id).ownedShares?.count, 1)
+        equal(await transport.shareRecords.count, 1)
+    }
+    #endif
 
     func testSharingUsesIndependentSecretsAndFreeRecipientIsReadOnly() async throws {
         let (auth, vault, store, transport, service, root) = try await fixture()

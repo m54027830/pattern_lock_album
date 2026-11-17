@@ -61,15 +61,22 @@ actor CloudKitVaultTransport: VaultCloudTransport {
     }
 
     func createInvitation(zone: String) async throws -> URL {
+        let (share, participantID) = Self.makeInvitationShare(zone: zone)
+        guard let saved = try await container.privateCloudDatabase.save(share) as? CKShare,
+              let url = saved.oneTimeURL(for: participantID) else { throw VaultCloudError.invalidData }
+        return url
+    }
+
+    /// Builds the real CloudKit invitation separately from its network save so
+    /// tests exercise participant setup and the app's sharing configuration.
+    nonisolated static func makeInvitationShare(zone: String) -> (share: CKShare, participantID: CKShare.Participant.ID) {
         let share = CKShare(recordZoneID: CKRecordZone.ID(zoneName: zone))
         share.publicPermission = .none
         let participant = CKShare.Participant.oneTimeURLParticipant()
         participant.permission = .readOnly
         share.addParticipant(participant)
         share[CKShare.SystemFieldKey.title] = "Shared vault" as CKRecordValue
-        guard let saved = try await container.privateCloudDatabase.save(share) as? CKShare,
-              let url = saved.oneTimeURL(for: participant.participantID) else { throw VaultCloudError.invalidData }
-        return url
+        return (share, participant.participantID)
     }
 
     func publishInvitation(id: String, envelope: CloudEnvelope) async throws {

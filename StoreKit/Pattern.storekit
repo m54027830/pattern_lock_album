@@ -9,12 +9,12 @@
       "localizations" : [
         {
           "description" : "Unlimited albums, photos, and videos with one purchase. No subscription.",
-          "displayName" : "Pattern Unlimited",
+          "displayName" : "Pattern Pro",
           "locale" : "en_US"
         }
       ],
       "productID" : "jp.gm.patternlock.pro",
-      "referenceName" : "Pattern Unlimited — One-Time Unlock",
+      "referenceName" : "Pattern Pro — One-Time Unlock",
       "type" : "NonConsumable"
     },
     {

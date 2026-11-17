@@ -347,8 +347,8 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = K9VR4GV3NX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Configuration/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Pattern;
-				INFOPLIST_KEY_CKSharingSupported = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Take photos and videos directly into your vault without saving them to Photos.";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Require Face ID after your pattern to open protected vaults.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Record sound for videos saved directly into your vault.";
@@ -394,8 +394,8 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = K9VR4GV3NX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Configuration/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Pattern;
-				INFOPLIST_KEY_CKSharingSupported = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Take photos and videos directly into your vault without saving them to Photos.";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Require Face ID after your pattern to open protected vaults.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Record sound for videos saved directly into your vault.";

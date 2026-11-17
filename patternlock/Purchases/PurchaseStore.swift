@@ -118,11 +118,13 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
         self.client = client ?? StoreKitPurchaseClient()
         self.access = access
         self.specialOffers = specialOffers ?? SpecialOfferStore()
+        if access.isProTestingEnabled { status = .unlimited }
     }
 
     func start() async {
         guard !started else { return }
         started = true
+        if access.isProTestingEnabled { return }
         let updates = client.updates()
         listener = Task { [weak self] in
             for await update in updates {
@@ -134,6 +136,7 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
     }
 
     func refreshEntitlements() async {
+        if access.isProTestingEnabled { return }
         refreshRevision += 1
         let revision = refreshRevision
         let entitlements = await client.currentEntitlements()
@@ -192,14 +195,14 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
             switch try await client.purchase(productID: offer.productID, in: scene) {
             case .cancelled: break
             case .pending:
-                message = String(localized: "Your purchase is awaiting approval. Unlimited access will unlock when the App Store confirms it.")
+                message = String(localized: "Your purchase is awaiting approval. Pro access will unlock when the App Store confirms it.")
             case .success(let verification):
                 guard case .verified(let transaction) = verification, transaction.grantsUnlimited,
                       transaction.productID == offer.productID else { throw PurchaseError.unverified }
                 // Grant only the signed, verified entitlement, then acknowledge delivery.
                 refreshRevision += 1
                 setAccess(true)
-                message = String(localized: "Pattern Unlimited is unlocked.")
+                message = String(localized: "Pattern Pro is unlocked.")
                 await client.finish(transactionID: transaction.id)
             }
         } catch { self.error = error.localizedDescription }
@@ -207,13 +210,14 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
 
     func restore() async {
         guard !busy else { return }
+        if access.isProTestingEnabled { return }
         isRestoring = true; message = nil; error = nil
         defer { isRestoring = false }
         do {
             // This may show an Apple Account prompt; only a user action calls it.
             try await client.synchronize()
             await refreshEntitlements()
-            message = isUnlimited ? String(localized: "Your one-time purchase has been restored.") : String(localized: "No Pattern Unlimited purchase was found for this Apple Account.")
+            message = isUnlimited ? String(localized: "Your one-time purchase has been restored.") : String(localized: "No Pattern Pro purchase was found for this Apple Account.")
         } catch { self.error = error.localizedDescription }
     }
 
@@ -228,14 +232,15 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
         }
     }
 
-    private func setAccess(_ unlimited: Bool) {
+    private func setAccess(_ verifiedUnlimited: Bool) {
+        access.update(isUnlimited: verifiedUnlimited)
+        let unlimited = access.isUnlimited
         if unlimited && status != .unlimited {
-            message = String(localized: "Pattern Unlimited is unlocked.")
+            message = String(localized: "Pattern Pro is unlocked.")
             error = nil
         } else if !unlimited && status == .unlimited {
-            message = String(localized: "Unlimited access is no longer available. Your existing albums and media are kept.")
+            message = String(localized: "Pro access is no longer available. Your existing albums and media are kept.")
         }
-        access.update(isUnlimited: unlimited)
         status = unlimited ? .unlimited : .free
         if unlimited { specialOffers.end() }
     }

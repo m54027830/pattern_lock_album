@@ -16,6 +16,22 @@ entitlements predate these capabilities. The target uses
 `patternlock/patternlock.entitlements`; Debug selects Development/development and
 Release selects Production/production for CloudKit/APNs respectively.
 
+The custom sharing-phrase flow also requires
+`com.apple.developer.icloud-extended-share-access` with **only**
+`InProcessOneTimeLinks`. It is declared in `patternlock/patternlock.entitlements`.
+Without it, CloudKit traps at `CKShare.addParticipant` for a one-time-link
+participant, before the network save; this is not a catchable Swift error.
+If signing reports that a manual profile does not support this entitlement,
+enable **iCloud Extended Share Access** for the App ID and regenerate the
+development and distribution profiles. See [Apple's entitlement documentation](https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.icloud-extended-share-access).
+
+`Configuration/Info.plist` supplies the Boolean `CKSharingSupported = true` for
+both Debug and Release. Xcode merges it with generated bundle and privacy keys.
+Do not replace it with `INFOPLIST_KEY_CKSharingSupported`: that setting alone
+was omitted from the built plist. `CloudKitInvitationTests` checks the actual
+built bundle and assembles a real private, read-only one-time-link participant
+without uploading anything or requiring an iCloud account.
+
 This implementation performs cloud work while the app is open. It does not
 register push subscriptions or request a Background Mode. It therefore does not
 need to read protected media while the phone is locked. Push entitlement is
@@ -96,7 +112,7 @@ logic, not Apple's claim semantics, quotas, account permissions, or delivery.
 5. Change the recovery phrase and finish another backup. New phrase must work;
    old phrase must fail for that cloud copy. An old exported file must retain
    its original phrase.
-6. With Unlimited, create a share. Claim it on account B with the sharing phrase.
+6. With Pro, create a share. Claim it on account B with the sharing phrase.
    Claiming on unrelated account C must fail. Reimporting on another device on
    B's account must work with the original sharing phrase. Confirm the actual
    CKShare participant is read-only and publicPermission remains none.

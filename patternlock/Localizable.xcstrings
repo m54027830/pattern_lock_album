@@ -376,7 +376,7 @@
         }
       }
     },
-    " %lld weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock Pattern Unlimited to add them." : {
+    " %lld weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock Pattern Pro to add them." : {
       "comment" : "Pluralize the entire message using the item count (or seconds for retry).",
       "localizations" : {
         "de" : {
@@ -385,13 +385,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld Objekt wurde wegen des kostenlosen Limits von 5 Fotos/Videos pro Album nicht importiert. Sein Original bleibt erhalten. Schalte Pattern Unlimited frei, um es hinzuzufügen."
+                  "value" : " %lld Objekt wurde wegen des kostenlosen Limits von 5 Fotos/Videos pro Album nicht importiert. Sein Original bleibt erhalten. Schalte Pattern Pro frei, um es hinzuzufügen."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld Objekte wurden wegen des kostenlosen Limits von 5 Fotos/Videos pro Album nicht importiert. Originale bleiben erhalten. Schalte Pattern Unlimited frei, um sie hinzuzufügen."
+                  "value" : " %lld Objekte wurden wegen des kostenlosen Limits von 5 Fotos/Videos pro Album nicht importiert. Originale bleiben erhalten. Schalte Pattern Pro frei, um sie hinzuzufügen."
                 }
               }
             }
@@ -403,13 +403,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld item wasn’t imported because the free album limit is 5 photos/videos. Its original was kept. Unlock Pattern Unlimited to add it."
+                  "value" : " %lld item wasn’t imported because the free album limit is 5 photos/videos. Its original was kept. Unlock Pattern Pro to add it."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock Pattern Unlimited to add them."
+                  "value" : " %lld weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock Pattern Pro to add them."
                 }
               }
             }
@@ -421,19 +421,19 @@
               "many" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld éléments non importés : la limite gratuite est de 5 photos/vidéos par album. Les originaux sont conservés. Débloquez Pattern Unlimited pour les ajouter."
+                  "value" : " %lld éléments non importés : la limite gratuite est de 5 photos/vidéos par album. Les originaux sont conservés. Débloquez Pattern Pro pour les ajouter."
                 }
               },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld élément non importé : la limite gratuite est de 5 photos/vidéos par album. L’original est conservé. Débloquez Pattern Unlimited pour l’ajouter."
+                  "value" : " %lld élément non importé : la limite gratuite est de 5 photos/vidéos par album. L’original est conservé. Débloquez Pattern Pro pour l’ajouter."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld éléments non importés : la limite gratuite est de 5 photos/vidéos par album. Les originaux sont conservés. Débloquez Pattern Unlimited pour les ajouter."
+                  "value" : " %lld éléments non importés : la limite gratuite est de 5 photos/vidéos par album. Les originaux sont conservés. Débloquez Pattern Pro pour les ajouter."
                 }
               }
             }
@@ -445,19 +445,19 @@
               "many" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld elementi non importati: il limite gratuito è di 5 foto/video per album. Gli originali sono conservati. Sblocca Pattern Unlimited per aggiungerli."
+                  "value" : " %lld elementi non importati: il limite gratuito è di 5 foto/video per album. Gli originali sono conservati. Sblocca Pattern Pro per aggiungerli."
                 }
               },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld elemento non importato: il limite gratuito è di 5 foto/video per album. L’originale è conservato. Sblocca Pattern Unlimited per aggiungerlo."
+                  "value" : " %lld elemento non importato: il limite gratuito è di 5 foto/video per album. L’originale è conservato. Sblocca Pattern Pro per aggiungerlo."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld elementi non importati: il limite gratuito è di 5 foto/video per album. Gli originali sono conservati. Sblocca Pattern Unlimited per aggiungerli."
+                  "value" : " %lld elementi non importati: il limite gratuito è di 5 foto/video per album. Gli originali sono conservati. Sblocca Pattern Pro per aggiungerli."
                 }
               }
             }
@@ -469,7 +469,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " 無料アルバムの上限は写真・動画5件のため、%lld件を読み込みませんでした。オリジナルは残っています。追加するにはPattern Unlimitedを購入してください。"
+                  "value" : " 無料アルバムの上限は写真・動画5件のため、%lld件を読み込みませんでした。オリジナルは残っています。追加するにはPattern Proを購入してください。"
                 }
               }
             }
@@ -481,7 +481,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " 무료 앨범은 사진/동영상이 5개로 제한되어 %lld개를 가져오지 않았습니다. 원본은 유지됩니다. 추가하려면 Pattern Unlimited를 구매하세요."
+                  "value" : " 무료 앨범은 사진/동영상이 5개로 제한되어 %lld개를 가져오지 않았습니다. 원본은 유지됩니다. 추가하려면 Pattern Pro를 구매하세요."
                 }
               }
             }
@@ -493,7 +493,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " 免费相册上限为 5 个照片/视频，因此未导入 %lld 个项目。原件已保留。解锁 Pattern Unlimited 后即可添加。"
+                  "value" : " 免费相册上限为 5 个照片/视频，因此未导入 %lld 个项目。原件已保留。解锁 Pattern Pro 后即可添加。"
                 }
               }
             }
@@ -2425,6 +2425,7 @@
       }
     },
     "Albums" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -7940,49 +7941,49 @@
         }
       }
     },
-    "Creating shares requires Pattern Unlimited. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person." : {
+    "Creating shares requires Pattern Pro. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zum Teilen brauchst du Pattern Unlimited. Geteilte Tresore zu öffnen ist kostenlos. Jede Phrase kann von einem Apple Account beansprucht werden. Erstelle für jede Person eine eigene."
+            "value" : "Zum Teilen brauchst du Pattern Pro. Geteilte Tresore zu öffnen ist kostenlos. Jede Phrase kann von einem Apple Account beansprucht werden. Erstelle für jede Person eine eigene."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Creating shares requires Pattern Unlimited. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person."
+            "value" : "Creating shares requires Pattern Pro. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Unlimited est nécessaire pour créer un partage. L’ouverture est gratuite. Chaque phrase est réservée à un seul compte Apple. Créez une phrase par personne."
+            "value" : "Pattern Pro est nécessaire pour créer un partage. L’ouverture est gratuite. Chaque phrase est réservée à un seul compte Apple. Créez une phrase par personne."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Per creare condivisioni serve Pattern Unlimited. Aprirle è gratuito. Ogni frase può essere riscattata da un solo Apple Account. Creane una per ogni persona."
+            "value" : "Per creare condivisioni serve Pattern Pro. Aprirle è gratuito. Ogni frase può essere riscattata da un solo Apple Account. Creane una per ogni persona."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "共有の作成にはPattern Unlimitedが必要です。共有保管庫を開くのは無料です。各フレーズは1つのApple Accountでのみ受け取れます。相手ごとに作成してください。"
+            "value" : "共有の作成にはPattern Proが必要です。共有保管庫を開くのは無料です。各フレーズは1つのApple Accountでのみ受け取れます。相手ごとに作成してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "공유 생성에는 Pattern Unlimited가 필요합니다. 공유 보관함 열기는 무료입니다. 각 문구는 하나의 Apple 계정만 사용할 수 있습니다. 사람마다 별도 문구를 만드세요."
+            "value" : "공유 생성에는 Pattern Pro가 필요합니다. 공유 보관함 열기는 무료입니다. 각 문구는 하나의 Apple 계정만 사용할 수 있습니다. 사람마다 별도 문구를 만드세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "创建共享需要 Pattern Unlimited，打开共享保险库则免费。每个短语仅供一个 Apple 账户领取。请为每位接收者创建独立短语。"
+            "value" : "创建共享需要 Pattern Pro，打开共享保险库则免费。每个短语仅供一个 Apple 账户领取。请为每位接收者创建独立短语。"
           }
         }
       }
@@ -11806,6 +11807,7 @@
       }
     },
     "Free" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -11991,48 +11993,48 @@
         }
       }
     },
-    "Free: 3 vaults with 5 items each. Pattern Unlimited removes both limits and unlocks vault sharing. One purchase. No subscription." : {
+    "Free: 3 vaults with 5 items each. Pattern Pro removes both limits and unlocks vault sharing. One purchase. No subscription." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kostenlos: 3 Tresore mit je 5 Inhalten. Pattern Unlimited hebt beide Limits auf und schaltet das Teilen frei. Einmaliger Kauf. Kein Abo."
+            "value" : "Kostenlos: 3 Tresore mit je 5 Inhalten. Pattern Pro hebt beide Limits auf und schaltet das Teilen frei. Einmaliger Kauf. Kein Abo."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Free: 3 vaults with 5 items each. Pattern Unlimited removes both limits and unlocks vault sharing. One purchase. No subscription."
+            "value" : "Free: 3 vaults with 5 items each. Pattern Pro removes both limits and unlocks vault sharing. One purchase. No subscription."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gratuit : 3 coffres de 5 éléments chacun. Pattern Unlimited supprime ces deux limites et débloque le partage. Un seul achat. Sans abonnement."
+            "value" : "Gratuit : 3 coffres de 5 éléments chacun. Pattern Pro supprime ces deux limites et débloque le partage. Un seul achat. Sans abonnement."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gratis: 3 casseforti con 5 elementi ciascuna. Pattern Unlimited elimina entrambi i limiti e sblocca la condivisione. Un solo acquisto. Nessun abbonamento."
+            "value" : "Gratis: 3 casseforti con 5 elementi ciascuna. Pattern Pro elimina entrambi i limiti e sblocca la condivisione. Un solo acquisto. Nessun abbonamento."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無料版は保管庫3個、各5アイテムまで。Pattern Unlimitedで両方の制限がなくなり、保管庫の共有も利用できます。一度の購入で、サブスクリプションはありません。"
+            "value" : "無料版は保管庫3個、各5アイテムまで。Pattern Proで両方の制限がなくなり、保管庫の共有も利用できます。一度の購入で、サブスクリプションはありません。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "무료: 보관함 3개, 각 항목 5개. Pattern Unlimited는 두 제한을 해제하고 보관함 공유를 제공합니다. 일회성 구매이며 구독이 아닙니다."
+            "value" : "무료: 보관함 3개, 각 항목 5개. Pattern Pro는 두 제한을 해제하고 보관함 공유를 제공합니다. 일회성 구매이며 구독이 아닙니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "免费版：3 个保险库，每个可存 5 个项目。Pattern Unlimited 解除这两项限制并解锁保险库共享。一次购买，无需订阅。"
+            "value" : "免费版：3 个保险库，每个可存 5 个项目。Pattern Pro 解除这两项限制并解锁保险库共享。一次购买，无需订阅。"
           }
         }
       }
@@ -13383,6 +13385,7 @@
       }
     },
     "Included" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -13428,49 +13431,95 @@
         }
       }
     },
-    "iOS is still finishing an app icon change. Wait a moment, then try again. If it keeps happening, restart your device.": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iOS schließt gerade eine Änderung des App-Symbols ab. Warte einen Moment und versuche es erneut. Falls das Problem weiterhin auftritt, starte dein Gerät neu."
+    "Included with Pattern Pro" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Pattern Pro enthalten"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iOS is still finishing an app icon change. Wait a moment, then try again. If it keeps happening, restart your device."
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Included with Pattern Pro"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iOS termine encore un changement d’icône. Patientez un instant, puis réessayez. Si le problème persiste, redémarrez votre appareil."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inclus avec Pattern Pro"
           }
         },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iOS sta ancora completando la modifica dell’icona. Attendi un momento e riprova. Se il problema persiste, riavvia il dispositivo."
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incluso in Pattern Pro"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iOSがアプリアイコンの変更を完了しています。少し待ってからもう一度お試しください。問題が続く場合は、デバイスを再起動してください。"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Proに含まれる機能"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iOS가 아직 앱 아이콘 변경을 마무리하고 있습니다. 잠시 기다린 후 다시 시도하세요. 문제가 계속되면 기기를 재시동하세요."
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Pro에 포함된 기능"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iOS 仍在完成应用图标更改。请稍等片刻后重试。如果问题持续出现，请重新启动设备。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Pro 包含的功能"
+          }
+        }
+      }
+    },
+    "iOS is still finishing an app icon change. Wait a moment, then try again. If it keeps happening, restart your device." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS schließt gerade eine Änderung des App-Symbols ab. Warte einen Moment und versuche es erneut. Falls das Problem weiterhin auftritt, starte dein Gerät neu."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS is still finishing an app icon change. Wait a moment, then try again. If it keeps happening, restart your device."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS termine encore un changement d’icône. Patientez un instant, puis réessayez. Si le problème persiste, redémarrez votre appareil."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS sta ancora completando la modifica dell’icona. Attendi un momento e riprova. Se il problema persiste, riavvia il dispositivo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOSがアプリアイコンの変更を完了しています。少し待ってからもう一度お試しください。問題が続く場合は、デバイスを再起動してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS가 아직 앱 아이콘 변경을 마무리하고 있습니다. 잠시 기다린 후 다시 시도하세요. 문제가 계속되면 기기를 재시동하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS 仍在完成应用图标更改。请稍等片刻后重试。如果问题持续出现，请重新启动设备。"
           }
         }
       }
@@ -13518,52 +13567,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在 iOS 上，更改图标后，应用名称仍为 Pattern。快捷指令可以使用其他名称及相应图标。"
-          }
-        }
-      }
-    },
-    "Included with Pattern Unlimited" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In Pattern Unlimited enthalten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Included with Pattern Unlimited"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inclus avec Pattern Unlimited"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Incluso in Pattern Unlimited"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pattern Unlimitedに含まれる機能"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pattern Unlimited에 포함된 기능"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pattern Unlimited 包含的功能"
           }
         }
       }
@@ -15780,48 +15783,48 @@
         }
       }
     },
-    "No Pattern Unlimited purchase was found for this Apple Account." : {
+    "No Pattern Pro purchase was found for this Apple Account." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Für diesen Apple Account wurde kein Kauf von Pattern Unlimited gefunden."
+            "value" : "Für diesen Apple Account wurde kein Kauf von Pattern Pro gefunden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No Pattern Unlimited purchase was found for this Apple Account."
+            "value" : "No Pattern Pro purchase was found for this Apple Account."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucun achat Pattern Unlimited trouvé pour ce compte Apple."
+            "value" : "Aucun achat Pattern Pro trouvé pour ce compte Apple."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nessun acquisto di Pattern Unlimited trovato per questo Apple Account."
+            "value" : "Nessun acquisto di Pattern Pro trovato per questo Apple Account."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このApple AccountにはPattern Unlimitedの購入が見つかりませんでした。"
+            "value" : "このApple AccountにはPattern Proの購入が見つかりませんでした。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 Apple 계정에서 Pattern Unlimited 구매 내역을 찾을 수 없습니다."
+            "value" : "이 Apple 계정에서 Pattern Pro 구매 내역을 찾을 수 없습니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未找到此 Apple 账户的 Pattern Unlimited 购买记录。"
+            "value" : "未找到此 Apple 账户的 Pattern Pro 购买记录。"
           }
         }
       }
@@ -17811,48 +17814,48 @@
         }
       }
     },
-    "Pattern Unlimited is unlocked." : {
+    "Pattern Pro is unlocked." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Unlimited ist freigeschaltet."
+            "value" : "Pattern Pro ist freigeschaltet."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Unlimited is unlocked."
+            "value" : "Pattern Pro is unlocked."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Unlimited est débloqué."
+            "value" : "Pattern Pro est débloqué."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Unlimited è sbloccato."
+            "value" : "Pattern Pro è sbloccato."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Unlimitedが有効です。"
+            "value" : "Pattern Proが有効です。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Unlimited가 활성화되었습니다."
+            "value" : "Pattern Pro가 활성화되었습니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已解锁 Pattern Unlimited。"
+            "value" : "已解锁 Pattern Pro。"
           }
         }
       }
@@ -19297,49 +19300,49 @@
         }
       }
     },
-    "Regular price: %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Regulärer Preis: %@"
+    "Regular price: %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regulärer Preis: %@"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Regular price: %@"
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regular price: %@"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prix habituel : %@"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prix habituel : %@"
           }
         },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prezzo normale: %@"
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prezzo normale: %@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "通常価格：%@"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通常価格：%@"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "정가: %@"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "정가: %@"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "原价：%@"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "原价：%@"
           }
         }
       }
@@ -20832,49 +20835,49 @@
         }
       }
     },
-    "Save %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ sparen"
+    "Save %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ sparen"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save %@"
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save %@"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Économisez %@"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Économisez %@"
           }
         },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Risparmia %@"
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Risparmia %@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@割引"
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@割引"
           }
         },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 할인"
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 할인"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "立省 %@"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "立省 %@"
           }
         }
       }
@@ -22827,48 +22830,48 @@
         }
       }
     },
-    "Sharing requires Pattern Unlimited" : {
+    "Sharing requires Pattern Pro" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Teilen erfordert Pattern Unlimited"
+            "value" : "Teilen erfordert Pattern Pro"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sharing requires Pattern Unlimited"
+            "value" : "Sharing requires Pattern Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le partage nécessite Pattern Unlimited"
+            "value" : "Le partage nécessite Pattern Pro"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La condivisione richiede Pattern Unlimited"
+            "value" : "La condivisione richiede Pattern Pro"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "共有にはPattern Unlimitedが必要です"
+            "value" : "共有にはPattern Proが必要です"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "공유하려면 Pattern Unlimited가 필요합니다"
+            "value" : "공유하려면 Pattern Pro가 필요합니다"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "共享需要 Pattern Unlimited"
+            "value" : "共享需要 Pattern Pro"
           }
         }
       }
@@ -25100,142 +25103,142 @@
         }
       }
     },
-    "The free version includes 3 albums. Unlock Pattern Unlimited to create more." : {
+    "The free version includes 3 albums. Unlock Pattern Pro to create more." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die kostenlose Version enthält 3 Alben. Schalte Pattern Unlimited frei, um weitere zu erstellen."
+            "value" : "Die kostenlose Version enthält 3 Alben. Schalte Pattern Pro frei, um weitere zu erstellen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The free version includes 3 albums. Unlock Pattern Unlimited to create more."
+            "value" : "The free version includes 3 albums. Unlock Pattern Pro to create more."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La version gratuite comprend 3 albums. Débloquez Pattern Unlimited pour en créer davantage."
+            "value" : "La version gratuite comprend 3 albums. Débloquez Pattern Pro pour en créer davantage."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La versione gratuita include 3 album. Sblocca Pattern Unlimited per crearne altri."
+            "value" : "La versione gratuita include 3 album. Sblocca Pattern Pro per crearne altri."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無料版にはアルバム3個が含まれます。さらに作成するにはPattern Unlimitedを購入してください。"
+            "value" : "無料版にはアルバム3個が含まれます。さらに作成するにはPattern Proを購入してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "무료 버전에는 앨범 3개가 포함됩니다. 더 만들려면 Pattern Unlimited를 구매하세요."
+            "value" : "무료 버전에는 앨범 3개가 포함됩니다. 더 만들려면 Pattern Pro를 구매하세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "免费版包含 3 个相册。解锁 Pattern Unlimited 即可创建更多。"
+            "value" : "免费版包含 3 个相册。解锁 Pattern Pro 即可创建更多。"
           }
         }
       }
     },
-    "The free version includes 5 items per album, including its folders. Unlock Pattern Unlimited to add more." : {
+    "The free version includes 5 items per album, including its folders. Unlock Pattern Pro to add more." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die kostenlose Version bietet 5 Elemente pro Album, einschließlich seiner Ordner. Schalte Pattern Unlimited frei, um mehr hinzuzufügen."
+            "value" : "Die kostenlose Version bietet 5 Elemente pro Album, einschließlich seiner Ordner. Schalte Pattern Pro frei, um mehr hinzuzufügen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The free version includes 5 items per album, including its folders. Unlock Pattern Unlimited to add more."
+            "value" : "The free version includes 5 items per album, including its folders. Unlock Pattern Pro to add more."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La version gratuite comprend 5 éléments par album, dossiers inclus. Débloquez Pattern Unlimited pour en ajouter davantage."
+            "value" : "La version gratuite comprend 5 éléments par album, dossiers inclus. Débloquez Pattern Pro pour en ajouter davantage."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La versione gratuita include 5 elementi per album, cartelle comprese. Sblocca Pattern Unlimited per aggiungerne altri."
+            "value" : "La versione gratuita include 5 elementi per album, cartelle comprese. Sblocca Pattern Pro per aggiungerne altri."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無料版ではフォルダ内も含め、アルバムごとに5項目まで保存できます。さらに追加するにはPattern Unlimitedを解除してください。"
+            "value" : "無料版ではフォルダ内も含め、アルバムごとに5項目まで保存できます。さらに追加するにはPattern Proを解除してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "무료 버전은 폴더를 포함하여 앨범당 항목 5개를 제공합니다. 더 추가하려면 Pattern Unlimited를 잠금 해제하세요."
+            "value" : "무료 버전은 폴더를 포함하여 앨범당 항목 5개를 제공합니다. 더 추가하려면 Pattern Pro를 잠금 해제하세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "免费版每个相册可保存5个项目，包括文件夹中的项目。解锁Pattern Unlimited以添加更多。"
+            "value" : "免费版每个相册可保存5个项目，包括文件夹中的项目。解锁Pattern Pro以添加更多。"
           }
         }
       }
     },
-    "The free version includes 5 photos or videos per album, including its folders. Unlock Pattern Unlimited to add more." : {
+    "The free version includes 5 photos or videos per album, including its folders. Unlock Pattern Pro to add more." : {
       "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kostenlos sind 5 Fotos oder Videos pro Album inklusive Ordnern enthalten. Schalte Pattern Unlimited frei, um mehr hinzuzufügen."
+            "value" : "Kostenlos sind 5 Fotos oder Videos pro Album inklusive Ordnern enthalten. Schalte Pattern Pro frei, um mehr hinzuzufügen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The free version includes 5 photos or videos per album, including its folders. Unlock Pattern Unlimited to add more."
+            "value" : "The free version includes 5 photos or videos per album, including its folders. Unlock Pattern Pro to add more."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La version gratuite autorise 5 photos ou vidéos par album, dossiers inclus. Débloquez Pattern Unlimited pour en ajouter davantage."
+            "value" : "La version gratuite autorise 5 photos ou vidéos par album, dossiers inclus. Débloquez Pattern Pro pour en ajouter davantage."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La versione gratuita include 5 foto o video per album, cartelle comprese. Sblocca Pattern Unlimited per aggiungerne altri."
+            "value" : "La versione gratuita include 5 foto o video per album, cartelle comprese. Sblocca Pattern Pro per aggiungerne altri."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無料版はフォルダ内も含め、アルバムごとに写真・動画5件までです。さらに追加するにはPattern Unlimitedを購入してください。"
+            "value" : "無料版はフォルダ内も含め、アルバムごとに写真・動画5件までです。さらに追加するにはPattern Proを購入してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "무료 버전은 폴더를 포함해 앨범당 사진 또는 동영상 5개를 저장할 수 있습니다. 더 추가하려면 Pattern Unlimited를 구매하세요."
+            "value" : "무료 버전은 폴더를 포함해 앨범당 사진 또는 동영상 5개를 저장할 수 있습니다. 더 추가하려면 Pattern Pro를 구매하세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "免费版每个相册（含文件夹）可存 5 个照片或视频。解锁 Pattern Unlimited 即可添加更多。"
+            "value" : "免费版每个相册（含文件夹）可存 5 个照片或视频。解锁 Pattern Pro 即可添加更多。"
           }
         }
       }
@@ -27546,94 +27549,94 @@
         }
       }
     },
-    "Unlimited" : {
+    "Pro" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unbegrenzt"
+            "value" : "Pro"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unlimited"
+            "value" : "Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Illimité"
+            "value" : "Pro"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Illimitato"
+            "value" : "Pro"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無制限"
+            "value" : "Pro"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "무제한"
+            "value" : "Pro"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无限"
+            "value" : "Pro"
           }
         }
       }
     },
-    "Unlimited access is no longer available. Your existing albums and media are kept." : {
+    "Pro access is no longer available. Your existing albums and media are kept." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unbegrenzter Zugriff ist nicht mehr verfügbar. Bestehende Alben und Medien bleiben erhalten."
+            "value" : "Pro ist nicht mehr verfügbar. Bestehende Alben und Medien bleiben erhalten."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unlimited access is no longer available. Your existing albums and media are kept."
+            "value" : "Pro access is no longer available. Your existing albums and media are kept."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L’accès illimité n’est plus disponible. Vos albums et médias existants sont conservés."
+            "value" : "L’accès à Pro n’est plus disponible. Vos albums et médias existants sont conservés."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L’accesso illimitato non è più disponibile. Album e contenuti esistenti sono conservati."
+            "value" : "L’accesso a Pro non è più disponibile. Album e contenuti esistenti sono conservati."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無制限アクセスは利用できなくなりました。既存のアルバムとメディアは残ります。"
+            "value" : "Proは利用できなくなりました。既存のアルバムとメディアは残ります。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "무제한 이용 권한이 더 이상 유효하지 않습니다. 기존 앨범과 미디어는 유지됩니다."
+            "value" : "Pro 이용 권한이 더 이상 유효하지 않습니다. 기존 앨범과 미디어는 유지됩니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无限使用权限已不可用。现有相册和媒体会保留。"
+            "value" : "Pro 使用权限已不可用。现有相册和媒体会保留。"
           }
         }
       }
@@ -27728,98 +27731,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无限相册、照片和视频。\n一次付费，无需订阅。"
-          }
-        }
-      }
-    },
-    "Unlock once" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einmalig freischalten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unlock once"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Débloquer en un achat"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sblocca una volta"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一度の購入で解放"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "한 번 구매로 해제"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一次解锁"
-          }
-        }
-      }
-    },
-    "Unlock once · %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einmalig freischalten · %@"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unlock once · %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Débloquer en un achat · %@"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sblocca una volta · %@"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一度の購入で解放 · %@"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "한 번 구매로 해제 · %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一次解锁 · %@"
           }
         }
       }
@@ -27962,48 +27873,94 @@
         }
       }
     },
-    "Unlock Unlimited" : {
+    "Unlock once" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unbegrenzt freischalten"
+            "value" : "Einmalig freischalten"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unlock Unlimited"
+            "value" : "Unlock once"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Débloquer l’illimité"
+            "value" : "Débloquer en un achat"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sblocca l’illimitato"
+            "value" : "Sblocca una volta"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無制限を解放"
+            "value" : "一度の購入で解放"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "무제한 이용하기"
+            "value" : "한 번 구매로 해제"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "解锁无限版"
+            "value" : "一次解锁"
+          }
+        }
+      }
+    },
+    "Unlock once · %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einmalig freischalten · %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock once · %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Débloquer en un achat · %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sblocca una volta · %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一度の購入で解放 · %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "한 번 구매로 해제 · %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一次解锁 · %@"
           }
         }
       }
@@ -28050,6 +28007,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "解锁共享"
+          }
+        }
+      }
+    },
+    "Unlock Pro" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro freischalten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock Pro"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Débloquer Pro"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sblocca Pro"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proを購入"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro 잠금 해제"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解锁 Pro"
           }
         }
       }
@@ -29400,52 +29403,6 @@
         }
       }
     },
-    "View Pattern Unlimited" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pattern Unlimited ansehen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "View Pattern Unlimited"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Voir Pattern Unlimited"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scopri Pattern Unlimited"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pattern Unlimitedを見る"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pattern Unlimited 보기"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "查看 Pattern Unlimited"
-          }
-        }
-      }
-    },
     "View offer" : {
       "localizations" : {
         "de" : {
@@ -29488,6 +29445,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "查看优惠"
+          }
+        }
+      }
+    },
+    "View Pattern Pro" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Pro ansehen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View Pattern Pro"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir Pattern Pro"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scopri Pattern Pro"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Proを見る"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pattern Pro 보기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看 Pattern Pro"
           }
         }
       }
@@ -30930,94 +30933,94 @@
         }
       }
     },
-    "Your purchase is awaiting approval. Unlimited access will unlock when the App Store confirms it." : {
+    "Your purchase is awaiting approval. Pro access will unlock when the App Store confirms it." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dein Kauf wartet auf Genehmigung. Unbegrenzter Zugriff wird nach Bestätigung durch den App Store freigeschaltet."
+            "value" : "Dein Kauf wartet auf Genehmigung. Pro wird nach Bestätigung durch den App Store freigeschaltet."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your purchase is awaiting approval. Unlimited access will unlock when the App Store confirms it."
+            "value" : "Your purchase is awaiting approval. Pro access will unlock when the App Store confirms it."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Votre achat attend une approbation. L’accès illimité sera débloqué après confirmation par l’App Store."
+            "value" : "Votre achat attend une approbation. L’accès à Pro sera débloqué après confirmation par l’App Store."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L’acquisto è in attesa di approvazione. L’accesso illimitato si sbloccherà alla conferma dell’App Store."
+            "value" : "L’acquisto è in attesa di approvazione. L’accesso a Pro si sbloccherà alla conferma dell’App Store."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "購入の承認待ちです。App Storeで確認されると無制限アクセスが有効になります。"
+            "value" : "購入の承認待ちです。App Storeで確認されるとProが有効になります。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "구매 승인 대기 중입니다. App Store에서 확인되면 무제한 이용 권한이 활성화됩니다."
+            "value" : "구매 승인 대기 중입니다. App Store에서 확인되면 Pro 이용 권한이 활성화됩니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "购买正在等待批准。App Store 确认后将解锁无限使用权限。"
+            "value" : "购买正在等待批准。App Store 确认后将解锁 Pro。"
           }
         }
       }
     },
-    "Your purchase is tied to your Apple Account. Restoring a purchase restores Unlimited access; your photos are restored separately from your saved backup." : {
+    "Your purchase is tied to your Apple Account. Restoring a purchase restores Pro access; your photos are restored separately from your saved backup." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dein Kauf ist mit deinem Apple Account verknüpft. Die Kaufwiederherstellung stellt unbegrenzten Zugriff wieder her; Fotos werden separat aus deinem Backup wiederhergestellt."
+            "value" : "Dein Kauf ist mit deinem Apple Account verknüpft. Die Kaufwiederherstellung stellt den Pro-Zugang wieder her; Fotos werden separat aus deinem Backup wiederhergestellt."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your purchase is tied to your Apple Account. Restoring a purchase restores Unlimited access; your photos are restored separately from your saved backup."
+            "value" : "Your purchase is tied to your Apple Account. Restoring a purchase restores Pro access; your photos are restored separately from your saved backup."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L’achat est lié à votre compte Apple. Restaurer l’achat rétablit l’accès illimité ; vos photos se restaurent séparément depuis votre sauvegarde."
+            "value" : "L’achat est lié à votre compte Apple. Restaurer l’achat rétablit l’accès à Pro ; vos photos se restaurent séparément depuis votre sauvegarde."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L’acquisto è legato al tuo Apple Account. Ripristinarlo restituisce l’accesso illimitato; le foto si ripristinano separatamente dal backup salvato."
+            "value" : "L’acquisto è legato al tuo Apple Account. Ripristinarlo restituisce l’accesso a Pro; le foto si ripristinano separatamente dal backup salvato."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "購入はApple Accountに紐付きます。購入の復元で無制限アクセスが戻ります。写真は保存したバックアップから別途復元してください。"
+            "value" : "購入はApple Accountに紐付きます。購入の復元でProが再び利用できます。写真は保存したバックアップから別途復元してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "구매는 Apple 계정에 연결됩니다. 구매를 복원하면 무제한 이용 권한이 복원됩니다. 사진은 저장한 백업에서 별도로 복원해야 합니다."
+            "value" : "구매는 Apple 계정에 연결됩니다. 구매를 복원하면 Pro 이용 권한이 복원됩니다. 사진은 저장한 백업에서 별도로 복원해야 합니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "购买与你的 Apple 账户关联。恢复购买可恢复无限使用权限；照片须从已保存的备份中单独恢复。"
+            "value" : "购买与你的 Apple 账户关联。恢复购买可恢复 Pro 使用权限；照片须从已保存的备份中单独恢复。"
           }
         }
       }

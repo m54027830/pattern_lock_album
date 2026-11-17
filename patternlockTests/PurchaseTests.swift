@@ -7,7 +7,7 @@ import UIKit
 @MainActor final class TestPurchaseClient: LifetimePurchaseClient {
     var entitlements: [PurchaseVerification] = []
     var outcome = LifetimePurchaseResult.cancelled
-    var product: LifetimeProduct? = .init(id: PurchaseConfiguration.productID, displayName: "Pattern Unlimited", displayPrice: "$9.99")
+    var product: LifetimeProduct? = .init(id: PurchaseConfiguration.productID, displayName: "Pattern Pro", displayPrice: "$9.99")
     var specialProduct: LifetimeProduct? = .init(id: PurchaseConfiguration.specialProductID, displayName: "Pro Special Offer", displayPrice: "$4.99")
     var purchasedProductIDs: [String] = []
     var productFails = false
@@ -16,6 +16,7 @@ import UIKit
     var purchases = 0
     var finishes: [UInt64] = []
     var listenerCount = 0
+    var entitlementReads = 0
     var continuation: AsyncStream<PurchaseVerification>.Continuation?
     var deferredSnapshot: CheckedContinuation<[PurchaseVerification], Never>?
     var deferNextSnapshot = false
@@ -25,6 +26,7 @@ import UIKit
         return id == PurchaseConfiguration.specialProductID ? specialProduct : product
     }
     func currentEntitlements() async -> [PurchaseVerification] {
+        entitlementReads += 1
         if deferNextSnapshot { deferNextSnapshot = false; return await withCheckedContinuation { deferredSnapshot = $0 } }
         return entitlements
     }
@@ -181,7 +183,7 @@ import UIKit
         await store.purchase(in: nil)
         XCTAssertEqual(client.purchases, 0)
         client.productFails = false
-        client.product = .init(id: PurchaseConfiguration.productID, displayName: "Pattern Unlimited", displayPrice: "¥600")
+        client.product = .init(id: PurchaseConfiguration.productID, displayName: "Pattern Pro", displayPrice: "¥600")
         await store.loadProduct()
         XCTAssertEqual(store.product?.displayPrice, "¥600")
         XCTAssertNil(store.error)

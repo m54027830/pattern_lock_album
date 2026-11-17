@@ -27,7 +27,7 @@ struct PurchaseView: View {
                     Button(purchases.isRestoring ? String(localized: "Restoring…") : String(localized: "Restore purchases")) {
                         Task { await purchases.restore() }
                     }.disabled(purchases.busy).accessibilityIdentifier("restorePurchases")
-                    Text(String(localized: "Your purchase is tied to your Apple Account. Restoring a purchase restores Unlimited access; your photos are restored separately from your saved backup."))
+                    Text(String(localized: "Your purchase is tied to your Apple Account. Restoring a purchase restores Pro access; your photos are restored separately from your saved backup."))
                         .font(.caption).foregroundStyle(secondary).multilineTextAlignment(.center)
                 }.padding(24).frame(maxWidth: 540).frame(maxWidth: .infinity)
             }
@@ -36,7 +36,7 @@ struct PurchaseView: View {
                 if isSpecial { SpecialOfferBackdrop() }
                 else { AlbumTheme.background.ignoresSafeArea() }
             }
-            .navigationTitle(isSpecial ? String(localized: "Pro Special Offer") : "Pattern Unlimited")
+            .navigationTitle(isSpecial ? String(localized: "Pro Special Offer") : "Pattern Pro")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(isSpecial ? SpecialOfferStyle.plum : AlbumTheme.background, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
@@ -82,7 +82,7 @@ struct PurchaseView: View {
             }
             Text(purchases.isUnlimited ? String(localized: "All yours.") : (isSpecial ? String(localized: "A special price.\nAll of Pro.") : String(localized: "More room.\nOne purchase.")))
                 .font(.system(size: 32, weight: .semibold, design: .rounded)).multilineTextAlignment(.center)
-            Text(purchases.isUnlimited ? String(localized: "Pattern Unlimited is unlocked.") : String(localized: "Unlimited vaults, items, and sharing.\nPay once. No subscription."))
+            Text(purchases.isUnlimited ? String(localized: "Pattern Pro is unlocked.") : String(localized: "Unlimited vaults, items, and sharing.\nPay once. No subscription."))
                 .font(.subheadline).foregroundStyle(secondary).multilineTextAlignment(.center)
         }
     }
@@ -170,7 +170,7 @@ struct PurchaseView: View {
 
     private var benefitsCard: some View {
         VStack(alignment: .leading, spacing: 18) {
-            Text(String(localized: "Included with Pattern Unlimited"))
+            Text(String(localized: "Included with Pattern Pro"))
                 .font(.headline)
             benefit(String(localized: "Unlimited vaults"), icon: "rectangle.stack",
                     detail: String(localized: "Free: 3 vaults."))

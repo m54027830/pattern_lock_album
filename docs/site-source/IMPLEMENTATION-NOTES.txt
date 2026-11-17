@@ -68,7 +68,7 @@ IMPORTANT DISTINCTIONS FROM MARKETING COPY
   the survivor's recovery phrase, suppresses backup/sharing persistently, and
   queues owned-share revocation. Earlier personal cloud backups can remain. A
   biometric fallback to a dummy vault does not itself trigger duress.
-- Current purchase implementation is one-time, non-consumable Unlimited. Free
+- Current purchase implementation is one-time, non-consumable Pro. Free
   limits are three owned vaults and five combined items per owned vault. Received
   shares do not count toward these owned-vault limits. Prices are not hard-coded
   in public copy; Apple's purchase sheet controls the displayed price.

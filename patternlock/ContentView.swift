@@ -175,7 +175,7 @@ struct ContentView: View {
             .alert(String(localized: "Import complete"), isPresented: $showingImportResult, presenting: store.importSummary) { summary in
                 Button(String(localized: "Keep originals"), role: .cancel) { store.dismissImportSummary() }
                 if summary.limitSkippedCount > 0 {
-                    Button(String(localized: "Unlock Unlimited")) { store.dismissImportSummary(); showingUpgrade = true }
+                    Button(String(localized: "Unlock Pro")) { store.dismissImportSummary(); showingUpgrade = true }
                 }
                 if !summary.originals.isEmpty {
                     Button(String(localized: "Delete originals from Photos"), role: .destructive) {

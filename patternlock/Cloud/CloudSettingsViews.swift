@@ -105,11 +105,11 @@ struct VaultSharingSettingsView: View {
         Form {
             if purchases.status == .free {
                 Section {
-                    Label(String(localized: "Sharing requires Pattern Unlimited"), systemImage: "lock.fill")
+                    Label(String(localized: "Sharing requires Pattern Pro"), systemImage: "lock.fill")
                         .font(.headline).foregroundStyle(AlbumTheme.ink)
                     Text(String(localized: "Unlock vault sharing with a one-time purchase. Opening a shared vault is free."))
                         .font(.subheadline).foregroundStyle(AlbumTheme.secondary)
-                    Button(String(localized: "View Pattern Unlimited")) { showingPurchase = true }
+                    Button(String(localized: "View Pattern Pro")) { showingPurchase = true }
                 }.accessibilityIdentifier("sharingPurchaseNotice")
             }
             Section {
@@ -132,7 +132,7 @@ struct VaultSharingSettingsView: View {
                     }
                 }.disabled(purchases.status == .checking)
             } header: { Text(String(localized: "Share this vault")) } footer: {
-                Text(String(localized: "Creating shares requires Pattern Unlimited. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person."))
+                Text(String(localized: "Creating shares requires Pattern Pro. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person."))
             }
             if let phrase {
                 Section {

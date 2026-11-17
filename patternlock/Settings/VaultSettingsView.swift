@@ -72,7 +72,7 @@ struct VaultSettingsView: View {
                     }
                     Section {
                         NavigationLink { VaultSharingSettingsView(vault: vault, store: store) } label: {
-                            valueRow(String(localized: "Share this vault"), value: purchases.isUnlimited ? "" : String(localized: "Unlimited"), icon: "person.2")
+                            valueRow(String(localized: "Share this vault"), value: purchases.isUnlimited ? "" : String(localized: "Pro"), icon: "person.2")
                         }.disabled(backupsDisabled)
                         NavigationLink { JoinSharedVaultView() } label: {
                             Label(String(localized: "Join shared vault"), systemImage: "person.badge.plus")
@@ -127,13 +127,20 @@ struct VaultSettingsView: View {
 
                 Section {
                     Button { showingPurchase = true } label: {
-                        valueRow("Pattern Unlimited", value: purchases.isUnlimited ? String(localized: "Purchased") : String(localized: "Unlock once"), icon: "sparkles")
+                        valueRow("Pattern Pro",
+                                 value: purchases.access.isProTestingEnabled ? "Debug" : (purchases.isUnlimited ? String(localized: "Purchased") : String(localized: "Unlock once")),
+                                 icon: "sparkles")
                     }
                     if !purchases.isUnlimited {
                         valueRow(String(localized: "Free album usage"), value: String(localized: "\(store.snapshot.items.count) / 5 items"))
                     }
                 } header: { Text(String(localized: "Purchase")) } footer: {
-                    Text(String(localized: "Free: 3 vaults with 5 items each. Pattern Unlimited removes both limits and unlocks vault sharing. One purchase. No subscription."))
+                    Text(String(localized: "Free: 3 vaults with 5 items each. Pattern Pro removes both limits and unlocks vault sharing. One purchase. No subscription."))
+                    #if DEBUG
+                    if purchases.access.isProTestingEnabled {
+                        Text(verbatim: "Pro testing is enabled for this Debug build. No purchase was made.")
+                    }
+                    #endif
                 }
 
                 Section {
