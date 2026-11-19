@@ -3,6 +3,7 @@ import SwiftUI
 struct PatternSetupView: View {
     let title: String
     let needsCurrentPattern: Bool
+    var vaultName: Binding<String>? = nil
     let completion: ([Int], [Int]) async throws -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var purchaseLimit: FreeTierLimit?
@@ -25,6 +26,18 @@ struct PatternSetupView: View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 24) {
+                    if let vaultName {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(String(localized: "Vault name")).font(.subheadline.weight(.semibold))
+                            TextField(String(localized: "Vault name"), text: vaultName)
+                                .textFieldStyle(.roundedBorder)
+                                .autocorrectionDisabled()
+                                .submitLabel(.done)
+                                .accessibilityIdentifier("patternSetupVaultName")
+                                .disabled(busy)
+                        }
+                        .frame(maxWidth: 420)
+                    }
                     Image(systemName: "hand.draw").font(.system(size: 36, weight: .light)).foregroundStyle(AlbumTheme.accent)
                     Text(instruction).font(.title3.weight(.medium)).multilineTextAlignment(.center)
                     PatternGridView(side: max(0, min(300, geometry.size.width - 48)), isEnabled: !busy, revision: revision, isDrawing: $isDrawing, completed: submit)
@@ -41,6 +54,7 @@ struct PatternSetupView: View {
         .navigationTitle(title).navigationBarTitleDisplayMode(.inline)
         .interactiveDismissDisabled(busy)
         .purchaseOffer(item: $purchaseLimit)
+        .onChange(of: vaultName?.wrappedValue) { _, _ in error = nil }
         .onDisappear { operation?.cancel(); current = []; proposed = [] }
     }
 

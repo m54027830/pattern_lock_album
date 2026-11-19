@@ -84,6 +84,8 @@ import Observation
     }
 
     func createShare(vault: Vault, store: LibraryStore, label: String, policy: VaultSharePolicy) async throws -> String {
+        let label = label.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !label.isEmpty else { throw VaultCloudError.missingRecipientLabel }
         guard !busyVaults.contains(vault.id) else { throw VaultSettingsError.busy }
         guard authenticator.purchaseAccess.isUnlimited else { throw FreeTierLimit.albums }
         busyVaults.insert(vault.id)

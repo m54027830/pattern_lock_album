@@ -9,7 +9,6 @@ struct VaultAccessGate<Content: View>: View {
     var isDummy = false
     let lock: () -> Void
     @ViewBuilder let content: () -> Content
-    @Environment(\.isSceneCaptured) private var captureState
     @State private var ready = false
     @State private var joined: JoinedVaultShare?
     @State private var session: SharedVaultSession?
@@ -39,7 +38,6 @@ struct VaultAccessGate<Content: View>: View {
                 if isDummy { ready = true; return }
                 joined = try await VaultCloudService.shared.openShared(vault: vault, store: store)
                 try Task.checkCancellation()
-                if joined?.policy.blocksCapture == true, captureState { lock(); return }
                 ready = true
                 guard let joined else { return }
                 session = VaultCloudService.shared.monitor(joined, scope: sessionScope)
@@ -52,12 +50,6 @@ struct VaultAccessGate<Content: View>: View {
         }
         .onChange(of: session?.error) { _, error in
             if error != nil { store.finishExport() }
-        }
-        .onChange(of: captureState) { _, value in
-            if value && joined?.policy.blocksCapture == true { ready = false; store.finishExport(); lock() }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.userDidTakeScreenshotNotification)) { _ in
-            if joined?.policy.blocksCapture == true { ready = false; store.finishExport(); lock() }
         }
     }
 }

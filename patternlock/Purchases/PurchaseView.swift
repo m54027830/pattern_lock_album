@@ -179,7 +179,7 @@ struct PurchaseView: View {
                     detail: String(localized: "Free: 5 items per vault."))
             Divider().overlay(ink.opacity(0.12))
             benefit(String(localized: "Create and share vaults"), icon: "person.2",
-                    detail: String(localized: "Share over iCloud with a private phrase. Set expiration dates, open limits, export permissions, and locking on screen capture."))
+                    detail: String(localized: "Share over iCloud with a private phrase. Set expiration dates, open limits, and export permissions."))
             Text(String(localized: "Opening a shared vault is free."))
                 .font(.caption).foregroundStyle(secondary)
         }.padding(20)

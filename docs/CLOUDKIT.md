@@ -112,16 +112,23 @@ logic, not Apple's claim semantics, quotas, account permissions, or delivery.
 5. Change the recovery phrase and finish another backup. New phrase must work;
    old phrase must fail for that cloud copy. An old exported file must retain
    its original phrase.
-6. With Pro, create a share. Claim it on account B with the sharing phrase.
+6. With Pro, verify that an empty or whitespace-only recipient label cannot
+   create a sharing phrase. Enter a label and create a share. Claim it on account
+   B with the sharing phrase.
    Claiming on unrelated account C must fail. Reimporting on another device on
    B's account must work with the original sharing phrase. Confirm the actual
    CKShare participant is read-only and publicPermission remains none.
 7. Verify recipient photos/videos/folders, fullscreen video, hidden edit actions,
    and export enabled/disabled. Update the owner's vault, then reopen the
    recipient's vault to receive the new version. Recipients cannot upload edits.
-8. Test expiration, open limits across relaunch, recording detection and
-   screenshot-triggered lock. These are app policies: screenshots can already
-   exist before notification, and reinstall/removal can reset local open counts.
+8. Test expiration and open limits across relaunch. In all app screens (including
+   presented photos/video, onboarding, and sheets), recording/mirroring must show
+   a blank white cover until capture ends. Start recording before launch as well
+   as while the app is open. A screenshot notification covers the app for two
+   seconds, then restores its prior state; it must not uncover ongoing recording
+   or an inactive scene. Verify on an iPhone/iPad: the original screenshot is
+   already saved before notification and cannot be blanked retroactively. These
+   are app policies; reinstall/removal can reset local open counts.
 9. Revoke while online and while offline. A pending revocation must remain
    queued across relaunch and complete later. After server revocation, recipient
    opening must fail even with cached media. Open sessions recheck every 30s.

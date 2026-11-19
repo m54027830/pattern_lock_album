@@ -116,6 +116,24 @@ import XCTest
     }
     #endif
 
+    func testSharingRequiresRecipientLabelBeforeCloudOrCredentialChanges() async throws {
+        let (auth, vault, store, transport, service, _) = try await fixture()
+        for label in ["", " \n\t ", "\u{00A0}\u{3000}"] {
+            do {
+                _ = try await service.createShare(vault: vault, store: store, label: label, policy: VaultSharePolicy())
+                XCTFail("A missing recipient label created a sharing phrase")
+            } catch VaultCloudError.missingRecipientLabel {} catch { XCTFail("Unexpected error: \(error)") }
+        }
+        equal(await transport.accountCalls, 0)
+        truth(await transport.shareRecords.isEmpty)
+        truth(try await auth.settings(for: vault.id).ownedShares?.isEmpty ?? true)
+        truth(service.busyVaults.isEmpty)
+
+        let phrase = try await service.createShare(vault: vault, store: store, label: " \n Family \t ", policy: VaultSharePolicy())
+        falsity(phrase.isEmpty)
+        equal(try await auth.settings(for: vault.id).ownedShares?.first?.label, "Family")
+    }
+
     func testSharingUsesIndependentSecretsAndFreeRecipientIsReadOnly() async throws {
         let (auth, vault, store, transport, service, root) = try await fixture()
         _ = await store.saveFolder(nil, name: "For you", colorIndex: 3)
@@ -157,6 +175,57 @@ import XCTest
         try await service.revoke(vaultID: vault.id, shareID: share.id)
         await transport.setAccount("recipient")
         do { _ = try await recipientService.openShared(vault: local, store: recipientStore); XCTFail("Revoked recipient opened cached media") } catch {}
+    }
+
+    func testLocalNameIsValidatedBeforeSharedVaultPatternSetup() async throws {
+        let storage = MemoryPatternStorage()
+        let auth = PatternAuthenticator(storage: storage)
+        equal(try await auth.validateNewVaultName("  Family  \n"), "Family", "Joining must also work before a first local vault exists")
+        XCTAssertNil(try storage.read(), "Checking a name must not create credentials")
+        _ = try await auth.register(pattern)
+        let credentials = try storage.read()
+        for name in ["  personal  ", " \n ", String(repeating: "a", count: 41)] {
+            do {
+                _ = try await auth.validateNewVaultName(name)
+                XCTFail("Invalid or duplicate name was accepted")
+            } catch VaultSettingsError.invalidName {} catch { XCTFail("Unexpected error: \(error)") }
+        }
+        equal(try await auth.validateNewVaultName(" Family shared "), "Family shared")
+        equal(try await auth.validateNewVaultName(String(repeating: "家", count: 40)), String(repeating: "家", count: 40))
+        equal(try storage.read(), credentials, "Checking names must not change existing vaults")
+    }
+
+    func testSharedVaultNameCollisionCanBeCorrectedWithoutClaimingAgain() async throws {
+        let (owner, vault, store, transport, service, root) = try await fixture()
+        _ = await store.saveFolder(nil, name: "Shared photos", colorIndex: 2)
+        let invitation = try await service.createShare(vault: vault, store: store, label: "Friend", policy: VaultSharePolicy())
+        await transport.setAccount("recipient")
+        let directory = root.appending(path: "Recipient")
+        let security = VaultSecurityState()
+        let recipient = PatternAuthenticator(storage: MemoryPatternStorage(), security: security, purchaseAccess: PurchaseAccess(), directory: directory)
+        let existing = try await recipient.registerFirstVault(name: vault.name, pattern: pattern, gridSize: 5, recoveryPhrase: phrase)
+        let client = VaultCloudService(transport: transport, authenticator: recipient)
+        let claim = try await client.prepareJoin(phrase: invitation)
+        let id = UUID().uuidString
+        let duplicate = Vault(id: id, name: claim.prepared.name)
+        do {
+            try await recipient.installRestoredVault(duplicate, pattern: secondPattern, preparedDirectory: claim.prepared.directory, directory: directory, lease: claim.prepared.lease, joinedShare: claim.joined)
+            XCTFail("Final registration must still reject a conflicting name")
+        } catch VaultSettingsError.invalidName {} catch { XCTFail("Unexpected error: \(error)") }
+        truth(FileManager.default.fileExists(atPath: claim.prepared.directory.path))
+        falsity(FileManager.default.fileExists(atPath: duplicate.root(in: directory).path))
+        falsity(FileManager.default.fileExists(atPath: directory.appending(path: "InstallingVault-" + id).path))
+
+        let name = try await recipient.validateNewVaultName("  Family shared  ")
+        let shared = Vault(id: id, name: name)
+        try await recipient.installRestoredVault(shared, pattern: secondPattern, preparedDirectory: claim.prepared.directory, directory: directory, lease: claim.prepared.lease, joinedShare: claim.joined)
+        equal(try await recipient.verify(secondPattern), .accepted(shared))
+        equal(try await recipient.verify(pattern), .accepted(existing))
+        equal(try await owner.settings(for: vault.id).vault.name, vault.name)
+        let received = LibraryStore(root: shared.root(in: directory), security: security)
+        _ = try await client.openShared(vault: shared, store: received)
+        equal(received.snapshot, store.snapshot)
+        equal(try await recipient.settings(for: shared.id).vault.name, "Family shared")
     }
 
     func testInterruptedInvitationIsRevokedBeforeAutomaticPublishing() async throws {

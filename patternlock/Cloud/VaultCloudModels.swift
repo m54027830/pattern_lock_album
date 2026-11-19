@@ -2,7 +2,7 @@ import CryptoKit
 import Foundation
 
 nonisolated enum VaultCloudError: LocalizedError {
-    case signedOut, accountChanged, invalidPhrase, unavailable, invalidData, readOnly, exportDisabled, expired, openLimit, duplicateShare, cloudStopped
+    case signedOut, accountChanged, invalidPhrase, unavailable, invalidData, readOnly, exportDisabled, expired, openLimit, duplicateShare, cloudStopped, missingRecipientLabel
     var errorDescription: String? {
         switch self {
         case .signedOut: String(localized: "Sign in to iCloud in iPhone Settings to continue.")
@@ -16,6 +16,7 @@ nonisolated enum VaultCloudError: LocalizedError {
         case .openLimit: String(localized: "This shared vault has reached its open limit.")
         case .duplicateShare: String(localized: "This shared vault is already on this device. Use its pattern to open it.")
         case .cloudStopped: String(localized: "Cloud backup and sharing are stopped on this device after a duress unlock.")
+        case .missingRecipientLabel: String(localized: "Enter a recipient label before creating a sharing phrase.")
         }
     }
 }
@@ -24,7 +25,9 @@ nonisolated struct VaultSharePolicy: Codable, Equatable, Sendable {
     var expiresAt: Date?
     var maximumOpens: Int?
     var allowsExport = true
-    var blocksCapture = false
+    // Keep this encoded flag for older recipients. Current versions cover every
+    // scene during capture, regardless of a share's saved policy.
+    var blocksCapture = true
 
     func check(opens: Int, now: Date = .now) throws {
         if let expiresAt, expiresAt <= now { throw VaultCloudError.expired }

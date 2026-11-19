@@ -606,6 +606,12 @@ actor PatternAuthenticator: PatternAuthenticating {
         security.update(from: registry)
     }
 
+    /// Check a proposed local name before asking the user to create a pattern.
+    /// Registration checks again when it commits, in case another window adds a vault.
+    func validateNewVaultName(_ name: String) throws -> String {
+        try validatedName(name, in: read() ?? VaultRegistry())
+    }
+
     private func validatedName(_ name: String, in registry: VaultRegistry, excluding id: String? = nil) throws -> String {
         let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty, name.count <= 40,

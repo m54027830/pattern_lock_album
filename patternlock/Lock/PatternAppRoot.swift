@@ -119,7 +119,9 @@ struct ScenePrivacyShield: UIViewRepresentable {
 
     func makeCoordinator() -> Coordinator { Coordinator(owner: self) }
     func makeUIView(context: Context) -> UIView {
-        let view = UIView()
+        let view = CapturePrivacyAnchor { [weak coordinator = context.coordinator] window in
+            coordinator?.attach(to: window)
+        }
         view.isUserInteractionEnabled = false
         context.coordinator.anchor = view
         context.coordinator.observe()
@@ -131,69 +133,171 @@ struct ScenePrivacyShield: UIViewRepresentable {
     @MainActor final class Coordinator {
         var owner: ScenePrivacyShield
         weak var anchor: UIView?
+        private weak var contentWindow: UIWindow?
+        private var captureRegistration: (any UITraitChangeRegistration)?
         private var cover: UIWindow?
         private var observers: [NSObjectProtocol] = []
         private var activationTask: Task<Void, Never>?
+        private var screenshotTask: Task<Void, Never>?
+        private var inactive = false
+        private var captured = false
+        private var screenshotVisible = false
+        private var showingCaptureCover = false
+        private let screenshotDelay: @MainActor () async throws -> Void
 
-        init(owner: ScenePrivacyShield) { self.owner = owner }
+        init(owner: ScenePrivacyShield, screenshotDelay: @escaping @MainActor () async throws -> Void = {
+            try await Task.sleep(for: .seconds(2))
+        }) {
+            self.owner = owner
+            self.screenshotDelay = screenshotDelay
+        }
+
+        // Avoid the Swift 6.2 implicit isolated-deinit runtime crash.
+        deinit {}
+
+        func attach(to window: UIWindow) {
+            guard contentWindow !== window else { return }
+            if let captureRegistration { contentWindow?.unregisterForTraitChanges(captureRegistration) }
+            contentWindow = window
+            captureRegistration = window.registerForTraitChanges([UITraitSceneCaptureState.self]) { [weak self] (window: UIWindow, _: UITraitCollection) in
+                self?.captureChanged(window.traitCollection.sceneCaptureState == .active)
+            }
+            captureChanged(window.traitCollection.sceneCaptureState == .active)
+        }
 
         func observe() {
+            if let window = anchor?.window { attach(to: window) }
             let center = NotificationCenter.default
             observers.append(center.addObserver(forName: UIScene.willDeactivateNotification, object: nil, queue: .main) { [weak self] notification in
                 MainActor.assumeIsolated {
                     guard let self, self.belongsToScene(notification) else { return }
                     self.activationTask?.cancel()
-                    self.show()
+                    self.inactive = true
+                    self.updateCover()
                     self.owner.onInactive()
                 }
             })
             observers.append(center.addObserver(forName: UIScene.didEnterBackgroundNotification, object: nil, queue: .main) { [weak self] notification in
                 MainActor.assumeIsolated {
                     guard let self, self.belongsToScene(notification) else { return }
-                    self.show()
+                    self.activationTask?.cancel()
+                    self.inactive = true
+                    self.updateCover()
                     self.owner.onBackground()
                 }
             })
             observers.append(center.addObserver(forName: UIScene.didActivateNotification, object: nil, queue: .main) { [weak self] notification in
                 MainActor.assumeIsolated {
                     guard let self, self.belongsToScene(notification) else { return }
+                    self.activationTask?.cancel()
                     self.activationTask = Task { [weak self] in
                         guard let self else { return }
                         await self.owner.onActive()
                         // Let the lock view commit its layout before uncovering it.
                         await Task.yield()
                         guard !Task.isCancelled else { return }
-                        self.anchor?.window?.layoutIfNeeded()
-                        self.cover?.isHidden = true
-                        self.cover = nil
+                        self.contentWindow?.layoutIfNeeded()
+                        self.inactive = false
+                        self.updateCover()
                     }
                 }
             })
+            observers.append(center.addObserver(forName: UIApplication.userDidTakeScreenshotNotification, object: nil, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated { self?.screenshotTaken() }
+            })
+        }
+
+        func captureChanged(_ captured: Bool) {
+            self.captured = captured
+            if captured { contentWindow?.endEditing(true) }
+            updateCover()
+        }
+
+        private func screenshotTaken() {
+            guard contentWindow != nil else { return }
+            // iOS sends this after saving the screenshot. This covers subsequent
+            // content briefly; it cannot retroactively blank the saved image.
+            screenshotTask?.cancel()
+            screenshotVisible = true
+            contentWindow?.endEditing(true)
+            updateCover()
+            screenshotTask = Task { [weak self] in
+                guard let self else { return }
+                do { try await self.screenshotDelay() } catch { return }
+                guard !Task.isCancelled else { return }
+                self.screenshotVisible = false
+                self.updateCover()
+            }
         }
 
         private func belongsToScene(_ notification: Notification) -> Bool {
             guard let scene = notification.object as? UIWindowScene else { return false }
-            return scene === anchor?.window?.windowScene
+            return scene === contentWindow?.windowScene
         }
 
-        private func show() {
-            guard cover == nil, let scene = anchor?.window?.windowScene else { return }
-            let window = UIWindow(windowScene: scene)
+        private func updateCover() {
+            let blank = captured || screenshotVisible
+            guard inactive || blank else {
+                cover?.isHidden = true
+                cover = nil
+                return
+            }
+            guard let scene = contentWindow?.windowScene else { return }
+            let window = cover ?? UIWindow(windowScene: scene)
             window.windowLevel = .alert + 1
-            window.rootViewController = UIHostingController(rootView: PrivacyCover())
+            if cover == nil || showingCaptureCover != blank {
+                window.rootViewController = blank ? BlankCaptureCoverController() : UIHostingController(rootView: PrivacyCover())
+                showingCaptureCover = blank
+            }
+            window.frame = scene.effectiveGeometry.coordinateSpace.bounds
             window.isUserInteractionEnabled = true
+            window.accessibilityViewIsModal = true
             window.isHidden = false
             cover = window
         }
 
         func stop() {
             activationTask?.cancel()
+            screenshotTask?.cancel()
+            if let captureRegistration { contentWindow?.unregisterForTraitChanges(captureRegistration) }
+            captureRegistration = nil
+            contentWindow = nil
+            anchor = nil
             observers.forEach(NotificationCenter.default.removeObserver)
             observers.removeAll()
             cover?.isHidden = true
             cover = nil
         }
     }
+}
+
+/// Connect to the containing window. Observe its traits, since fullscreen
+/// presentations can temporarily detach this root-view anchor from the window.
+final class CapturePrivacyAnchor: UIView {
+    private let onWindowAttached: @MainActor (UIWindow) -> Void
+
+    init(onWindowAttached: @escaping @MainActor (UIWindow) -> Void) {
+        self.onWindowAttached = onWindowAttached
+        super.init(frame: .zero)
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if let window { onWindowAttached(window) }
+    }
+}
+
+private final class BlankCaptureCoverController: UIViewController {
+    override func loadView() {
+        view = UIView()
+        view.backgroundColor = .white
+        view.isOpaque = true
+        view.accessibilityIdentifier = "screenCaptureCover"
+    }
+    override var prefersStatusBarHidden: Bool { true }
+    override var prefersHomeIndicatorAutoHidden: Bool { true }
 }
 
 private struct PrivacyCover: View {

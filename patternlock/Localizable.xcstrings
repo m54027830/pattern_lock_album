@@ -4887,6 +4887,52 @@
         }
       }
     },
+    "Choose a unique name on this device (1–40 characters). The owner’s vault name stays the same." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle einen eindeutigen Namen auf diesem Gerät (1–40 Zeichen). Der Tresorname beim Eigentümer bleibt unverändert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a unique name on this device (1–40 characters). The owner’s vault name stays the same."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez un nom unique sur cet appareil (1 à 40 caractères). Le nom du coffre chez son propriétaire reste inchangé."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scegli un nome univoco su questo dispositivo (1–40 caratteri). Il nome della cassaforte del proprietario resta invariato."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このデバイスで使われていない名前を1〜40文字で付けてください。所有者側の保管庫名は変わりません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 기기에서 사용하지 않는 이름을 1~40자로 입력하세요. 소유자의 보관함 이름은 변경되지 않습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请设置此设备上未使用的名称（1–40 个字符）。所有者的保险库名称不会改变。"
+          }
+        }
+      }
+    },
     "Choose a unique pattern for %@.\nConnect at least 4 dots." : {
       "localizations" : {
         "de" : {
@@ -10230,6 +10276,144 @@
         }
       }
     },
+    "Enter a recipient label before creating a sharing phrase." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib eine Empfängerbezeichnung ein, bevor du eine Freigabephrase erstellst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a recipient label before creating a sharing phrase."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saisissez un libellé de destinataire avant de créer une phrase de partage."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inserisci un’etichetta per il destinatario prima di creare una frase di condivisione."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有フレーズを作成する前に、受信者のラベルを入力してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유 문구를 만들기 전에 받는 사람의 라벨을 입력하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请先输入接收者标签，再创建共享口令。"
+          }
+        }
+      }
+    },
+    "Give one person read-only access with a separate sharing phrase." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib einer Person mit einer separaten Freigabephrase schreibgeschützten Zugriff."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Give one person read-only access with a separate sharing phrase."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accordez à une personne un accès en lecture seule avec une phrase de partage distincte."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concedi a una persona l’accesso in sola lettura con una frase di condivisione separata."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "専用の共有フレーズで、1人に読み取り専用のアクセスを許可します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "별도의 공유 문구로 한 사람에게 읽기 전용 접근 권한을 부여하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用单独的共享口令，授予一人只读访问权限。"
+          }
+        }
+      }
+    },
+    "Share over iCloud with a private phrase. Set expiration dates, open limits, and export permissions." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teile über iCloud mit einer privaten Phrase. Lege Ablaufdaten, Öffnungslimits und Exportberechtigungen fest."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share over iCloud with a private phrase. Set expiration dates, open limits, and export permissions."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partagez via iCloud avec une phrase privée. Définissez des dates d’expiration, des limites d’ouverture et des autorisations d’exportation."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Condividi tramite iCloud con una frase privata. Imposta date di scadenza, limiti di apertura e permessi di esportazione."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "非公開のフレーズを使ってiCloud経由で共有。共有期限、開く回数の上限、書き出し権限を設定できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "비공개 문구로 iCloud를 통해 공유하세요. 만료일, 열기 횟수 제한, 내보내기 권한을 설정할 수 있습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用私密口令通过 iCloud 共享，并设置到期日期、打开次数限制和导出权限。"
+          }
+        }
+      }
+    },
     "e.g. Travel, Family, Personal" : {
       "localizations" : {
         "de" : {
@@ -12269,53 +12453,6 @@
         }
       }
     },
-    "Give one person read-only access with a separate sharing phrase. They need Pattern and an iCloud account. Your pattern and recovery phrase stay private." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gib einer Person mit einer eigenen Freigabephrase Lesezugriff. Sie benötigt Pattern und einen iCloud-Account. Dein Muster und deine Wiederherstellungsphrase bleiben privat."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Give one person read-only access with a separate sharing phrase. They need Pattern and an iCloud account. Your pattern and recovery phrase stay private."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Accordez à une personne un accès en lecture seule avec une phrase distincte. Elle doit utiliser Pattern et iCloud. Votre schéma et votre phrase de récupération restent privés."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Concedi accesso in sola lettura a una persona con una frase separata. Servono Pattern e un account iCloud. La tua sequenza e la frase di recupero restano private."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "専用の共有フレーズで1人に閲覧専用アクセスを付与します。相手にはPatternとiCloudアカウントが必要です。パターンや復元フレーズは共有されません。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "별도 공유 문구로 한 사람에게 읽기 전용 접근을 허용합니다. 상대방에게 Pattern과 iCloud 계정이 필요합니다. 패턴과 복구 문구는 공개되지 않습니다."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通过独立共享短语授予一人只读访问权限。对方需要 Pattern 和 iCloud 账户。你的图案及恢复短语不会共享。"
-          }
-        }
-      }
-    },
     "Give the vault a unique name between 1 and 40 characters." : {
       "localizations" : {
         "de" : {
@@ -14310,53 +14447,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在加载价格…"
-          }
-        }
-      }
-    },
-    "Lock on screen capture" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bei Bildschirmaufnahme sperren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lock on screen capture"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verrouiller lors d’une capture"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Blocca alla cattura dello schermo"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "画面キャプチャ時にロック"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "화면 캡처 시 잠금"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "截屏或录屏时锁定"
           }
         }
       }
@@ -18975,53 +19065,6 @@
         }
       }
     },
-    "Recipients check access online before opening. Updates are sent while your vault is open. Expiration, open limits, and export controls are app rules; they cannot erase saved copies. Screen capture detection can lock the vault after a screenshot, but cannot prevent that first screenshot or another camera." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Empfänger prüfen den Zugriff vor dem Öffnen online. Updates werden bei geöffnetem Tresor gesendet. Ablaufdatum, Öffnungs- und Exportlimits sind App-Regeln und löschen keine gespeicherten Kopien. Die Aufnahmeerkennung kann nach einem Screenshot sperren, verhindert aber weder den ersten Screenshot noch eine andere Kamera."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recipients check access online before opening. Updates are sent while your vault is open. Expiration, open limits, and export controls are app rules; they cannot erase saved copies. Screen capture detection can lock the vault after a screenshot, but cannot prevent that first screenshot or another camera."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’accès est vérifié en ligne avant l’ouverture. Les mises à jour partent quand votre coffre est ouvert. Expiration, limites d’ouverture et d’exportation sont des règles de l’app : elles n’effacent pas les copies enregistrées. La détection peut verrouiller après une capture, sans empêcher la première capture ni une autre caméra."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’accesso viene verificato online prima dell’apertura. Gli aggiornamenti partono quando la cassaforte è aperta. Scadenza, limiti di apertura ed esportazione sono regole dell’app e non eliminano copie salvate. Il rilevamento può bloccare dopo uno screenshot, ma non impedisce il primo né un’altra fotocamera."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "受信者は開く前にオンラインで権限を確認します。更新は所有者が保管庫を開いている間に送信されます。有効期限、回数、書き出しの制限はアプリ内のルールで、保存済みコピーは消せません。撮影検知でロックできますが、最初のスクリーンショットや別のカメラは防げません。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "수신자는 열기 전에 온라인으로 권한을 확인합니다. 소유자가 보관함을 열면 변경 사항이 전송됩니다. 만료, 열기 횟수, 내보내기 제한은 앱 규칙이며 저장된 사본을 지울 수 없습니다. 캡처 감지 후 잠글 수 있지만 첫 스크린샷이나 다른 카메라 촬영은 막을 수 없습니다."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "接收者打开前会在线检查权限。你打开保险库时才会发送更新。到期、打开次数和导出限制属于应用规则，无法删除已保存的副本。检测到截屏后可锁定，但无法阻止第一次截屏或其他相机拍摄。"
-          }
-        }
-      }
-    },
     "Record video" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -22498,52 +22541,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "设置步骤 %lld，共 4 步"
-          }
-        }
-      }
-    },
-    "Share over iCloud with a private phrase. Set expiration dates, open limits, export permissions, and locking on screen capture." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Teile über iCloud mit einer privaten Phrase. Lege Ablaufdatum, Öffnungslimit, Exportrechte und die Sperre bei Bildschirmaufnahmen fest."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Share over iCloud with a private phrase. Set expiration dates, open limits, export permissions, and locking on screen capture."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Partagez via iCloud avec une phrase privée. Définissez une expiration, une limite d’ouvertures, les autorisations d’exportation et le verrouillage lors d’une capture d’écran."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Condividi tramite iCloud con una frase privata. Imposta scadenza, limite di aperture, permessi di esportazione e blocco in caso di acquisizione dello schermo."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "専用のフレーズでiCloud経由の共有が可能。有効期限、開く回数の上限、書き出しの許可、画面キャプチャ時のロックを設定できます。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "비공개 문구로 iCloud를 통해 공유하세요. 만료일, 열기 횟수 제한, 내보내기 권한, 화면 캡처 시 잠금을 설정할 수 있습니다."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通过私密短语使用 iCloud 共享。可设置到期时间、打开次数上限、导出权限和截屏时锁定。"
           }
         }
       }

@@ -94,7 +94,6 @@ struct VaultSharingSettingsView: View {
     @State private var limitsOpens = false
     @State private var maximumOpens = 10
     @State private var allowsExport = true
-    @State private var blocksCapture = false
     @State private var phrase: String?
     @State private var busy = false
     @State private var error: String?
@@ -113,24 +112,26 @@ struct VaultSharingSettingsView: View {
                 }.accessibilityIdentifier("sharingPurchaseNotice")
             }
             Section {
-                Text(String(localized: "Give one person read-only access with a separate sharing phrase. They need Pattern and an iCloud account. Your pattern and recovery phrase stay private."))
+                Text(String(localized: "Give one person read-only access with a separate sharing phrase."))
                 TextField(String(localized: "Recipient label (only on this device)"), text: $label)
+                    .accessibilityIdentifier("sharingRecipientLabel")
                 Toggle(String(localized: "Set an expiration date"), isOn: $expires)
                 if expires { DatePicker(String(localized: "Expires"), selection: $expiry, in: Date.now...) }
                 Toggle(String(localized: "Limit number of opens"), isOn: $limitsOpens)
                 if limitsOpens { Stepper(String(localized: "Maximum opens: \(maximumOpens)"), value: $maximumOpens, in: 1...1000) }
                 Toggle(String(localized: "Allow export"), isOn: $allowsExport)
-                Toggle(String(localized: "Lock on screen capture"), isOn: $blocksCapture)
                 Button(purchases.isUnlimited ? String(localized: "Create sharing phrase") : String(localized: "Unlock sharing"),
                        systemImage: purchases.isUnlimited ? "person.badge.plus" : "lock.fill") {
                     if !purchases.isUnlimited { showingPurchase = true }
                     else {
                         run {
                             phrase = try await cloud.createShare(vault: vault, store: store, label: label,
-                                policy: VaultSharePolicy(expiresAt: expires ? expiry : nil, maximumOpens: limitsOpens ? maximumOpens : nil, allowsExport: allowsExport, blocksCapture: blocksCapture))
+                                policy: VaultSharePolicy(expiresAt: expires ? expiry : nil, maximumOpens: limitsOpens ? maximumOpens : nil, allowsExport: allowsExport))
                         }
                     }
-                }.disabled(purchases.status == .checking)
+                }
+                .disabled(purchases.status == .checking || label.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .accessibilityIdentifier("createSharingPhrase")
             } header: { Text(String(localized: "Share this vault")) } footer: {
                 Text(String(localized: "Creating shares requires Pattern Pro. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person."))
             }
@@ -154,9 +155,6 @@ struct VaultSharingSettingsView: View {
                     }
                     Button(String(localized: "Send latest changes")) { run { try await cloud.synchronize(vault: vault, store: store, force: true) } }
                 } header: { Text(String(localized: "People with access")) }
-            }
-            Section {
-                Text(String(localized: "Recipients check access online before opening. Updates are sent while your vault is open. Expiration, open limits, and export controls are app rules; they cannot erase saved copies. Screen capture detection can lock the vault after a screenshot, but cannot prevent that first screenshot or another camera."))
             }
             if busy { Section { ProgressView(String(localized: "Updating iCloud…")) } }
             if let error { Section { Text(error).foregroundStyle(.red) } }
@@ -202,6 +200,8 @@ struct JoinSharedVaultView: View {
     @State private var busy = false
     @State private var installed = false
     @State private var error: String?
+    @State private var nameError: String?
+    @State private var choosingPattern = false
 
     var body: some View {
         Form {
@@ -211,18 +211,25 @@ struct JoinSharedVaultView: View {
                     Text(String(localized: "Use your new pattern to open it. An internet connection is required to check access."))
                     Button(String(localized: "Done")) { onJoined?(); dismiss() }
                 }
-            } else if let prepared, let joined {
+            } else if let prepared, joined != nil {
                 Section {
                     Label(String(localized: "Read-only shared vault"), systemImage: "person.2")
-                    TextField(String(localized: "Vault name"), text: $name)
                     Text(String(localized: "Files: \(prepared.snapshot.items.count) · Folders: \(prepared.snapshot.folders.count)"))
-                    NavigationLink(String(localized: "Choose a pattern")) {
-                        PatternSetupView(title: String(localized: "Shared vault pattern"), needsCurrentPattern: false) { _, pattern in
-                            let vault = Vault(id: UUID().uuidString, name: name.trimmingCharacters(in: .whitespacesAndNewlines))
-                            try await PatternAuthenticator.shared.installRestoredVault(vault, pattern: pattern, preparedDirectory: prepared.directory, directory: URL.applicationSupportDirectory.appending(path: "Vaults"), lease: prepared.lease, joinedShare: joined)
-                            self.prepared = nil; self.joined = nil; installed = true; phrase = ""
-                        }
-                    }.disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+                Section {
+                    TextField(String(localized: "Vault name"), text: $name)
+                        .autocorrectionDisabled()
+                        .accessibilityIdentifier("sharedVaultName")
+                    if let nameError { Text(nameError).foregroundStyle(.red) }
+                } header: {
+                    Text(String(localized: "Vault name"))
+                } footer: {
+                    Text(String(localized: "Choose a unique name on this device (1–40 characters). The owner’s vault name stays the same."))
+                }
+                .disabled(busy)
+                Section {
+                    Button(String(localized: "Choose a pattern"), action: choosePattern)
+                        .disabled(busy || name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             } else {
                 Section {
@@ -246,5 +253,27 @@ struct JoinSharedVaultView: View {
         }
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
         .navigationTitle(String(localized: "Join shared vault")).navigationBarTitleDisplayMode(.inline)
+        .onChange(of: name) { _, _ in nameError = nil }
+        .navigationDestination(isPresented: $choosingPattern) {
+            if let prepared, let joined {
+                PatternSetupView(title: String(localized: "Shared vault pattern"), needsCurrentPattern: false, vaultName: $name) { _, pattern in
+                    let vault = Vault(id: UUID().uuidString, name: name.trimmingCharacters(in: .whitespacesAndNewlines))
+                    try await PatternAuthenticator.shared.installRestoredVault(vault, pattern: pattern, preparedDirectory: prepared.directory, directory: URL.applicationSupportDirectory.appending(path: "Vaults"), lease: prepared.lease, joinedShare: joined)
+                    choosingPattern = false
+                    self.prepared = nil; self.joined = nil; installed = true; phrase = ""
+                }
+            }
+        }
+    }
+
+    private func choosePattern() {
+        busy = true; nameError = nil
+        Task {
+            do {
+                name = try await PatternAuthenticator.shared.validateNewVaultName(name)
+                choosingPattern = true
+            } catch { nameError = error.localizedDescription }
+            busy = false
+        }
     }
 }
