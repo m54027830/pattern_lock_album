@@ -66,7 +66,7 @@ struct MediaImportSummary: Identifiable {
             text += String(localized: " \(failedCount) couldn’t be imported; those originals will be kept.")
         }
         if limitSkippedCount > 0 {
-            text += String(localized: " \(limitSkippedCount) weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock Pattern Pro to add them.")
+            text += String(localized: " \(limitSkippedCount) weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock PatternVault Pro to add them.")
         }
         if unidentifiedCount > 0 {
             text += String(localized: " \(unidentifiedCount) saved items couldn’t be linked to Photos; those originals will be kept.")

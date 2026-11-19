@@ -126,7 +126,7 @@ import XCTest
         setup.recordPhraseShare(completed: true, phraseID: setup.phraseID)
         setup.confirmRecovery()
         setup.confirmation = "  " + customPhrase.uppercased().replacingOccurrences(of: " ", with: "\n  ") + "  "
-        await setup.finish { _, _, _, _ in XCTFail("Saving outside Pattern must be acknowledged") }
+        await setup.finish { _, _, _, _ in XCTFail("Saving outside PatternVault must be acknowledged") }
         XCTAssertNotNil(setup.error)
         XCTAssertFalse(setup.recoveryConfirmationMismatch)
         setup.savedPhrase = true

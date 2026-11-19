@@ -43,12 +43,12 @@ struct OnboardingView: View {
     }
     private var subtitle: String {
         switch setup.step {
-        case .welcome: [String(localized: "Welcome to Pattern. A calm home for the photos and videos you want to keep close."), String(localized: "Each pattern opens its own vault, with separate photos, videos, and folders."), String(localized: "Deleting Pattern removes your local vaults. Enable encrypted iCloud backup in settings to restore after reinstalling.")][setup.welcomePage]
+        case .welcome: [String(localized: "Welcome to PatternVault. A calm home for the photos and videos you want to keep close."), String(localized: "Each pattern opens its own vault, with separate photos, videos, and folders."), String(localized: "Deleting PatternVault removes your local vaults. Enable encrypted iCloud backup in settings to restore after reinstalling.")][setup.welcomePage]
         case .vaultChoice: String(localized: "Choose how you’d like to start.")
         case .grid: String(localized: "Choose the grid you’ll use for every vault. More dots give you more room to draw.")
         case .pattern: String(localized: "Name your first vault, then connect at least 4 different dots.")
         case .confirm: String(localized: "Draw the same pattern again to confirm it.")
-        case .recovery: String(localized: "Save a recovery phrase outside Pattern. It can reset this vault’s pattern if you forget it.")
+        case .recovery: String(localized: "Save a recovery phrase outside PatternVault. It can reset this vault’s pattern if you forget it.")
         case .verifyRecovery: String(localized: "Paste the whole recovery phrase")
         }
     }
@@ -111,7 +111,7 @@ struct OnboardingView: View {
                     .opacity(setup.step == .welcome && setup.welcomePage == 0 ? 0 : 1)
                     .disabled(setup.step == .welcome && setup.welcomePage == 0).accessibilityLabel(String(localized: "Back"))
                 Spacer()
-                HStack(spacing: 8) { PatternMark(); Text("PATTERN").font(.system(size: 11, weight: .semibold, design: .monospaced)).tracking(3) }
+                HStack(spacing: 8) { PatternMark(); Text("PatternVault").font(.system(size: 11, weight: .semibold, design: .monospaced)).tracking(3) }
                 Spacer()
                 if setup.step == .welcome {
                     Button(String(localized: "Skip"), action: setup.showVaultChoices).font(.caption)
@@ -219,7 +219,7 @@ struct OnboardingView: View {
                 .accessibilityIdentifier("onboardingPhraseConfirmation")
                 .clipboardPasteButton(text: $setup.confirmation, belowField: true)
             validationMessage
-            Toggle(String(localized: "I saved my phrase outside Pattern"), isOn: $setup.savedPhrase).font(.subheadline)
+            Toggle(String(localized: "I saved my phrase outside PatternVault"), isOn: $setup.savedPhrase).font(.subheadline)
             Text(String(localized: "The phrase won’t be shown again after setup. Keep it to reset a forgotten pattern or open an iCloud backup. A phrase alone cannot restore photos after deleting the app."))
                 .font(.caption).foregroundStyle(AlbumTheme.secondary).multilineTextAlignment(.center)
         }

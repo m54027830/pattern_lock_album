@@ -43,7 +43,7 @@ actor VaultBackup {
         cleanTemporaryFilesOnce()
         try RecoveryPhrase.validate(phrase)
         let directory = try temporaryDirectory(prefix: "EncryptedBackup-")
-        let url = directory.appending(path: "Pattern-\(UUID().uuidString.prefix(8)).patternbackup")
+        let url = directory.appending(path: "PatternVault-\(UUID().uuidString.prefix(8)).patternbackup")
         do {
             let files = try paths(for: snapshot).map { path in
                 let source = root.appending(path: path)

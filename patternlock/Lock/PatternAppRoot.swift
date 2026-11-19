@@ -16,7 +16,7 @@ struct PatternAppRoot: View {
             if lock.stage == .loading {
                 // Registration is still unknown. Never flash the returning-user
                 // lock screen before deciding whether onboarding is needed.
-                AlbumTheme.background.ignoresSafeArea()
+                PrivacyCover()
                     .accessibilityIdentifier("initialLoadingScreen")
             } else if lock.stage == .unlocked, let vault = lock.unlockedVault {
                 VaultAccessGate(vault: vault, store: libraries.store(for: vault), sessionScope: cloudSessionScope, isDummy: lock.isDummySession, lock: { libraries.dismissPresentations(); lock.lock(); Task { await lock.activate() } }) {
@@ -304,10 +304,10 @@ private struct PrivacyCover: View {
     var body: some View {
         ZStack {
             AlbumTheme.background.ignoresSafeArea()
-            VStack(spacing: 18) {
-                Image(systemName: "lock").font(.system(size: 32, weight: .light))
-                Text("PATTERN").font(.system(size: 12, weight: .semibold, design: .monospaced)).tracking(4)
-            }.foregroundStyle(AlbumTheme.accent)
+            VStack(spacing: 12) {
+                PatternMark(size: 68)
+                Text("PatternVault").font(.system(size: 20, weight: .semibold))
+            }.foregroundStyle(AlbumTheme.ink)
         }.protectedPreferredColorScheme(.light)
     }
 }

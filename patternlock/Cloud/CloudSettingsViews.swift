@@ -49,7 +49,7 @@ struct CloudBackupSettingsView: View {
             if let message = error ?? cloud.errors[vault.id] { Section { Text(message).foregroundStyle(.red) } }
             if let message = cloud.deletionError {
                 Section {
-                    Text(String(localized: "Cloud removal is pending. Pattern will retry when it can reach iCloud."))
+                    Text(String(localized: "Cloud removal is pending. PatternVault will retry when it can reach iCloud."))
                     Text(message).font(.caption).foregroundStyle(.secondary)
                     Button(String(localized: "Try again")) { run { await cloud.processDeletions() } }
                 }
@@ -106,11 +106,11 @@ struct VaultSharingSettingsView: View {
         Form {
             if purchases.status == .free {
                 Section {
-                    Label(String(localized: "Sharing requires Pattern Pro"), systemImage: "lock.fill")
+                    Label(String(localized: "Sharing requires PatternVault Pro"), systemImage: "lock.fill")
                         .font(.headline).foregroundStyle(AlbumTheme.ink)
                     Text(String(localized: "Unlock vault sharing with a one-time purchase. Opening a shared vault is free."))
                         .font(.subheadline).foregroundStyle(AlbumTheme.secondary)
-                    Button(String(localized: "View Pattern Pro")) { showingPurchase = true }
+                    Button(String(localized: "View PatternVault Pro")) { showingPurchase = true }
                 }.accessibilityIdentifier("sharingPurchaseNotice")
             }
             Section {
@@ -149,7 +149,7 @@ struct VaultSharingSettingsView: View {
                 .disabled(busy || cloud.busyVaults.contains(vault.id) || purchases.status == .checking)
                 .accessibilityIdentifier("createSharingPhrase")
             } header: { Text(String(localized: "Share this vault")) } footer: {
-                Text(String(localized: "Creating shares requires Pattern Pro. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person."))
+                Text(String(localized: "Creating shares requires PatternVault Pro. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person."))
             }
             if let phrase {
                 Section {
@@ -176,7 +176,7 @@ struct VaultSharingSettingsView: View {
             if let error { Section { Text(error).foregroundStyle(.red) } }
             if cloud.deletionError != nil {
                 Section {
-                    Text(String(localized: "Revocation is pending. Pattern will retry when it can reach iCloud."))
+                    Text(String(localized: "Revocation is pending. PatternVault will retry when it can reach iCloud."))
                     Button(String(localized: "Try again")) { run { await cloud.processDeletions() } }
                 }
             }
@@ -195,7 +195,7 @@ struct VaultSharingSettingsView: View {
             if let share = revoking {
                 Button(String(localized: "Revoke access"), role: .destructive) { run { try await cloud.revoke(vaultID: vault.id, shareID: share.id); phrase = nil } }
             }
-        } message: { Text(String(localized: "Revocation takes effect when iCloud receives it. Copies already saved outside Pattern cannot be removed.")) }
+        } message: { Text(String(localized: "Revocation takes effect when iCloud receives it. Copies already saved outside PatternVault cannot be removed.")) }
     }
 
     private func reload() async {

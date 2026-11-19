@@ -1,6 +1,6 @@
-Pattern documentation — editorial and implementation notes
+PatternVault documentation — editorial and implementation notes
 Reviewed: 15 November 2026
-App: Pattern 1.0.0
+App: PatternVault 1.0.0
 Source revision: see publisher.json. No application source was changed for this documentation.
 
 DELIVERY
@@ -58,7 +58,7 @@ IMPORTANT DISTINCTIONS FROM MARKETING COPY
   record and encrypted backup/shared archives. Do not imply pattern-derived
   encryption for each local media file unless the implementation changes.
 - Local vault files and the installation key are excluded from ordinary device
-  backups. Recovery after deletion requires a completed Pattern backup AND the
+  backups. Recovery after deletion requires a completed PatternVault backup AND the
   phrase protecting that backup. A recovery phrase contains no media.
 - iCloud backup retains one latest completed archive, runs with the vault open,
   and is not automatic bidirectional synchronization across personal devices.

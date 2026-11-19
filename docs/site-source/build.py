@@ -41,7 +41,7 @@ def language_menu(lang, filename):
     links = ''.join(f'<a data-language-link href="{language_href(lang, other, filename)}" lang="{other}" hreflang="{other}"' + (' aria-current="true"' if other == lang else '') + f'>{LABELS[other]["native_name"]}</a>' for other in LANGUAGES)
     return f'<details class="language-picker" data-language-picker><summary aria-label="{l["language"]}: {l["native_name"]}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg><span>{l["native_name"]}</span></summary><nav aria-label="{l["language"]}">{links}</nav></details>'
 
-MARK = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 5h7l7 7v7H5V12" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"/><g fill="currentColor"><circle cx="5" cy="5" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="19" cy="19" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="5" cy="12" r="2"/></g></svg>'
+MARK = (SOURCE.parent.parent / 'patternlock/Assets.xcassets/PVMonogram.imageset/PVMonogram.svg').read_text().strip()
 ICONS = {
  'privacy-policy':'<rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 018 0v3m-4 5v2"/>',
  'terms-of-use':'<path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9zM14 3v6h6M8 13h8M8 17h5"/>',
@@ -106,14 +106,14 @@ def chrome(lang, pages, slug, title, description, lead, main, toc='', home=False
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{esc(description)}">
 <meta name="theme-color" content="#152b35">
-<title>{esc(title)} — Pattern</title>
+<title>{esc(title)} — {esc(CONFIG['app_name'])}</title>
 {alternates}
 <style>\n{CSS}\n</style>
 </head>
 <body>
 <a class="skip" href="#main">{l['skip']}</a>
 <header class="topbar"><div class="shell header-inner">
-<a class="brand" href="index.html"><span class="brand-mark">{MARK}</span>Pattern</a>
+<a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">{MARK}</span>{esc(CONFIG['app_name'])}</a>
 <nav class="nav" aria-label="{l['navigation']}">{nav(lang,pages,slug)}</nav>
 {language_menu(lang,filename)}
 </div></header>
@@ -125,7 +125,7 @@ def chrome(lang, pages, slug, title, description, lead, main, toc='', home=False
 {draft}
 {body}
 </main>
-<footer class="footer"><div class="shell"><div class="footer-inner"><div><strong>Pattern</strong><p>{l['foot']}</p></div><div class="footer-links">{footerlinks}</div></div><p class="footer-note">{l['support']}: {render_copy('{{contact}}',lang)}</p></div></footer>
+<footer class="footer"><div class="shell"><div class="footer-inner"><div><strong>{esc(CONFIG['app_name'])}</strong><p>{l['foot']}</p></div><div class="footer-links">{footerlinks}</div></div><p class="footer-note">{l['support']}: {render_copy('{{contact}}',lang)}</p></div></footer>
 {script}
 </body>
 </html>

@@ -5,8 +5,8 @@ nonisolated enum FreeTierLimit: String, LocalizedError, Identifiable, Sendable {
     var id: String { rawValue }
     var errorDescription: String? {
         switch self {
-        case .albums: String(localized: "The free version includes 3 albums. Unlock Pattern Pro to create more.")
-        case .media: String(localized: "The free version includes 5 items per album, including its folders. Unlock Pattern Pro to add more.")
+        case .albums: String(localized: "The free version includes 3 albums. Unlock PatternVault Pro to create more.")
+        case .media: String(localized: "The free version includes 5 items per album, including its folders. Unlock PatternVault Pro to add more.")
         }
     }
 }

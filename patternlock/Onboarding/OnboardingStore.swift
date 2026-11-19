@@ -105,7 +105,7 @@ nonisolated enum OnboardingStep: Int, CaseIterable { case welcome, vaultChoice, 
             return false
         }
         guard savedPhrase else {
-            error = String(localized: "Confirm that you saved your phrase outside Pattern before continuing.")
+            error = String(localized: "Confirm that you saved your phrase outside PatternVault before continuing.")
             return false
         }
         return true

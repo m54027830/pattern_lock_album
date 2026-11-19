@@ -1,5 +1,5 @@
 #!/usr/bin/env swift
-import CoreGraphics
+import AppKit
 import Foundation
 import ImageIO
 
@@ -42,12 +42,17 @@ func render(_ name: String, pixels: Int) -> CGImage {
         }
     }
     switch name {
-    case "Classic", "ProPurchase", "SpecialPurchase":
-        // Layers / Atmosphere: overlapping tiles on a muted, flowing backdrop.
-        // Keep the Classic asset identifier for the existing default-icon picker.
-        let isPurchase = name != "Classic"
+    case "Classic":
+        background(0xF4F7FA, 0xB3C3D4)
+        let monogram = NSImage(contentsOf: assets.appending(path: "PVMonogram.imageset/PVMonogram.svg"))!
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = NSGraphicsContext(cgContext: c, flipped: true)
+        monogram.draw(in: CGRect(x: 144, y: 133, width: 736, height: 736),
+                      from: .zero, operation: .sourceOver, fraction: 1, respectFlipped: true, hints: nil)
+        NSGraphicsContext.restoreGraphicsState()
+    case "ProPurchase", "SpecialPurchase":
         let isSpecial = name == "SpecialPurchase"
-        let palette: [UInt32] = isPurchase ? [0x344C69, 0x223953, 0x14273E] : [0x92A3A2, 0x738B91, 0x526A77]
+        let palette: [UInt32] = [0x344C69, 0x223953, 0x14273E]
         let gradient = CGGradient(colorsSpace: space,
                                   colors: palette.map { color($0) } as CFArray,
                                   locations: [0, 0.5, 1])!
@@ -73,37 +78,16 @@ func render(_ name: String, pixels: Int) -> CGImage {
         c.closePath()
         c.fillPath()
         c.restoreGState()
-        if isPurchase {
-            rect(280, 280, 360, 360, 58, isSpecial ? 0xBA965B : 0x70889E)
-        } else {
-            // Three distinct rear-tile sections echo the gold, green, and blue
-            // keys in Passwords while preserving Pattern's overlapping squares.
-            c.saveGState()
-            c.addPath(CGPath(roundedRect: CGRect(x: 280, y: 280, width: 360, height: 360),
-                             cornerWidth: 58, cornerHeight: 58, transform: nil))
-            c.clip()
-            let sections: [(UInt32, UInt32)] = [(0xF1D15B, 0xC3A139), (0x78C878, 0x439B57), (0x4E9EE4, 0x286CB3)]
-            for (index, shades) in sections.enumerated() {
-                let x = CGFloat(280 + index * 120)
-                c.saveGState()
-                c.clip(to: CGRect(x: x, y: 280, width: 120, height: 360))
-                let gradient = CGGradient(colorsSpace: space, colors: [color(shades.0), color(shades.1)] as CFArray, locations: [0, 1])!
-                c.drawLinearGradient(gradient, start: CGPoint(x: x, y: 280), end: CGPoint(x: x + 120, y: 640), options: [])
-                c.restoreGState()
-            }
-            c.restoreGState()
-        }
-        rect(384, 384, 360, 360, 58, isPurchase ? (isSpecial ? 0xF8E7BE : 0xE0E6EA) : 0xDBE0DB)
-        if isPurchase {
-            // Both products unlock the same unlimited access: the same infinity mark.
-            c.setStrokeColor(color(0x223953)); c.setLineWidth(24); c.setLineCap(.round)
-            c.move(to: CGPoint(x: 564, y: 564))
-            c.addCurve(to: CGPoint(x: 460, y: 564), control1: CGPoint(x: 510, y: 482), control2: CGPoint(x: 460, y: 504))
-            c.addCurve(to: CGPoint(x: 564, y: 564), control1: CGPoint(x: 460, y: 624), control2: CGPoint(x: 510, y: 646))
-            c.addCurve(to: CGPoint(x: 668, y: 564), control1: CGPoint(x: 618, y: 482), control2: CGPoint(x: 668, y: 504))
-            c.addCurve(to: CGPoint(x: 564, y: 564), control1: CGPoint(x: 668, y: 624), control2: CGPoint(x: 618, y: 646))
-            c.strokePath()
-        }
+        rect(280, 280, 360, 360, 58, isSpecial ? 0xBA965B : 0x70889E)
+        rect(384, 384, 360, 360, 58, isSpecial ? 0xF8E7BE : 0xE0E6EA)
+        // Both products unlock the same unlimited access: the same infinity mark.
+        c.setStrokeColor(color(0x223953)); c.setLineWidth(24); c.setLineCap(.round)
+        c.move(to: CGPoint(x: 564, y: 564))
+        c.addCurve(to: CGPoint(x: 460, y: 564), control1: CGPoint(x: 510, y: 482), control2: CGPoint(x: 460, y: 504))
+        c.addCurve(to: CGPoint(x: 564, y: 564), control1: CGPoint(x: 460, y: 624), control2: CGPoint(x: 510, y: 646))
+        c.addCurve(to: CGPoint(x: 668, y: 564), control1: CGPoint(x: 618, y: 482), control2: CGPoint(x: 668, y: 504))
+        c.addCurve(to: CGPoint(x: 564, y: 564), control1: CGPoint(x: 668, y: 624), control2: CGPoint(x: 618, y: 646))
+        c.strokePath()
         if isSpecial {
             // A price-tag badge identifies the offer without embedding a price or deadline.
             polygon([CGPoint(x: 710, y: 268), CGPoint(x: 788, y: 268), CGPoint(x: 842, y: 322),

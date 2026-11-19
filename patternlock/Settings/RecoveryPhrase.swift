@@ -16,7 +16,7 @@ nonisolated enum VaultSettingsError: LocalizedError {
         case .duplicatePhrase: String(localized: "That recovery phrase is already used by another vault. Choose a different phrase.")
         case .noRecovery: String(localized: "Set up a recovery phrase first. Keep it somewhere safe outside this app.")
         case .invalidBackup: String(localized: "The backup couldn’t be opened. Check the phrase and make sure the file is complete and unchanged.")
-        case .backupVersion: String(localized: "This backup format isn’t supported by this version of Pattern.")
+        case .backupVersion: String(localized: "This backup format isn’t supported by this version of PatternVault.")
         case .invalidName: String(localized: "Give the vault a unique name between 1 and 40 characters.")
         case .backupsDisabled: String(localized: "Backups are turned off on this device after a duress unlock.")
         case .busy: String(localized: "Wait for the current operation to finish.")

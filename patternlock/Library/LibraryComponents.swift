@@ -49,16 +49,13 @@ import UIKit
 }
 
 struct PatternMark: View {
+    var size: CGFloat = 25
+
     var body: some View {
-        Grid(horizontalSpacing: 5, verticalSpacing: 5) {
-            ForEach(0..<3) { row in
-                GridRow {
-                    ForEach(0..<3) { col in
-                        Circle().fill(AlbumTheme.accent).frame(width: 5, height: 5)
-                    }
-                }
-            }
-        }.accessibilityHidden(true)
+        Image(decorative: "PVMonogram")
+            .resizable()
+            .scaledToFit()
+            .frame(width: size, height: size)
     }
 }
 

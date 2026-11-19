@@ -38,8 +38,8 @@ struct PatternLockView: View {
             ScrollView {
                 VStack(spacing: 0) {
                     HStack(spacing: 10) {
-                        PatternMark().frame(width: 25, height: 25)
-                        Text("PATTERN").font(.system(size: 11, weight: .semibold, design: .monospaced)).tracking(3)
+                        PatternMark()
+                        Text("PatternVault").font(.system(size: 11, weight: .semibold, design: .monospaced)).tracking(3)
                     }
                     .foregroundStyle(AlbumTheme.ink)
                     .frame(maxWidth: .infinity)

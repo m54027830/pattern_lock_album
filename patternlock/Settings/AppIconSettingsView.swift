@@ -7,7 +7,7 @@ struct AppIconSettingsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                Text(String(localized: "Choose a look for Pattern. This changes the app icon on this device for all vaults."))
+                Text(String(localized: "Choose a look for PatternVault. This changes the app icon on this device for all vaults."))
                     .font(.subheadline).foregroundStyle(AlbumTheme.secondary)
 
                 Button { choose(.classic) } label: {
@@ -38,7 +38,7 @@ struct AppIconSettingsView: View {
                 }
                 VStack(alignment: .leading, spacing: 10) {
                     Text(String(localized: "Home Screen name")).font(.headline)
-                    Text(String(localized: "iOS keeps the app’s name as Pattern when you change its icon. A shortcut can use a different name and matching artwork."))
+                    Text(String(localized: "iOS keeps the app’s name as PatternVault when you change its icon. A shortcut can use a different name and matching artwork."))
                         .font(.subheadline).foregroundStyle(AlbumTheme.secondary)
                     NavigationLink {
                         AppIconShortcutGuide(icon: icons.selected)
@@ -133,10 +133,10 @@ private struct AppIconShortcutGuide: View {
                 Text(String(localized: "Save the icon to Files using the share sheet."))
             }
             Section {
-                Text(String(localized: "Open Shortcuts, create a shortcut, and add Open App. Choose Pattern."))
+                Text(String(localized: "Open Shortcuts, create a shortcut, and add Open App. Choose PatternVault."))
                 Text(String(localized: "Choose Add to Home Screen, enter your name, then tap the icon and choose the exported image from Files."))
             } footer: {
-                Text(String(localized: "This adds a separate shortcut. The installed app stays named Pattern. You can remove its original icon from the Home Screen without deleting the app."))
+                Text(String(localized: "This adds a separate shortcut. The installed app stays named PatternVault. You can remove its original icon from the Home Screen without deleting the app."))
             }
         }
         .scrollContentBackground(.hidden).background(AlbumTheme.background)

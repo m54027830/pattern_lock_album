@@ -74,7 +74,7 @@ nonisolated enum VaultAccessError: LocalizedError {
         switch self {
         case .chooseDummy: String(localized: "Choose a different vault to display when \(DeviceBiometrics.name) fails.")
         case .invalidDummy: String(localized: "The dummy vault is no longer available. Unlock with \(DeviceBiometrics.name) and choose another in settings.")
-        case .faceIDRequired: String(localized: "\(DeviceBiometrics.name) must succeed to change these access settings. Make sure \(DeviceBiometrics.name) is enabled for Pattern on this device.")
+        case .faceIDRequired: String(localized: "\(DeviceBiometrics.name) must succeed to change these access settings. Make sure \(DeviceBiometrics.name) is enabled for PatternVault on this device.")
         case .changed: String(localized: "Vault access changed during authentication. Enter your pattern again.")
         case .interrupted: String(localized: "Authentication was interrupted. Enter your pattern again.")
         }

@@ -148,7 +148,7 @@ struct RecoveryPhraseSettingsView: View {
                         .clipboardPasteButton(text: $phrase, belowField: true)
                 }
             } header: { Text(generated ? String(localized: "New recovery phrase") : String(localized: "Custom recovery phrase")) } footer: {
-                Text(String(localized: "Keep this phrase somewhere safe outside Pattern. Anyone with it can reset this vault’s pattern and open backups made with it. Custom phrases are only as strong as the words you choose."))
+                Text(String(localized: "Keep this phrase somewhere safe outside PatternVault. Anyone with it can reset this vault’s pattern and open backups made with it. Custom phrases are only as strong as the words you choose."))
             }
             Section {
                 SecureField(String(localized: "Repeat the whole phrase"), text: $confirmation)
@@ -206,7 +206,7 @@ struct PendingRecoveryPhraseView: View {
             } else {
                 Section {
                     Text(phrase).font(.system(.body, design: .monospaced)).textSelection(.enabled).privacySensitive()
-                } footer: { Text(String(localized: "Save this phrase outside Pattern. Your previous phrase no longer recovers this vault. Existing backup files still use their original phrases.")) }
+                } footer: { Text(String(localized: "Save this phrase outside PatternVault. Your previous phrase no longer recovers this vault. Existing backup files still use their original phrases.")) }
                 Section {
                     SecureField(String(localized: "Repeat the whole phrase"), text: $confirmation)
                         .textInputAutocapitalization(.never).autocorrectionDisabled().privacySensitive()

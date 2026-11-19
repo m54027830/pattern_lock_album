@@ -22,7 +22,7 @@ def main():
     OUTPUT.mkdir(parents=True,exist_ok=True)
     status=('Public support email remains TBD. The pages show a localized draft notice\nand an unlinked email placeholder. Replace it before final publication.'
             if not config.get('support_email') else 'Publisher details are configured. Review the legal content before publication.')
-    notes=f'''Pattern HTML documentation — all seven app languages
+    notes=f'''{config['app_name']} HTML documentation — all seven app languages
 
 Publisher: {config['company_name']} (developer: {config['developer_name']})
 Country: {config['developer_country']}

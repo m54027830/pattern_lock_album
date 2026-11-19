@@ -60,7 +60,7 @@ struct BackupExportView: View {
                 Text(String(localized: "Your photos, videos, folders, and vault name are encrypted before saving. Choose iCloud Drive in Files to keep the backup in iCloud."))
                 SecureField(String(localized: "This vault’s recovery phrase"), text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
                     .clipboardPasteButton(text: $phrase, belowField: true)
-            } footer: { Text(String(localized: "Save the phrase separately and wait for iCloud Drive to finish uploading before deleting Pattern. Deleting the app removes local vaults. Restoration needs both the backup file and its original phrase.")) }
+            } footer: { Text(String(localized: "Save the phrase separately and wait for iCloud Drive to finish uploading before deleting PatternVault. Deleting the app removes local vaults. Restoration needs both the backup file and its original phrase.")) }
             Section {
                 Button(String(localized: "Export backup file"), systemImage: "arrow.up.doc", action: createBackup).disabled(phrase.isEmpty || busy || store.isBusy)
                 if busy { ProgressView(String(localized: "Encrypting backup…")) }
@@ -270,7 +270,7 @@ struct RecoverPatternView: View {
                 Section {
                     SecureField(String(localized: "Recovery phrase"), text: $phrase).textInputAutocapitalization(.never).autocorrectionDisabled()
                         .clipboardPasteButton(text: $phrase, belowField: true)
-                } footer: { Text(String(localized: "This resets a pattern for a vault still on this device. After reinstalling Pattern, use Restore from iCloud with a completed backup and its recovery phrase.")) }
+                } footer: { Text(String(localized: "This resets a pattern for a vault still on this device. After reinstalling PatternVault, use Restore from iCloud with a completed backup and its recovery phrase.")) }
                 Section {
                     NavigationLink(String(localized: "Choose a new pattern")) {
                         PatternSetupView(title: String(localized: "Reset pattern"), needsCurrentPattern: false) { _, pattern in

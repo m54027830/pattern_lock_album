@@ -14,7 +14,7 @@ nonisolated enum AppIcon: String, CaseIterable, Identifiable, Sendable {
     var id: String { rawValue }
     var alternateName: String? { self == .classic ? nil : "AppIcon" + rawValue }
     var previewAsset: String { "IconPreview" + rawValue }
-    var shortcutName: String { Self.utilityIcons.contains(self) ? title : "Pattern" }
+    var shortcutName: String { Self.utilityIcons.contains(self) ? title : "PatternVault" }
     var title: String {
         switch self {
         case .classic: String(localized: "Classic")

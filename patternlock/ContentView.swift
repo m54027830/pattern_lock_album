@@ -309,7 +309,7 @@ struct ContentView: View {
 
     private var vaultLabel: some View {
         HStack(spacing: 8) {
-            PatternMark().frame(width: 26, height: 26)
+            PatternMark(size: 26)
             Text(vaultName.uppercased())
                 .font(.system(size: 14, weight: .semibold, design: .monospaced)).tracking(2)
                 .lineLimit(1).minimumScaleFactor(0.8)

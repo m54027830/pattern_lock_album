@@ -127,7 +127,7 @@ struct VaultSettingsView: View {
 
                 Section {
                     Button { showingPurchase = true } label: {
-                        valueRow("Pattern Pro",
+                        valueRow("PatternVault Pro",
                                  value: purchases.access.isProTestingEnabled ? "Debug" : (purchases.isUnlimited ? String(localized: "Purchased") : String(localized: "Unlock once")),
                                  icon: "sparkles")
                     }
@@ -135,7 +135,7 @@ struct VaultSettingsView: View {
                         valueRow(String(localized: "Free album usage"), value: String(localized: "\(store.snapshot.items.count) / 5 items"))
                     }
                 } header: { Text(String(localized: "Purchase")) } footer: {
-                    Text(String(localized: "Free: 3 vaults with 5 items each. Pattern Pro removes both limits and unlocks vault sharing. One purchase. No subscription."))
+                    Text(String(localized: "Free: 3 vaults with 5 items each. PatternVault Pro removes both limits and unlocks vault sharing. One purchase. No subscription."))
                     #if DEBUG
                     if purchases.access.isProTestingEnabled {
                         Text(verbatim: "Pro testing is enabled for this Debug build. No purchase was made.")
@@ -258,7 +258,7 @@ private struct DuressSetupView: View {
                     Toggle(String(localized: "I understand that other vault access will be removed"), isOn: $understood)
                 }
                 NavigationLink(enabled ? String(localized: "Turn off duress vault") : String(localized: "Use this vault for duress")) {
-                    PatternAuthorizationView(title: enabled ? String(localized: "Turn off duress vault") : String(localized: "Use as duress vault"), detail: enabled ? String(localized: "This stops future duress actions. It won’t restore access already removed or turn backups back on.") : String(localized: "Confirm this vault’s pattern to enable duress. The next time you use it to unlock Pattern, the actions above will happen.")) { pattern in
+                    PatternAuthorizationView(title: enabled ? String(localized: "Turn off duress vault") : String(localized: "Use as duress vault"), detail: enabled ? String(localized: "This stops future duress actions. It won’t restore access already removed or turn backups back on.") : String(localized: "Confirm this vault’s pattern to enable duress. The next time you use it to unlock PatternVault, the actions above will happen.")) { pattern in
                         try await authenticator.setDuressVault(vaultID: vault.id, enabled: !enabled, currentPattern: pattern)
                         completion(); dismiss()
                     }

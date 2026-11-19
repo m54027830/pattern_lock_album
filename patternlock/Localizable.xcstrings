@@ -376,7 +376,7 @@
         }
       }
     },
-    " %lld weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock Pattern Pro to add them." : {
+    " %lld weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock PatternVault Pro to add them." : {
       "comment" : "Pluralize the entire message using the item count (or seconds for retry).",
       "localizations" : {
         "de" : {
@@ -385,13 +385,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld Objekt wurde wegen des kostenlosen Limits von 5 Fotos/Videos pro Album nicht importiert. Sein Original bleibt erhalten. Schalte Pattern Pro frei, um es hinzuzufügen."
+                  "value" : " %lld Objekt wurde wegen des kostenlosen Limits von 5 Fotos/Videos pro Album nicht importiert. Sein Original bleibt erhalten. Schalte PatternVault Pro frei, um es hinzuzufügen."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld Objekte wurden wegen des kostenlosen Limits von 5 Fotos/Videos pro Album nicht importiert. Originale bleiben erhalten. Schalte Pattern Pro frei, um sie hinzuzufügen."
+                  "value" : " %lld Objekte wurden wegen des kostenlosen Limits von 5 Fotos/Videos pro Album nicht importiert. Originale bleiben erhalten. Schalte PatternVault Pro frei, um sie hinzuzufügen."
                 }
               }
             }
@@ -403,13 +403,13 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld item wasn’t imported because the free album limit is 5 photos/videos. Its original was kept. Unlock Pattern Pro to add it."
+                  "value" : " %lld item wasn’t imported because the free album limit is 5 photos/videos. Its original was kept. Unlock PatternVault Pro to add it."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock Pattern Pro to add them."
+                  "value" : " %lld weren’t imported because the free album limit is 5 photos/videos. Their originals were kept. Unlock PatternVault Pro to add them."
                 }
               }
             }
@@ -421,19 +421,19 @@
               "many" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld éléments non importés : la limite gratuite est de 5 photos/vidéos par album. Les originaux sont conservés. Débloquez Pattern Pro pour les ajouter."
+                  "value" : " %lld éléments non importés : la limite gratuite est de 5 photos/vidéos par album. Les originaux sont conservés. Débloquez PatternVault Pro pour les ajouter."
                 }
               },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld élément non importé : la limite gratuite est de 5 photos/vidéos par album. L’original est conservé. Débloquez Pattern Pro pour l’ajouter."
+                  "value" : " %lld élément non importé : la limite gratuite est de 5 photos/vidéos par album. L’original est conservé. Débloquez PatternVault Pro pour l’ajouter."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld éléments non importés : la limite gratuite est de 5 photos/vidéos par album. Les originaux sont conservés. Débloquez Pattern Pro pour les ajouter."
+                  "value" : " %lld éléments non importés : la limite gratuite est de 5 photos/vidéos par album. Les originaux sont conservés. Débloquez PatternVault Pro pour les ajouter."
                 }
               }
             }
@@ -445,19 +445,19 @@
               "many" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld elementi non importati: il limite gratuito è di 5 foto/video per album. Gli originali sono conservati. Sblocca Pattern Pro per aggiungerli."
+                  "value" : " %lld elementi non importati: il limite gratuito è di 5 foto/video per album. Gli originali sono conservati. Sblocca PatternVault Pro per aggiungerli."
                 }
               },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld elemento non importato: il limite gratuito è di 5 foto/video per album. L’originale è conservato. Sblocca Pattern Pro per aggiungerlo."
+                  "value" : " %lld elemento non importato: il limite gratuito è di 5 foto/video per album. L’originale è conservato. Sblocca PatternVault Pro per aggiungerlo."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " %lld elementi non importati: il limite gratuito è di 5 foto/video per album. Gli originali sono conservati. Sblocca Pattern Pro per aggiungerli."
+                  "value" : " %lld elementi non importati: il limite gratuito è di 5 foto/video per album. Gli originali sono conservati. Sblocca PatternVault Pro per aggiungerli."
                 }
               }
             }
@@ -469,7 +469,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " 無料アルバムの上限は写真・動画5件のため、%lld件を読み込みませんでした。オリジナルは残っています。追加するにはPattern Proを購入してください。"
+                  "value" : " 無料アルバムの上限は写真・動画5件のため、%lld件を読み込みませんでした。オリジナルは残っています。追加するにはPatternVault Proを購入してください。"
                 }
               }
             }
@@ -481,7 +481,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " 무료 앨범은 사진/동영상이 5개로 제한되어 %lld개를 가져오지 않았습니다. 원본은 유지됩니다. 추가하려면 Pattern Pro를 구매하세요."
+                  "value" : " 무료 앨범은 사진/동영상이 5개로 제한되어 %lld개를 가져오지 않았습니다. 원본은 유지됩니다. 추가하려면 PatternVault Pro를 구매하세요."
                 }
               }
             }
@@ -493,7 +493,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : " 免费相册上限为 5 个照片/视频，因此未导入 %lld 个项目。原件已保留。解锁 Pattern Pro 后即可添加。"
+                  "value" : " 免费相册上限为 5 个照片/视频，因此未导入 %lld 个项目。原件已保留。解锁 PatternVault Pro 后即可添加。"
                 }
               }
             }
@@ -548,49 +548,49 @@
         }
       }
     },
-    "%@ must succeed to change these access settings. Make sure %@ is enabled for Pattern on this device." : {
+    "%@ must succeed to change these access settings. Make sure %@ is enabled for PatternVault on this device." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zum Ändern dieser Einstellungen muss %@ erfolgreich sein. Prüfe, ob %@ für Pattern auf diesem Gerät aktiviert ist."
+            "value" : "Zum Ändern dieser Einstellungen muss %@ erfolgreich sein. Prüfe, ob %@ für PatternVault auf diesem Gerät aktiviert ist."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ must succeed to change these access settings. Make sure %@ is enabled for Pattern on this device."
+            "value" : "%@ must succeed to change these access settings. Make sure %@ is enabled for PatternVault on this device."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ doit réussir pour modifier ces accès. Vérifiez que %@ est activé pour Pattern sur cet appareil."
+            "value" : "%@ doit réussir pour modifier ces accès. Vérifiez que %@ est activé pour PatternVault sur cet appareil."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Per modificare queste impostazioni %@ deve riuscire. Assicurati che %@ sia abilitato per Pattern su questo dispositivo."
+            "value" : "Per modificare queste impostazioni %@ deve riuscire. Assicurati che %@ sia abilitato per PatternVault su questo dispositivo."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "アクセス設定の変更には%@認証が必要です。このデバイスでPatternの%@が有効か確認してください。"
+            "value" : "アクセス設定の変更には%@認証が必要です。このデバイスでPatternVaultの%@が有効か確認してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 접근 설정을 변경하려면 %@ 인증에 성공해야 합니다. 이 기기에서 Pattern의 %@가 켜져 있는지 확인하세요."
+            "value" : "이 접근 설정을 변경하려면 %@ 인증에 성공해야 합니다. 이 기기에서 PatternVault의 %@가 켜져 있는지 확인하세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "更改这些访问设置必须通过 %@ 验证。请确保此设备已为 Pattern 启用 %@。"
+            "value" : "更改这些访问设置必须通过 %@ 验证。请确保此设备已为 PatternVault 启用 %@。"
           }
         }
       }
@@ -4610,48 +4610,48 @@
         }
       }
     },
-    "Choose a look for Pattern. This changes the app icon on this device for all vaults." : {
+    "Choose a look for PatternVault. This changes the app icon on this device for all vaults." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wähle einen Look für Pattern. Das App-Symbol auf diesem Gerät gilt für alle Tresore."
+            "value" : "Wähle einen Look für PatternVault. Das App-Symbol auf diesem Gerät gilt für alle Tresore."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose a look for Pattern. This changes the app icon on this device for all vaults."
+            "value" : "Choose a look for PatternVault. This changes the app icon on this device for all vaults."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez le style de Pattern. L’icône de l’app change sur cet appareil pour tous les coffres."
+            "value" : "Choisissez le style de PatternVault. L’icône de l’app change sur cet appareil pour tous les coffres."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scegli uno stile per Pattern. L’icona dell’app cambia su questo dispositivo per tutte le casseforti."
+            "value" : "Scegli uno stile per PatternVault. L’icona dell’app cambia su questo dispositivo per tutte le casseforti."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Patternのアイコンを選べます。このデバイスのすべての保管庫に共通のアプリアイコンが変わります。"
+            "value" : "PatternVaultのアイコンを選べます。このデバイスのすべての保管庫に共通のアプリアイコンが変わります。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern의 모양을 선택하세요. 이 기기의 모든 보관함에 동일한 앱 아이콘이 적용됩니다."
+            "value" : "PatternVault의 모양을 선택하세요. 이 기기의 모든 보관함에 동일한 앱 아이콘이 적용됩니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "为 Pattern 选择外观。此设备上所有保险库共用的 App 图标都会更改。"
+            "value" : "为 PatternVault 选择外观。此设备上所有保险库共用的 App 图标都会更改。"
           }
         }
       }
@@ -5721,31 +5721,31 @@
         }
       }
     },
-    "Cloud removal is pending. Pattern will retry when it can reach iCloud." : {
+    "Cloud removal is pending. PatternVault will retry when it can reach iCloud." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Cloud-Löschung steht aus. Pattern versucht es erneut, sobald iCloud erreichbar ist."
+            "value" : "Die Cloud-Löschung steht aus. PatternVault versucht es erneut, sobald iCloud erreichbar ist."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cloud removal is pending. Pattern will retry when it can reach iCloud."
+            "value" : "Cloud removal is pending. PatternVault will retry when it can reach iCloud."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La suppression cloud est en attente. Pattern réessaiera dès qu’iCloud sera accessible."
+            "value" : "La suppression cloud est en attente. PatternVault réessaiera dès qu’iCloud sera accessible."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La rimozione dal cloud è in attesa. Pattern riproverà quando iCloud sarà raggiungibile."
+            "value" : "La rimozione dal cloud è in attesa. PatternVault riproverà quando iCloud sarà raggiungibile."
           }
         },
         "ja" : {
@@ -5763,7 +5763,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "云端删除正在等待处理。连接到 iCloud 后 Pattern 会重试。"
+            "value" : "云端删除正在等待处理。连接到 iCloud 后 PatternVault 会重试。"
           }
         }
       }
@@ -6371,48 +6371,48 @@
         }
       }
     },
-    "Confirm that you saved your phrase outside Pattern before continuing." : {
+    "Confirm that you saved your phrase outside PatternVault before continuing." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bestätige vor dem Fortfahren, dass du deine Phrase außerhalb von Pattern gespeichert hast."
+            "value" : "Bestätige vor dem Fortfahren, dass du deine Phrase außerhalb von PatternVault gespeichert hast."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Confirm that you saved your phrase outside Pattern before continuing."
+            "value" : "Confirm that you saved your phrase outside PatternVault before continuing."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Confirmez que vous avez enregistré votre phrase en dehors de Pattern avant de continuer."
+            "value" : "Confirmez que vous avez enregistré votre phrase en dehors de PatternVault avant de continuer."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conferma di aver salvato la frase al di fuori di Pattern prima di continuare."
+            "value" : "Conferma di aver salvato la frase al di fuori di PatternVault prima di continuare."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "続ける前に、フレーズをPattern以外の場所に保存したことを確認してください。"
+            "value" : "続ける前に、フレーズをPatternVault以外の場所に保存したことを確認してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "계속하기 전에 문구를 Pattern 외부에 저장했는지 확인하세요."
+            "value" : "계속하기 전에 문구를 PatternVault 외부에 저장했는지 확인하세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "继续前，请确认已将恢复短语保存在 Pattern 以外的地方。"
+            "value" : "继续前，请确认已将恢复短语保存在 PatternVault 以外的地方。"
           }
         }
       }
@@ -6509,48 +6509,48 @@
         }
       }
     },
-    "Confirm this vault’s pattern to enable duress. The next time you use it to unlock Pattern, the actions above will happen." : {
+    "Confirm this vault’s pattern to enable duress. The next time you use it to unlock PatternVault, the actions above will happen." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bestätige das Muster dieses Tresors für den Zwangsmodus. Wenn du Pattern das nächste Mal damit entsperrst, werden die obigen Aktionen ausgeführt."
+            "value" : "Bestätige das Muster dieses Tresors für den Zwangsmodus. Wenn du PatternVault das nächste Mal damit entsperrst, werden die obigen Aktionen ausgeführt."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Confirm this vault’s pattern to enable duress. The next time you use it to unlock Pattern, the actions above will happen."
+            "value" : "Confirm this vault’s pattern to enable duress. The next time you use it to unlock PatternVault, the actions above will happen."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Confirmez le schéma de ce coffre pour activer le mode contrainte. À son prochain déverrouillage de Pattern, les actions ci-dessus seront exécutées."
+            "value" : "Confirmez le schéma de ce coffre pour activer le mode contrainte. À son prochain déverrouillage de PatternVault, les actions ci-dessus seront exécutées."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conferma il segno per abilitare la modalità coercizione. Al prossimo sblocco di Pattern con questo segno verranno eseguite le azioni sopra indicate."
+            "value" : "Conferma il segno per abilitare la modalità coercizione. Al prossimo sblocco di PatternVault con questo segno verranno eseguite le azioni sopra indicate."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "この保管庫のパターンを確認して強要対策モードを有効にします。次にこのパターンでPatternを解除すると、上記の処理が実行されます。"
+            "value" : "この保管庫のパターンを確認して強要対策モードを有効にします。次にこのパターンでPatternVaultを解除すると、上記の処理が実行されます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "강압 대응 모드를 켜려면 이 보관함의 패턴을 확인하세요. 다음에 이 패턴으로 Pattern의 잠금을 해제하면 위의 작업이 실행됩니다."
+            "value" : "강압 대응 모드를 켜려면 이 보관함의 패턴을 확인하세요. 다음에 이 패턴으로 PatternVault의 잠금을 해제하면 위의 작업이 실행됩니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "确认此保险库的图案以启用胁迫模式。下次使用该图案解锁 Pattern 时，将执行上述操作。"
+            "value" : "确认此保险库的图案以启用胁迫模式。下次使用该图案解锁 PatternVault 时，将执行上述操作。"
           }
         }
       }
@@ -7987,49 +7987,49 @@
         }
       }
     },
-    "Creating shares requires Pattern Pro. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person." : {
+    "Creating shares requires PatternVault Pro. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zum Teilen brauchst du Pattern Pro. Geteilte Tresore zu öffnen ist kostenlos. Jede Phrase kann von einem Apple Account beansprucht werden. Erstelle für jede Person eine eigene."
+            "value" : "Zum Teilen brauchst du PatternVault Pro. Geteilte Tresore zu öffnen ist kostenlos. Jede Phrase kann von einem Apple Account beansprucht werden. Erstelle für jede Person eine eigene."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Creating shares requires Pattern Pro. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person."
+            "value" : "Creating shares requires PatternVault Pro. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Pro est nécessaire pour créer un partage. L’ouverture est gratuite. Chaque phrase est réservée à un seul compte Apple. Créez une phrase par personne."
+            "value" : "PatternVault Pro est nécessaire pour créer un partage. L’ouverture est gratuite. Chaque phrase est réservée à un seul compte Apple. Créez une phrase par personne."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Per creare condivisioni serve Pattern Pro. Aprirle è gratuito. Ogni frase può essere riscattata da un solo Apple Account. Creane una per ogni persona."
+            "value" : "Per creare condivisioni serve PatternVault Pro. Aprirle è gratuito. Ogni frase può essere riscattata da un solo Apple Account. Creane una per ogni persona."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "共有の作成にはPattern Proが必要です。共有保管庫を開くのは無料です。各フレーズは1つのApple Accountでのみ受け取れます。相手ごとに作成してください。"
+            "value" : "共有の作成にはPatternVault Proが必要です。共有保管庫を開くのは無料です。各フレーズは1つのApple Accountでのみ受け取れます。相手ごとに作成してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "공유 생성에는 Pattern Pro가 필요합니다. 공유 보관함 열기는 무료입니다. 각 문구는 하나의 Apple 계정만 사용할 수 있습니다. 사람마다 별도 문구를 만드세요."
+            "value" : "공유 생성에는 PatternVault Pro가 필요합니다. 공유 보관함 열기는 무료입니다. 각 문구는 하나의 Apple 계정만 사용할 수 있습니다. 사람마다 별도 문구를 만드세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "创建共享需要 Pattern Pro，打开共享保险库则免费。每个短语仅供一个 Apple 账户领取。请为每位接收者创建独立短语。"
+            "value" : "创建共享需要 PatternVault Pro，打开共享保险库则免费。每个短语仅供一个 Apple 账户领取。请为每位接收者创建独立短语。"
           }
         }
       }
@@ -8977,96 +8977,96 @@
         }
       }
     },
-    "Deleting Pattern removes your local vaults. Enable encrypted iCloud backup in settings to restore after reinstalling." : {
+    "Deleting PatternVault removes your local vaults. Enable encrypted iCloud backup in settings to restore after reinstalling." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn du Pattern löschst, werden lokale Tresore entfernt. Aktiviere das verschlüsselte iCloud-Backup in den Einstellungen, um sie nach einer Neuinstallation wiederherzustellen."
+            "value" : "Wenn du PatternVault löschst, werden lokale Tresore entfernt. Aktiviere das verschlüsselte iCloud-Backup in den Einstellungen, um sie nach einer Neuinstallation wiederherzustellen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deleting Pattern removes your local vaults. Enable encrypted iCloud backup in settings to restore after reinstalling."
+            "value" : "Deleting PatternVault removes your local vaults. Enable encrypted iCloud backup in settings to restore after reinstalling."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Supprimer Pattern efface les coffres locaux. Activez la sauvegarde iCloud chiffrée dans les réglages pour les restaurer après réinstallation."
+            "value" : "Supprimer PatternVault efface les coffres locaux. Activez la sauvegarde iCloud chiffrée dans les réglages pour les restaurer après réinstallation."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eliminando Pattern rimuovi le casseforti locali. Abilita il backup iCloud crittografato nelle impostazioni per ripristinarle dopo la reinstallazione."
+            "value" : "Eliminando PatternVault rimuovi le casseforti locali. Abilita il backup iCloud crittografato nelle impostazioni per ripristinarle dopo la reinstallazione."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Patternを削除すると端末内の保管庫も削除されます。再インストール後に復元するには、設定で暗号化iCloudバックアップを有効にしてください。"
+            "value" : "PatternVaultを削除すると端末内の保管庫も削除されます。再インストール後に復元するには、設定で暗号化iCloudバックアップを有効にしてください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern을 삭제하면 로컬 보관함도 삭제됩니다. 재설치 후 복원하려면 설정에서 암호화된 iCloud 백업을 켜세요."
+            "value" : "PatternVault을 삭제하면 로컬 보관함도 삭제됩니다. 재설치 후 복원하려면 설정에서 암호화된 iCloud 백업을 켜세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "删除 Pattern 会清除本地保险库。请在设置中启用加密 iCloud 备份，以便重新安装后恢复。"
+            "value" : "删除 PatternVault 会清除本地保险库。请在设置中启用加密 iCloud 备份，以便重新安装后恢复。"
           }
         }
       }
     },
-    "Deleting Pattern removes your local vaults. Save an encrypted backup to iCloud Drive in settings so you can restore after reinstalling." : {
+    "Deleting PatternVault removes your local vaults. Save an encrypted backup to iCloud Drive in settings so you can restore after reinstalling." : {
       "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beim Löschen von Pattern werden lokale Tresore entfernt. Sichere in den Einstellungen ein verschlüsseltes Backup in iCloud Drive zur Wiederherstellung nach einer Neuinstallation."
+            "value" : "Beim Löschen von PatternVault werden lokale Tresore entfernt. Sichere in den Einstellungen ein verschlüsseltes Backup in iCloud Drive zur Wiederherstellung nach einer Neuinstallation."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deleting Pattern removes your local vaults. Save an encrypted backup to iCloud Drive in settings so you can restore after reinstalling."
+            "value" : "Deleting PatternVault removes your local vaults. Save an encrypted backup to iCloud Drive in settings so you can restore after reinstalling."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Supprimer Pattern efface les coffres locaux. Enregistrez une sauvegarde chiffrée sur iCloud Drive dans les réglages pour restaurer après réinstallation."
+            "value" : "Supprimer PatternVault efface les coffres locaux. Enregistrez une sauvegarde chiffrée sur iCloud Drive dans les réglages pour restaurer après réinstallation."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eliminando Pattern rimuovi le casseforti locali. Salva un backup crittografato su iCloud Drive nelle impostazioni per ripristinarle dopo la reinstallazione."
+            "value" : "Eliminando PatternVault rimuovi le casseforti locali. Salva un backup crittografato su iCloud Drive nelle impostazioni per ripristinarle dopo la reinstallazione."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Patternを削除するとローカルの保管庫も削除されます。再インストール後に復元できるよう、設定で暗号化バックアップをiCloud Driveに保存してください。"
+            "value" : "PatternVaultを削除するとローカルの保管庫も削除されます。再インストール後に復元できるよう、設定で暗号化バックアップをiCloud Driveに保存してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern을 삭제하면 로컬 보관함도 삭제됩니다. 재설치 후 복원하려면 설정에서 iCloud Drive에 암호화된 백업을 저장하세요."
+            "value" : "PatternVault을 삭제하면 로컬 보관함도 삭제됩니다. 재설치 후 복원하려면 설정에서 iCloud Drive에 암호화된 백업을 저장하세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "删除 Pattern 会移除本地保险库。请在设置中将加密备份保存到 iCloud Drive，以便重新安装后恢复。"
+            "value" : "删除 PatternVault 会移除本地保险库。请在设置中将加密备份保存到 iCloud Drive，以便重新安装后恢复。"
           }
         }
       }
@@ -10229,49 +10229,49 @@
         }
       }
     },
-    "Duress unlock turned off new backups from Pattern on this device. Previously saved iCloud Drive backups remain available for restoration." : {
+    "Duress unlock turned off new backups from PatternVault on this device. Previously saved iCloud Drive backups remain available for restoration." : {
       "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Entsperrung unter Zwang hat neue Pattern-Backups auf diesem Gerät deaktiviert. Gespeicherte iCloud-Drive-Backups lassen sich weiterhin wiederherstellen."
+            "value" : "Die Entsperrung unter Zwang hat neue PatternVault-Backups auf diesem Gerät deaktiviert. Gespeicherte iCloud-Drive-Backups lassen sich weiterhin wiederherstellen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Duress unlock turned off new backups from Pattern on this device. Previously saved iCloud Drive backups remain available for restoration."
+            "value" : "Duress unlock turned off new backups from PatternVault on this device. Previously saved iCloud Drive backups remain available for restoration."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le déverrouillage sous contrainte a désactivé les nouvelles sauvegardes de Pattern sur cet appareil. Celles déjà enregistrées sur iCloud Drive restent restaurables."
+            "value" : "Le déverrouillage sous contrainte a désactivé les nouvelles sauvegardes de PatternVault sur cet appareil. Celles déjà enregistrées sur iCloud Drive restent restaurables."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lo sblocco sotto coercizione ha disattivato nuovi backup di Pattern su questo dispositivo. Quelli già su iCloud Drive restano disponibili per il ripristino."
+            "value" : "Lo sblocco sotto coercizione ha disattivato nuovi backup di PatternVault su questo dispositivo. Quelli già su iCloud Drive restano disponibili per il ripristino."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "強要時の解除により、このデバイスでPatternの新規バックアップが無効になりました。以前iCloud Driveに保存したバックアップからは復元できます。"
+            "value" : "強要時の解除により、このデバイスでPatternVaultの新規バックアップが無効になりました。以前iCloud Driveに保存したバックアップからは復元できます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "강압 상황에서의 잠금 해제로 이 기기에서 Pattern의 새 백업이 꺼졌습니다. 이전에 iCloud Drive에 저장한 백업은 복원에 사용할 수 있습니다."
+            "value" : "강압 상황에서의 잠금 해제로 이 기기에서 PatternVault의 새 백업이 꺼졌습니다. 이전에 iCloud Drive에 저장한 백업은 복원에 사용할 수 있습니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "胁迫解锁已关闭此设备上 Pattern 的新备份。此前保存在 iCloud Drive 的备份仍可用于恢复。"
+            "value" : "胁迫解锁已关闭此设备上 PatternVault 的新备份。此前保存在 iCloud Drive 的备份仍可用于恢复。"
           }
         }
       }
@@ -11713,49 +11713,49 @@
         }
       }
     },
-    "Face ID must succeed to change these access settings. Make sure Face ID is enabled for Pattern on this device." : {
+    "Face ID must succeed to change these access settings. Make sure Face ID is enabled for PatternVault on this device." : {
       "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zum Ändern dieser Einstellungen muss Face ID erfolgreich sein. Prüfe, ob Face ID für Pattern auf diesem Gerät aktiviert ist."
+            "value" : "Zum Ändern dieser Einstellungen muss Face ID erfolgreich sein. Prüfe, ob Face ID für PatternVault auf diesem Gerät aktiviert ist."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Face ID must succeed to change these access settings. Make sure Face ID is enabled for Pattern on this device."
+            "value" : "Face ID must succeed to change these access settings. Make sure Face ID is enabled for PatternVault on this device."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Face ID doit réussir pour modifier ces accès. Vérifiez que Face ID est activé pour Pattern sur cet appareil."
+            "value" : "Face ID doit réussir pour modifier ces accès. Vérifiez que Face ID est activé pour PatternVault sur cet appareil."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Per modificare queste impostazioni Face ID deve riuscire. Assicurati che sia abilitato per Pattern su questo dispositivo."
+            "value" : "Per modificare queste impostazioni Face ID deve riuscire. Assicurati che sia abilitato per PatternVault su questo dispositivo."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "アクセス設定の変更にはFace ID認証が必要です。このデバイスでPatternのFace IDが有効か確認してください。"
+            "value" : "アクセス設定の変更にはFace ID認証が必要です。このデバイスでPatternVaultのFace IDが有効か確認してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 접근 설정을 변경하려면 Face ID 인증에 성공해야 합니다. 이 기기에서 Pattern의 Face ID가 켜져 있는지 확인하세요."
+            "value" : "이 접근 설정을 변경하려면 Face ID 인증에 성공해야 합니다. 이 기기에서 PatternVault의 Face ID가 켜져 있는지 확인하세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "更改这些访问设置必须通过 Face ID 验证。请确保此设备已为 Pattern 启用 Face ID。"
+            "value" : "更改这些访问设置必须通过 Face ID 验证。请确保此设备已为 PatternVault 启用 Face ID。"
           }
         }
       }
@@ -12407,48 +12407,48 @@
         }
       }
     },
-    "Free: 3 vaults with 5 items each. Pattern Pro removes both limits and unlocks vault sharing. One purchase. No subscription." : {
+    "Free: 3 vaults with 5 items each. PatternVault Pro removes both limits and unlocks vault sharing. One purchase. No subscription." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kostenlos: 3 Tresore mit je 5 Inhalten. Pattern Pro hebt beide Limits auf und schaltet das Teilen frei. Einmaliger Kauf. Kein Abo."
+            "value" : "Kostenlos: 3 Tresore mit je 5 Inhalten. PatternVault Pro hebt beide Limits auf und schaltet das Teilen frei. Einmaliger Kauf. Kein Abo."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Free: 3 vaults with 5 items each. Pattern Pro removes both limits and unlocks vault sharing. One purchase. No subscription."
+            "value" : "Free: 3 vaults with 5 items each. PatternVault Pro removes both limits and unlocks vault sharing. One purchase. No subscription."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gratuit : 3 coffres de 5 éléments chacun. Pattern Pro supprime ces deux limites et débloque le partage. Un seul achat. Sans abonnement."
+            "value" : "Gratuit : 3 coffres de 5 éléments chacun. PatternVault Pro supprime ces deux limites et débloque le partage. Un seul achat. Sans abonnement."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gratis: 3 casseforti con 5 elementi ciascuna. Pattern Pro elimina entrambi i limiti e sblocca la condivisione. Un solo acquisto. Nessun abbonamento."
+            "value" : "Gratis: 3 casseforti con 5 elementi ciascuna. PatternVault Pro elimina entrambi i limiti e sblocca la condivisione. Un solo acquisto. Nessun abbonamento."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無料版は保管庫3個、各5アイテムまで。Pattern Proで両方の制限がなくなり、保管庫の共有も利用できます。一度の購入で、サブスクリプションはありません。"
+            "value" : "無料版は保管庫3個、各5アイテムまで。PatternVault Proで両方の制限がなくなり、保管庫の共有も利用できます。一度の購入で、サブスクリプションはありません。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "무료: 보관함 3개, 각 항목 5개. Pattern Pro는 두 제한을 해제하고 보관함 공유를 제공합니다. 일회성 구매이며 구독이 아닙니다."
+            "value" : "무료: 보관함 3개, 각 항목 5개. PatternVault Pro는 두 제한을 해제하고 보관함 공유를 제공합니다. 일회성 구매이며 구독이 아닙니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "免费版：3 个保险库，每个可存 5 个项目。Pattern Pro 解除这两项限制并解锁保险库共享。一次购买，无需订阅。"
+            "value" : "免费版：3 个保险库，每个可存 5 个项目。PatternVault Pro 解除这两项限制并解锁保险库共享。一次购买，无需订阅。"
           }
         }
       }
@@ -13099,48 +13099,48 @@
         }
       }
     },
-    "I saved my phrase outside Pattern" : {
+    "I saved my phrase outside PatternVault" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ich habe meine Phrase außerhalb von Pattern gesichert"
+            "value" : "Ich habe meine Phrase außerhalb von PatternVault gesichert"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I saved my phrase outside Pattern"
+            "value" : "I saved my phrase outside PatternVault"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "J’ai conservé ma phrase hors de Pattern"
+            "value" : "J’ai conservé ma phrase hors de PatternVault"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ho salvato la frase fuori da Pattern"
+            "value" : "Ho salvato la frase fuori da PatternVault"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "フレーズをPatternの外に保存しました"
+            "value" : "フレーズをPatternVaultの外に保存しました"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "문구를 Pattern 외부에 저장했습니다"
+            "value" : "문구를 PatternVault 외부에 저장했습니다"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "我已在 Pattern 之外保存短语"
+            "value" : "我已在 PatternVault 之外保存短语"
           }
         }
       }
@@ -13798,48 +13798,48 @@
         }
       }
     },
-    "Included with Pattern Pro" : {
+    "Included with PatternVault Pro" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In Pattern Pro enthalten"
+            "value" : "In PatternVault Pro enthalten"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Included with Pattern Pro"
+            "value" : "Included with PatternVault Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inclus avec Pattern Pro"
+            "value" : "Inclus avec PatternVault Pro"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Incluso in Pattern Pro"
+            "value" : "Incluso in PatternVault Pro"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Proに含まれる機能"
+            "value" : "PatternVault Proに含まれる機能"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Pro에 포함된 기능"
+            "value" : "PatternVault Pro에 포함된 기능"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Pro 包含的功能"
+            "value" : "PatternVault Pro 包含的功能"
           }
         }
       }
@@ -13891,49 +13891,49 @@
         }
       }
     },
-    "iOS keeps the app’s name as Pattern when you change its icon. A shortcut can use a different name and matching artwork." : {
+    "iOS keeps the app’s name as PatternVault when you change its icon. A shortcut can use a different name and matching artwork." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unter iOS heißt die App auch nach einem Symbolwechsel weiterhin Pattern. Ein Kurzbefehl kann einen anderen Namen und ein passendes Symbol verwenden."
+            "value" : "Unter iOS heißt die App auch nach einem Symbolwechsel weiterhin PatternVault. Ein Kurzbefehl kann einen anderen Namen und ein passendes Symbol verwenden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iOS keeps the app’s name as Pattern when you change its icon. A shortcut can use a different name and matching artwork."
+            "value" : "iOS keeps the app’s name as PatternVault when you change its icon. A shortcut can use a different name and matching artwork."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sous iOS, l’app garde le nom Pattern lorsque vous changez son icône. Un raccourci peut utiliser un autre nom et une icône assortie."
+            "value" : "Sous iOS, l’app garde le nom PatternVault lorsque vous changez son icône. Un raccourci peut utiliser un autre nom et une icône assortie."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Su iOS, il nome dell’app resta Pattern quando cambi l’icona. Un comando rapido può usare un nome diverso e un’immagine abbinata."
+            "value" : "Su iOS, il nome dell’app resta PatternVault quando cambi l’icona. Un comando rapido può usare un nome diverso e un’immagine abbinata."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iOSではアイコンを変更してもアプリ名はPatternのままです。ショートカットなら、別の名前と対応するアイコンを設定できます。"
+            "value" : "iOSではアイコンを変更してもアプリ名はPatternVaultのままです。ショートカットなら、別の名前と対応するアイコンを設定できます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iOS에서는 아이콘을 변경해도 앱 이름이 Pattern으로 유지됩니다. 단축어를 사용하면 다른 이름과 원하는 아이콘을 지정할 수 있습니다."
+            "value" : "iOS에서는 아이콘을 변경해도 앱 이름이 PatternVault으로 유지됩니다. 단축어를 사용하면 다른 이름과 원하는 아이콘을 지정할 수 있습니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在 iOS 上，更改图标后，应用名称仍为 Pattern。快捷指令可以使用其他名称及相应图标。"
+            "value" : "在 iOS 上，更改图标后，应用名称仍为 PatternVault。快捷指令可以使用其他名称及相应图标。"
           }
         }
       }
@@ -14172,48 +14172,48 @@
         }
       }
     },
-    "Keep this phrase somewhere safe outside Pattern. Anyone with it can reset this vault’s pattern and open backups made with it. Custom phrases are only as strong as the words you choose." : {
+    "Keep this phrase somewhere safe outside PatternVault. Anyone with it can reset this vault’s pattern and open backups made with it. Custom phrases are only as strong as the words you choose." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bewahre die Phrase sicher außerhalb von Pattern auf. Wer sie kennt, kann das Muster zurücksetzen und damit erstellte Backups öffnen. Eigene Phrasen sind nur so sicher wie ihre Wörter."
+            "value" : "Bewahre die Phrase sicher außerhalb von PatternVault auf. Wer sie kennt, kann das Muster zurücksetzen und damit erstellte Backups öffnen. Eigene Phrasen sind nur so sicher wie ihre Wörter."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keep this phrase somewhere safe outside Pattern. Anyone with it can reset this vault’s pattern and open backups made with it. Custom phrases are only as strong as the words you choose."
+            "value" : "Keep this phrase somewhere safe outside PatternVault. Anyone with it can reset this vault’s pattern and open backups made with it. Custom phrases are only as strong as the words you choose."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gardez cette phrase en lieu sûr hors de Pattern. Quiconque la possède peut réinitialiser ce schéma et ouvrir ses sauvegardes. La solidité d’une phrase personnalisée dépend des mots choisis."
+            "value" : "Gardez cette phrase en lieu sûr hors de PatternVault. Quiconque la possède peut réinitialiser ce schéma et ouvrir ses sauvegardes. La solidité d’une phrase personnalisée dépend des mots choisis."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conserva la frase al sicuro fuori da Pattern. Chi la possiede può reimpostare il segno e aprire i backup creati con essa. La sicurezza delle frasi personalizzate dipende dalle parole scelte."
+            "value" : "Conserva la frase al sicuro fuori da PatternVault. Chi la possiede può reimpostare il segno e aprire i backup creati con essa. La sicurezza delle frasi personalizzate dipende dalle parole scelte."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "フレーズはPatternの外で安全に保管してください。持っている人はこの保管庫のパターンをリセットし、このフレーズで作ったバックアップを開けます。カスタムフレーズの強さは選んだ単語次第です。"
+            "value" : "フレーズはPatternVaultの外で安全に保管してください。持っている人はこの保管庫のパターンをリセットし、このフレーズで作ったバックアップを開けます。カスタムフレーズの強さは選んだ単語次第です。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "문구를 Pattern 외부의 안전한 곳에 보관하세요. 문구를 가진 사람은 이 보관함의 패턴을 재설정하고 해당 문구로 만든 백업을 열 수 있습니다. 사용자 지정 문구의 보안 강도는 선택한 단어에 달려 있습니다."
+            "value" : "문구를 PatternVault 외부의 안전한 곳에 보관하세요. 문구를 가진 사람은 이 보관함의 패턴을 재설정하고 해당 문구로 만든 백업을 열 수 있습니다. 사용자 지정 문구의 보안 강도는 선택한 단어에 달려 있습니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请将此短语保存在 Pattern 之外的安全位置。任何持有短语的人都能重设此保险库的图案并打开用它创建的备份。自定义短语的安全性取决于所选的词。"
+            "value" : "请将此短语保存在 PatternVault 之外的安全位置。任何持有短语的人都能重设此保险库的图案并打开用它创建的备份。自定义短语的安全性取决于所选的词。"
           }
         }
       }
@@ -16103,48 +16103,48 @@
         }
       }
     },
-    "No Pattern Pro purchase was found for this Apple Account." : {
+    "No PatternVault Pro purchase was found for this Apple Account." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Für diesen Apple Account wurde kein Kauf von Pattern Pro gefunden."
+            "value" : "Für diesen Apple Account wurde kein Kauf von PatternVault Pro gefunden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No Pattern Pro purchase was found for this Apple Account."
+            "value" : "No PatternVault Pro purchase was found for this Apple Account."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucun achat Pattern Pro trouvé pour ce compte Apple."
+            "value" : "Aucun achat PatternVault Pro trouvé pour ce compte Apple."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nessun acquisto di Pattern Pro trovato per questo Apple Account."
+            "value" : "Nessun acquisto di PatternVault Pro trovato per questo Apple Account."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このApple AccountにはPattern Proの購入が見つかりませんでした。"
+            "value" : "このApple AccountにはPatternVault Proの購入が見つかりませんでした。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 Apple 계정에서 Pattern Pro 구매 내역을 찾을 수 없습니다."
+            "value" : "이 Apple 계정에서 PatternVault Pro 구매 내역을 찾을 수 없습니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未找到此 Apple 账户的 Pattern Pro 购买记录。"
+            "value" : "未找到此 Apple 账户的 PatternVault Pro 购买记录。"
           }
         }
       }
@@ -17479,49 +17479,49 @@
         }
       }
     },
-    "Open Shortcuts, create a shortcut, and add Open App. Choose Pattern." : {
+    "Open Shortcuts, create a shortcut, and add Open App. Choose PatternVault." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Öffne „Kurzbefehle“, erstelle einen Kurzbefehl und füge „App öffnen“ hinzu. Wähle Pattern."
+            "value" : "Öffne „Kurzbefehle“, erstelle einen Kurzbefehl und füge „App öffnen“ hinzu. Wähle PatternVault."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open Shortcuts, create a shortcut, and add Open App. Choose Pattern."
+            "value" : "Open Shortcuts, create a shortcut, and add Open App. Choose PatternVault."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ouvrez Raccourcis, créez un raccourci et ajoutez l’action Ouvrir l’app. Choisissez Pattern."
+            "value" : "Ouvrez Raccourcis, créez un raccourci et ajoutez l’action Ouvrir l’app. Choisissez PatternVault."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apri Comandi Rapidi, crea un comando rapido e aggiungi Apri app. Scegli Pattern."
+            "value" : "Apri Comandi Rapidi, crea un comando rapido e aggiungi Apri app. Scegli PatternVault."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "「ショートカット」で新しいショートカットを作成し、「アプリを開く」を追加してPatternを選びます。"
+            "value" : "「ショートカット」で新しいショートカットを作成し、「アプリを開く」を追加してPatternVaultを選びます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "단축어 앱에서 새 단축어를 만들고 앱 열기를 추가한 다음 Pattern을 선택하세요."
+            "value" : "단축어 앱에서 새 단축어를 만들고 앱 열기를 추가한 다음 PatternVault을 선택하세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "打开“快捷指令”，创建快捷指令并添加“打开 App”操作，然后选择 Pattern。"
+            "value" : "打开“快捷指令”，创建快捷指令并添加“打开 App”操作，然后选择 PatternVault。"
           }
         }
       }
@@ -17804,49 +17804,49 @@
         }
       }
     },
-    "Other vaults’ patterns and recovery phrases are removed from this device, including this vault’s if a different dummy vault is selected. Their local files are kept, but you’ll need a saved backup to restore access in Pattern. Already saved iCloud backups and copies sent to others can’t be recalled. Automatic iCloud sync and revocable share links aren’t available in this version." : {
+    "Other vaults’ patterns and recovery phrases are removed from this device, including this vault’s if a different dummy vault is selected. Their local files are kept, but you’ll need a saved backup to restore access in PatternVault. Already saved iCloud backups and copies sent to others can’t be recalled. Automatic iCloud sync and revocable share links aren’t available in this version." : {
       "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Muster und Wiederherstellungsphrasen anderer Tresore werden von diesem Gerät entfernt, auch die dieses Tresors bei einem anderen Scheintresor. Lokale Dateien bleiben, aber zur Wiederherstellung des Zugriffs in Pattern brauchst du ein Backup. Gespeicherte iCloud-Backups und versandte Kopien können nicht zurückgerufen werden. Automatische iCloud-Synchronisierung und widerrufbare Freigabelinks gibt es in dieser Version nicht."
+            "value" : "Muster und Wiederherstellungsphrasen anderer Tresore werden von diesem Gerät entfernt, auch die dieses Tresors bei einem anderen Scheintresor. Lokale Dateien bleiben, aber zur Wiederherstellung des Zugriffs in PatternVault brauchst du ein Backup. Gespeicherte iCloud-Backups und versandte Kopien können nicht zurückgerufen werden. Automatische iCloud-Synchronisierung und widerrufbare Freigabelinks gibt es in dieser Version nicht."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Other vaults’ patterns and recovery phrases are removed from this device, including this vault’s if a different dummy vault is selected. Their local files are kept, but you’ll need a saved backup to restore access in Pattern. Already saved iCloud backups and copies sent to others can’t be recalled. Automatic iCloud sync and revocable share links aren’t available in this version."
+            "value" : "Other vaults’ patterns and recovery phrases are removed from this device, including this vault’s if a different dummy vault is selected. Their local files are kept, but you’ll need a saved backup to restore access in PatternVault. Already saved iCloud backups and copies sent to others can’t be recalled. Automatic iCloud sync and revocable share links aren’t available in this version."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les schémas et phrases des autres coffres sont supprimés de cet appareil, y compris ceux de ce coffre si un autre leurre est choisi. Les fichiers locaux restent, mais une sauvegarde sera nécessaire pour retrouver l’accès dans Pattern. Les sauvegardes iCloud et copies déjà envoyées ne peuvent pas être rappelées. Cette version n’offre ni synchronisation iCloud automatique ni liens de partage révocables."
+            "value" : "Les schémas et phrases des autres coffres sont supprimés de cet appareil, y compris ceux de ce coffre si un autre leurre est choisi. Les fichiers locaux restent, mais une sauvegarde sera nécessaire pour retrouver l’accès dans PatternVault. Les sauvegardes iCloud et copies déjà envoyées ne peuvent pas être rappelées. Cette version n’offre ni synchronisation iCloud automatique ni liens de partage révocables."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I segni e le frasi delle altre casseforti vengono rimossi dal dispositivo, inclusi quelli di questa se l’esca è diversa. I file locali restano, ma serve un backup salvato per recuperare l’accesso in Pattern. Backup iCloud e copie già inviate non possono essere ritirati. Questa versione non offre sincronizzazione iCloud automatica né link di condivisione revocabili."
+            "value" : "I segni e le frasi delle altre casseforti vengono rimossi dal dispositivo, inclusi quelli di questa se l’esca è diversa. I file locali restano, ma serve un backup salvato per recuperare l’accesso in PatternVault. Backup iCloud e copie già inviate non possono essere ritirati. Questa versione non offre sincronizzazione iCloud automatica né link di condivisione revocabili."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "他の保管庫のパターンと復旧フレーズをこのデバイスから削除します。別のダミーを選んだ場合はこの保管庫も含みます。ローカルファイルは残りますが、Patternでアクセスを戻すには保存済みバックアップが必要です。保存済みiCloudバックアップや送信済みコピーは取り消せません。このバージョンにはiCloud自動同期や無効化可能な共有リンクはありません。"
+            "value" : "他の保管庫のパターンと復旧フレーズをこのデバイスから削除します。別のダミーを選んだ場合はこの保管庫も含みます。ローカルファイルは残りますが、PatternVaultでアクセスを戻すには保存済みバックアップが必要です。保存済みiCloudバックアップや送信済みコピーは取り消せません。このバージョンにはiCloud自動同期や無効化可能な共有リンクはありません。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 기기에서 다른 보관함의 패턴과 복구 문구가 제거됩니다. 다른 위장 보관함을 선택한 경우 이 보관함도 포함됩니다. 로컬 파일은 유지되지만 Pattern에서 다시 접근하려면 저장된 백업이 필요합니다. 이미 저장한 iCloud 백업과 다른 사람에게 보낸 사본은 회수할 수 없습니다. 이 버전은 자동 iCloud 동기화와 취소 가능한 공유 링크를 지원하지 않습니다."
+            "value" : "이 기기에서 다른 보관함의 패턴과 복구 문구가 제거됩니다. 다른 위장 보관함을 선택한 경우 이 보관함도 포함됩니다. 로컬 파일은 유지되지만 PatternVault에서 다시 접근하려면 저장된 백업이 필요합니다. 이미 저장한 iCloud 백업과 다른 사람에게 보낸 사본은 회수할 수 없습니다. 이 버전은 자동 iCloud 동기화와 취소 가능한 공유 링크를 지원하지 않습니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "其他保险库的图案和恢复短语将从此设备移除；若选择了不同的伪装保险库，也包括此保险库。本地文件会保留，但需要已保存的备份才能在 Pattern 中恢复访问。已保存的 iCloud 备份及已发给他人的副本无法撤回。此版本不支持自动 iCloud 同步或可撤销的共享链接。"
+            "value" : "其他保险库的图案和恢复短语将从此设备移除；若选择了不同的伪装保险库，也包括此保险库。本地文件会保留，但需要已保存的备份才能在 PatternVault 中恢复访问。已保存的 iCloud 备份及已发给他人的副本无法撤回。此版本不支持自动 iCloud 同步或可撤销的共享链接。"
           }
         }
       }
@@ -17991,8 +17991,8 @@
         }
       }
     },
-    "PATTERN" : {
-      "comment" : "Brand name or language-independent numeric notation.",
+    "PatternVault" : {
+      "comment" : "App brand name.",
       "shouldTranslate" : false
     },
     "Pattern changed" : {
@@ -18134,48 +18134,48 @@
         }
       }
     },
-    "Pattern Pro is unlocked." : {
+    "PatternVault Pro is unlocked." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Pro ist freigeschaltet."
+            "value" : "PatternVault Pro ist freigeschaltet."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Pro is unlocked."
+            "value" : "PatternVault Pro is unlocked."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Pro est débloqué."
+            "value" : "PatternVault Pro est débloqué."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Pro è sbloccato."
+            "value" : "PatternVault Pro è sbloccato."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Proが有効です。"
+            "value" : "PatternVault Proが有効です。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Pro가 활성화되었습니다."
+            "value" : "PatternVault Pro가 활성화되었습니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已解锁 Pattern Pro。"
+            "value" : "已解锁 PatternVault Pro。"
           }
         }
       }
@@ -20501,48 +20501,48 @@
         }
       }
     },
-    "Return to Pattern and try the purchase again." : {
+    "Return to PatternVault and try the purchase again." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kehre zu Pattern zurück und versuche den Kauf erneut."
+            "value" : "Kehre zu PatternVault zurück und versuche den Kauf erneut."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Return to Pattern and try the purchase again."
+            "value" : "Return to PatternVault and try the purchase again."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Revenez à Pattern et réessayez l’achat."
+            "value" : "Revenez à PatternVault et réessayez l’achat."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Torna a Pattern e riprova l’acquisto."
+            "value" : "Torna a PatternVault e riprova l’acquisto."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Patternに戻って購入を再試行してください。"
+            "value" : "PatternVaultに戻って購入を再試行してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern으로 돌아가 다시 구매해 보세요."
+            "value" : "PatternVault으로 돌아가 다시 구매해 보세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请返回 Pattern 并重试购买。"
+            "value" : "请返回 PatternVault 并重试购买。"
           }
         }
       }
@@ -20641,31 +20641,31 @@
         }
       }
     },
-    "Revocation is pending. Pattern will retry when it can reach iCloud." : {
+    "Revocation is pending. PatternVault will retry when it can reach iCloud." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Zugriffsentzug steht aus. Pattern versucht es erneut, sobald iCloud erreichbar ist."
+            "value" : "Der Zugriffsentzug steht aus. PatternVault versucht es erneut, sobald iCloud erreichbar ist."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Revocation is pending. Pattern will retry when it can reach iCloud."
+            "value" : "Revocation is pending. PatternVault will retry when it can reach iCloud."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La révocation est en attente. Pattern réessaiera dès qu’iCloud sera accessible."
+            "value" : "La révocation est en attente. PatternVault réessaiera dès qu’iCloud sera accessible."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La revoca è in attesa. Pattern riproverà quando iCloud sarà raggiungibile."
+            "value" : "La revoca è in attesa. PatternVault riproverà quando iCloud sarà raggiungibile."
           }
         },
         "ja" : {
@@ -20683,54 +20683,54 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "撤销正在等待处理。连接到 iCloud 后 Pattern 会重试。"
+            "value" : "撤销正在等待处理。连接到 iCloud 后 PatternVault 会重试。"
           }
         }
       }
     },
-    "Revocation takes effect when iCloud receives it. Copies already saved outside Pattern cannot be removed." : {
+    "Revocation takes effect when iCloud receives it. Copies already saved outside PatternVault cannot be removed." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Entzug wird wirksam, sobald iCloud ihn erhält. Bereits außerhalb von Pattern gespeicherte Kopien können nicht gelöscht werden."
+            "value" : "Der Entzug wird wirksam, sobald iCloud ihn erhält. Bereits außerhalb von PatternVault gespeicherte Kopien können nicht gelöscht werden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Revocation takes effect when iCloud receives it. Copies already saved outside Pattern cannot be removed."
+            "value" : "Revocation takes effect when iCloud receives it. Copies already saved outside PatternVault cannot be removed."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La révocation prend effet à réception par iCloud. Les copies déjà enregistrées hors de Pattern ne peuvent pas être supprimées."
+            "value" : "La révocation prend effet à réception par iCloud. Les copies déjà enregistrées hors de PatternVault ne peuvent pas être supprimées."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La revoca ha effetto quando iCloud la riceve. Le copie già salvate fuori da Pattern non possono essere rimosse."
+            "value" : "La revoca ha effetto quando iCloud la riceve. Le copie già salvate fuori da PatternVault non possono essere rimosse."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloudが受け付けると取り消しが有効になります。Patternの外に保存済みのコピーは削除できません。"
+            "value" : "iCloudが受け付けると取り消しが有効になります。PatternVaultの外に保存済みのコピーは削除できません。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud가 요청을 받으면 취소가 적용됩니다. Pattern 외부에 이미 저장된 사본은 삭제할 수 없습니다."
+            "value" : "iCloud가 요청을 받으면 취소가 적용됩니다. PatternVault 외부에 이미 저장된 사본은 삭제할 수 없습니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud 收到请求后撤销才会生效。无法删除已保存到 Pattern 之外的副本。"
+            "value" : "iCloud 收到请求后撤销才会生效。无法删除已保存到 PatternVault 之外的副本。"
           }
         }
       }
@@ -21155,48 +21155,48 @@
         }
       }
     },
-    "Save a recovery phrase outside Pattern. It can reset this vault’s pattern if you forget it." : {
+    "Save a recovery phrase outside PatternVault. It can reset this vault’s pattern if you forget it." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sichere eine Wiederherstellungsphrase außerhalb von Pattern. Damit kannst du das Muster dieses Tresors zurücksetzen, falls du es vergisst."
+            "value" : "Sichere eine Wiederherstellungsphrase außerhalb von PatternVault. Damit kannst du das Muster dieses Tresors zurücksetzen, falls du es vergisst."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Save a recovery phrase outside Pattern. It can reset this vault’s pattern if you forget it."
+            "value" : "Save a recovery phrase outside PatternVault. It can reset this vault’s pattern if you forget it."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conservez une phrase de récupération hors de Pattern. Elle permet de réinitialiser le schéma oublié de ce coffre."
+            "value" : "Conservez une phrase de récupération hors de PatternVault. Elle permet de réinitialiser le schéma oublié de ce coffre."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Salva una frase di recupero fuori da Pattern. Può reimpostare il segno di questa cassaforte se lo dimentichi."
+            "value" : "Salva una frase di recupero fuori da PatternVault. Può reimpostare il segno di questa cassaforte se lo dimentichi."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "復旧フレーズをPatternの外に保存してください。忘れたときにこの保管庫のパターンをリセットできます。"
+            "value" : "復旧フレーズをPatternVaultの外に保存してください。忘れたときにこの保管庫のパターンをリセットできます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "복구 문구를 Pattern 외부에 저장하세요. 패턴을 잊으면 이 보관함의 패턴을 재설정할 수 있습니다."
+            "value" : "복구 문구를 PatternVault 외부에 저장하세요. 패턴을 잊으면 이 보관함의 패턴을 재설정할 수 있습니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请在 Pattern 之外保存恢复短语。忘记此保险库的图案时，可用它重设图案。"
+            "value" : "请在 PatternVault 之外保存恢复短语。忘记此保险库的图案时，可用它重设图案。"
           }
         }
       }
@@ -21525,94 +21525,94 @@
         }
       }
     },
-    "Save the phrase separately and wait for iCloud Drive to finish uploading before deleting Pattern. Deleting the app removes local vaults. Restoration needs both the backup file and its original phrase." : {
+    "Save the phrase separately and wait for iCloud Drive to finish uploading before deleting PatternVault. Deleting the app removes local vaults. Restoration needs both the backup file and its original phrase." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sichere die Phrase separat und warte vor dem Löschen von Pattern auf den abgeschlossenen iCloud-Drive-Upload. Das Löschen entfernt lokale Tresore. Zur Wiederherstellung brauchst du Backup-Datei und ursprüngliche Phrase."
+            "value" : "Sichere die Phrase separat und warte vor dem Löschen von PatternVault auf den abgeschlossenen iCloud-Drive-Upload. Das Löschen entfernt lokale Tresore. Zur Wiederherstellung brauchst du Backup-Datei und ursprüngliche Phrase."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Save the phrase separately and wait for iCloud Drive to finish uploading before deleting Pattern. Deleting the app removes local vaults. Restoration needs both the backup file and its original phrase."
+            "value" : "Save the phrase separately and wait for iCloud Drive to finish uploading before deleting PatternVault. Deleting the app removes local vaults. Restoration needs both the backup file and its original phrase."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conservez la phrase séparément et attendez la fin de l’envoi sur iCloud Drive avant de supprimer Pattern. Les coffres locaux seront effacés. La restauration exige le fichier de sauvegarde et sa phrase d’origine."
+            "value" : "Conservez la phrase séparément et attendez la fin de l’envoi sur iCloud Drive avant de supprimer PatternVault. Les coffres locaux seront effacés. La restauration exige le fichier de sauvegarde et sa phrase d’origine."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Salva la frase separatamente e attendi il caricamento completo su iCloud Drive prima di eliminare Pattern. L’eliminazione rimuove le casseforti locali. Servono file di backup e frase originale per ripristinare."
+            "value" : "Salva la frase separatamente e attendi il caricamento completo su iCloud Drive prima di eliminare PatternVault. L’eliminazione rimuove le casseforti locali. Servono file di backup e frase originale per ripristinare."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "フレーズは別に保管し、iCloud Driveのアップロード完了を待ってからPatternを削除してください。アプリ削除でローカル保管庫も消えます。復元にはバックアップファイルと元のフレーズが必要です。"
+            "value" : "フレーズは別に保管し、iCloud Driveのアップロード完了を待ってからPatternVaultを削除してください。アプリ削除でローカル保管庫も消えます。復元にはバックアップファイルと元のフレーズが必要です。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "문구를 별도로 저장하고 iCloud Drive 업로드가 완료될 때까지 기다린 후 Pattern을 삭제하세요. 앱을 삭제하면 로컬 보관함도 삭제됩니다. 복원하려면 백업 파일과 원래 문구가 모두 필요합니다."
+            "value" : "문구를 별도로 저장하고 iCloud Drive 업로드가 완료될 때까지 기다린 후 PatternVault을 삭제하세요. 앱을 삭제하면 로컬 보관함도 삭제됩니다. 복원하려면 백업 파일과 원래 문구가 모두 필요합니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请单独保存短语，并在 iCloud Drive 上传完成后再删除 Pattern。删除应用会移除本地保险库。恢复时必须同时具备备份文件及其原始短语。"
+            "value" : "请单独保存短语，并在 iCloud Drive 上传完成后再删除 PatternVault。删除应用会移除本地保险库。恢复时必须同时具备备份文件及其原始短语。"
           }
         }
       }
     },
-    "Save this phrase outside Pattern. Your previous phrase no longer recovers this vault. Existing backup files still use their original phrases." : {
+    "Save this phrase outside PatternVault. Your previous phrase no longer recovers this vault. Existing backup files still use their original phrases." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sichere diese Phrase außerhalb von Pattern. Die alte stellt diesen Tresor nicht mehr wieder her. Bestehende Backups nutzen weiterhin ihre ursprünglichen Phrasen."
+            "value" : "Sichere diese Phrase außerhalb von PatternVault. Die alte stellt diesen Tresor nicht mehr wieder her. Bestehende Backups nutzen weiterhin ihre ursprünglichen Phrasen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Save this phrase outside Pattern. Your previous phrase no longer recovers this vault. Existing backup files still use their original phrases."
+            "value" : "Save this phrase outside PatternVault. Your previous phrase no longer recovers this vault. Existing backup files still use their original phrases."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conservez cette phrase hors de Pattern. L’ancienne ne récupère plus ce coffre. Les sauvegardes existantes utilisent encore leurs phrases d’origine."
+            "value" : "Conservez cette phrase hors de PatternVault. L’ancienne ne récupère plus ce coffre. Les sauvegardes existantes utilisent encore leurs phrases d’origine."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Salva questa frase fuori da Pattern. La precedente non recupera più questa cassaforte. I backup esistenti usano ancora le frasi originali."
+            "value" : "Salva questa frase fuori da PatternVault. La precedente non recupera più questa cassaforte. I backup esistenti usano ancora le frasi originali."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このフレーズをPatternの外に保存してください。以前のフレーズではこの保管庫を復旧できません。既存のバックアップには元のフレーズが必要です。"
+            "value" : "このフレーズをPatternVaultの外に保存してください。以前のフレーズではこの保管庫を復旧できません。既存のバックアップには元のフレーズが必要です。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 문구를 Pattern 외부에 저장하세요. 이전 문구로는 이 보관함을 복구할 수 없습니다. 기존 백업 파일에는 원래 문구가 필요합니다."
+            "value" : "이 문구를 PatternVault 외부에 저장하세요. 이전 문구로는 이 보관함을 복구할 수 없습니다. 기존 백업 파일에는 원래 문구가 필요합니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请在 Pattern 之外保存此短语。旧短语已无法恢复此保险库。现有备份仍使用各自的原始短语。"
+            "value" : "请在 PatternVault 之外保存此短语。旧短语已无法恢复此保险库。现有备份仍使用各自的原始短语。"
           }
         }
       }
@@ -23057,48 +23057,48 @@
         }
       }
     },
-    "Sharing requires Pattern Pro" : {
+    "Sharing requires PatternVault Pro" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Teilen erfordert Pattern Pro"
+            "value" : "Teilen erfordert PatternVault Pro"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sharing requires Pattern Pro"
+            "value" : "Sharing requires PatternVault Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le partage nécessite Pattern Pro"
+            "value" : "Le partage nécessite PatternVault Pro"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La condivisione richiede Pattern Pro"
+            "value" : "La condivisione richiede PatternVault Pro"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "共有にはPattern Proが必要です"
+            "value" : "共有にはPatternVault Proが必要です"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "공유하려면 Pattern Pro가 필요합니다"
+            "value" : "공유하려면 PatternVault Pro가 필요합니다"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "共享需要 Pattern Pro"
+            "value" : "共享需要 PatternVault Pro"
           }
         }
       }
@@ -25330,142 +25330,142 @@
         }
       }
     },
-    "The free version includes 3 albums. Unlock Pattern Pro to create more." : {
+    "The free version includes 3 albums. Unlock PatternVault Pro to create more." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die kostenlose Version enthält 3 Alben. Schalte Pattern Pro frei, um weitere zu erstellen."
+            "value" : "Die kostenlose Version enthält 3 Alben. Schalte PatternVault Pro frei, um weitere zu erstellen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The free version includes 3 albums. Unlock Pattern Pro to create more."
+            "value" : "The free version includes 3 albums. Unlock PatternVault Pro to create more."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La version gratuite comprend 3 albums. Débloquez Pattern Pro pour en créer davantage."
+            "value" : "La version gratuite comprend 3 albums. Débloquez PatternVault Pro pour en créer davantage."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La versione gratuita include 3 album. Sblocca Pattern Pro per crearne altri."
+            "value" : "La versione gratuita include 3 album. Sblocca PatternVault Pro per crearne altri."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無料版にはアルバム3個が含まれます。さらに作成するにはPattern Proを購入してください。"
+            "value" : "無料版にはアルバム3個が含まれます。さらに作成するにはPatternVault Proを購入してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "무료 버전에는 앨범 3개가 포함됩니다. 더 만들려면 Pattern Pro를 구매하세요."
+            "value" : "무료 버전에는 앨범 3개가 포함됩니다. 더 만들려면 PatternVault Pro를 구매하세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "免费版包含 3 个相册。解锁 Pattern Pro 即可创建更多。"
+            "value" : "免费版包含 3 个相册。解锁 PatternVault Pro 即可创建更多。"
           }
         }
       }
     },
-    "The free version includes 5 items per album, including its folders. Unlock Pattern Pro to add more." : {
+    "The free version includes 5 items per album, including its folders. Unlock PatternVault Pro to add more." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die kostenlose Version bietet 5 Elemente pro Album, einschließlich seiner Ordner. Schalte Pattern Pro frei, um mehr hinzuzufügen."
+            "value" : "Die kostenlose Version bietet 5 Elemente pro Album, einschließlich seiner Ordner. Schalte PatternVault Pro frei, um mehr hinzuzufügen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The free version includes 5 items per album, including its folders. Unlock Pattern Pro to add more."
+            "value" : "The free version includes 5 items per album, including its folders. Unlock PatternVault Pro to add more."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La version gratuite comprend 5 éléments par album, dossiers inclus. Débloquez Pattern Pro pour en ajouter davantage."
+            "value" : "La version gratuite comprend 5 éléments par album, dossiers inclus. Débloquez PatternVault Pro pour en ajouter davantage."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La versione gratuita include 5 elementi per album, cartelle comprese. Sblocca Pattern Pro per aggiungerne altri."
+            "value" : "La versione gratuita include 5 elementi per album, cartelle comprese. Sblocca PatternVault Pro per aggiungerne altri."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無料版ではフォルダ内も含め、アルバムごとに5項目まで保存できます。さらに追加するにはPattern Proを解除してください。"
+            "value" : "無料版ではフォルダ内も含め、アルバムごとに5項目まで保存できます。さらに追加するにはPatternVault Proを解除してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "무료 버전은 폴더를 포함하여 앨범당 항목 5개를 제공합니다. 더 추가하려면 Pattern Pro를 잠금 해제하세요."
+            "value" : "무료 버전은 폴더를 포함하여 앨범당 항목 5개를 제공합니다. 더 추가하려면 PatternVault Pro를 잠금 해제하세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "免费版每个相册可保存5个项目，包括文件夹中的项目。解锁Pattern Pro以添加更多。"
+            "value" : "免费版每个相册可保存5个项目，包括文件夹中的项目。解锁PatternVault Pro以添加更多。"
           }
         }
       }
     },
-    "The free version includes 5 photos or videos per album, including its folders. Unlock Pattern Pro to add more." : {
+    "The free version includes 5 photos or videos per album, including its folders. Unlock PatternVault Pro to add more." : {
       "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kostenlos sind 5 Fotos oder Videos pro Album inklusive Ordnern enthalten. Schalte Pattern Pro frei, um mehr hinzuzufügen."
+            "value" : "Kostenlos sind 5 Fotos oder Videos pro Album inklusive Ordnern enthalten. Schalte PatternVault Pro frei, um mehr hinzuzufügen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The free version includes 5 photos or videos per album, including its folders. Unlock Pattern Pro to add more."
+            "value" : "The free version includes 5 photos or videos per album, including its folders. Unlock PatternVault Pro to add more."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La version gratuite autorise 5 photos ou vidéos par album, dossiers inclus. Débloquez Pattern Pro pour en ajouter davantage."
+            "value" : "La version gratuite autorise 5 photos ou vidéos par album, dossiers inclus. Débloquez PatternVault Pro pour en ajouter davantage."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La versione gratuita include 5 foto o video per album, cartelle comprese. Sblocca Pattern Pro per aggiungerne altri."
+            "value" : "La versione gratuita include 5 foto o video per album, cartelle comprese. Sblocca PatternVault Pro per aggiungerne altri."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無料版はフォルダ内も含め、アルバムごとに写真・動画5件までです。さらに追加するにはPattern Proを購入してください。"
+            "value" : "無料版はフォルダ内も含め、アルバムごとに写真・動画5件までです。さらに追加するにはPatternVault Proを購入してください。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "무료 버전은 폴더를 포함해 앨범당 사진 또는 동영상 5개를 저장할 수 있습니다. 더 추가하려면 Pattern Pro를 구매하세요."
+            "value" : "무료 버전은 폴더를 포함해 앨범당 사진 또는 동영상 5개를 저장할 수 있습니다. 더 추가하려면 PatternVault Pro를 구매하세요."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "免费版每个相册（含文件夹）可存 5 个照片或视频。解锁 Pattern Pro 即可添加更多。"
+            "value" : "免费版每个相册（含文件夹）可存 5 个照片或视频。解锁 PatternVault Pro 即可添加更多。"
           }
         }
       }
@@ -26028,49 +26028,49 @@
         }
       }
     },
-    "This adds a separate shortcut. The installed app stays named Pattern. You can remove its original icon from the Home Screen without deleting the app." : {
+    "This adds a separate shortcut. The installed app stays named PatternVault. You can remove its original icon from the Home Screen without deleting the app." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dadurch wird ein separater Kurzbefehl hinzugefügt. Die installierte App heißt weiterhin Pattern. Du kannst das ursprüngliche Symbol vom Home-Bildschirm entfernen, ohne die App zu löschen."
+            "value" : "Dadurch wird ein separater Kurzbefehl hinzugefügt. Die installierte App heißt weiterhin PatternVault. Du kannst das ursprüngliche Symbol vom Home-Bildschirm entfernen, ohne die App zu löschen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This adds a separate shortcut. The installed app stays named Pattern. You can remove its original icon from the Home Screen without deleting the app."
+            "value" : "This adds a separate shortcut. The installed app stays named PatternVault. You can remove its original icon from the Home Screen without deleting the app."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cela ajoute un raccourci distinct. L’app installée garde le nom Pattern. Vous pouvez retirer son icône d’origine de l’écran d’accueil sans supprimer l’app."
+            "value" : "Cela ajoute un raccourci distinct. L’app installée garde le nom PatternVault. Vous pouvez retirer son icône d’origine de l’écran d’accueil sans supprimer l’app."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Viene aggiunto un comando rapido separato. L’app installata mantiene il nome Pattern. Puoi rimuovere l’icona originale dalla schermata Home senza eliminare l’app."
+            "value" : "Viene aggiunto un comando rapido separato. L’app installata mantiene il nome PatternVault. Puoi rimuovere l’icona originale dalla schermata Home senza eliminare l’app."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "別のショートカットが追加されます。インストール済みのアプリ名はPatternのままです。アプリを削除せずに、元のアイコンをホーム画面から取り除くことができます。"
+            "value" : "別のショートカットが追加されます。インストール済みのアプリ名はPatternVaultのままです。アプリを削除せずに、元のアイコンをホーム画面から取り除くことができます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "별도의 단축어가 추가됩니다. 설치된 앱 이름은 Pattern으로 유지됩니다. 앱을 삭제하지 않고 홈 화면에서 원래 아이콘만 제거할 수 있습니다."
+            "value" : "별도의 단축어가 추가됩니다. 설치된 앱 이름은 PatternVault으로 유지됩니다. 앱을 삭제하지 않고 홈 화면에서 원래 아이콘만 제거할 수 있습니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "这会添加一个单独的快捷指令。已安装的应用仍名为 Pattern。你可以将原图标从主屏幕移除，而不删除应用。"
+            "value" : "这会添加一个单独的快捷指令。已安装的应用仍名为 PatternVault。你可以将原图标从主屏幕移除，而不删除应用。"
           }
         }
       }
@@ -26169,48 +26169,48 @@
         }
       }
     },
-    "This backup format isn’t supported by this version of Pattern." : {
+    "This backup format isn’t supported by this version of PatternVault." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dieses Backup-Format wird von dieser Pattern-Version nicht unterstützt."
+            "value" : "Dieses Backup-Format wird von dieser PatternVault-Version nicht unterstützt."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This backup format isn’t supported by this version of Pattern."
+            "value" : "This backup format isn’t supported by this version of PatternVault."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cette version de Pattern ne prend pas en charge ce format de sauvegarde."
+            "value" : "Cette version de PatternVault ne prend pas en charge ce format de sauvegarde."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Questo formato di backup non è supportato da questa versione di Pattern."
+            "value" : "Questo formato di backup non è supportato da questa versione di PatternVault."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このバージョンのPatternはこのバックアップ形式に対応していません。"
+            "value" : "このバージョンのPatternVaultはこのバックアップ形式に対応していません。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 Pattern 버전은 해당 백업 형식을 지원하지 않습니다."
+            "value" : "이 PatternVault 버전은 해당 백업 형식을 지원하지 않습니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此版本的 Pattern 不支持该备份格式。"
+            "value" : "此版本的 PatternVault 不支持该备份格式。"
           }
         }
       }
@@ -26584,54 +26584,54 @@
         }
       }
     },
-    "This resets a pattern for a vault still on this device. After deleting and reinstalling Pattern, use Restore from iCloud instead; you’ll need your saved backup file and its phrase." : {
+    "This resets a pattern for a vault still on this device. After deleting and reinstalling PatternVault, use Restore from iCloud instead; you’ll need your saved backup file and its phrase." : {
       "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dies setzt das Muster eines noch vorhandenen Tresors zurück. Nutze nach dem Löschen und Neuinstallieren von Pattern „Aus iCloud wiederherstellen“. Du brauchst Backup-Datei und Phrase."
+            "value" : "Dies setzt das Muster eines noch vorhandenen Tresors zurück. Nutze nach dem Löschen und Neuinstallieren von PatternVault „Aus iCloud wiederherstellen“. Du brauchst Backup-Datei und Phrase."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This resets a pattern for a vault still on this device. After deleting and reinstalling Pattern, use Restore from iCloud instead; you’ll need your saved backup file and its phrase."
+            "value" : "This resets a pattern for a vault still on this device. After deleting and reinstalling PatternVault, use Restore from iCloud instead; you’ll need your saved backup file and its phrase."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cela réinitialise le schéma d’un coffre encore sur cet appareil. Après suppression et réinstallation de Pattern, utilisez Restaurer depuis iCloud avec votre sauvegarde et sa phrase."
+            "value" : "Cela réinitialise le schéma d’un coffre encore sur cet appareil. Après suppression et réinstallation de PatternVault, utilisez Restaurer depuis iCloud avec votre sauvegarde et sa phrase."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reimposta il segno di una cassaforte ancora sul dispositivo. Dopo aver eliminato e reinstallato Pattern, usa Ripristina da iCloud: servono il backup salvato e la sua frase."
+            "value" : "Reimposta il segno di una cassaforte ancora sul dispositivo. Dopo aver eliminato e reinstallato PatternVault, usa Ripristina da iCloud: servono il backup salvato e la sua frase."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このデバイスに残っている保管庫のパターンをリセットします。Patternを削除・再インストールした場合は「iCloudから復元」を使ってください。保存したバックアップとそのフレーズが必要です。"
+            "value" : "このデバイスに残っている保管庫のパターンをリセットします。PatternVaultを削除・再インストールした場合は「iCloudから復元」を使ってください。保存したバックアップとそのフレーズが必要です。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 기기에 남아 있는 보관함의 패턴을 재설정합니다. Pattern을 삭제하고 재설치했다면 iCloud에서 복원을 사용하세요. 저장한 백업 파일과 해당 문구가 필요합니다."
+            "value" : "이 기기에 남아 있는 보관함의 패턴을 재설정합니다. PatternVault을 삭제하고 재설치했다면 iCloud에서 복원을 사용하세요. 저장한 백업 파일과 해당 문구가 필요합니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "这会重设仍在此设备上的保险库图案。删除并重新安装 Pattern 后，请使用“从 iCloud 恢复”；你需要已保存的备份文件及其短语。"
+            "value" : "这会重设仍在此设备上的保险库图案。删除并重新安装 PatternVault 后，请使用“从 iCloud 恢复”；你需要已保存的备份文件及其短语。"
           }
         }
       }
     },
-    "This resets a pattern for a vault still on this device. After reinstalling Pattern, use Restore from iCloud with a completed backup and its recovery phrase." : {
+    "This resets a pattern for a vault still on this device. After reinstalling PatternVault, use Restore from iCloud with a completed backup and its recovery phrase." : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -26643,7 +26643,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This resets a pattern for a vault still on this device. After reinstalling Pattern, use Restore from iCloud with a completed backup and its recovery phrase."
+            "value" : "This resets a pattern for a vault still on this device. After reinstalling PatternVault, use Restore from iCloud with a completed backup and its recovery phrase."
           }
         },
         "fr" : {
@@ -29676,48 +29676,48 @@
         }
       }
     },
-    "View Pattern Pro" : {
+    "View PatternVault Pro" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Pro ansehen"
+            "value" : "PatternVault Pro ansehen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "View Pattern Pro"
+            "value" : "View PatternVault Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Voir Pattern Pro"
+            "value" : "Voir PatternVault Pro"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scopri Pattern Pro"
+            "value" : "Scopri PatternVault Pro"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Proを見る"
+            "value" : "PatternVault Proを見る"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern Pro 보기"
+            "value" : "PatternVault Pro 보기"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "查看 Pattern Pro"
+            "value" : "查看 PatternVault Pro"
           }
         }
       }
@@ -30139,48 +30139,48 @@
         }
       }
     },
-    "Welcome to Pattern. A calm home for the photos and videos you want to keep close." : {
+    "Welcome to PatternVault. A calm home for the photos and videos you want to keep close." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Willkommen bei Pattern. Ein ruhiger Ort für Fotos und Videos, die dir am Herzen liegen."
+            "value" : "Willkommen bei PatternVault. Ein ruhiger Ort für Fotos und Videos, die dir am Herzen liegen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Welcome to Pattern. A calm home for the photos and videos you want to keep close."
+            "value" : "Welcome to PatternVault. A calm home for the photos and videos you want to keep close."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bienvenue dans Pattern. Un espace paisible pour les photos et vidéos qui vous sont chères."
+            "value" : "Bienvenue dans PatternVault. Un espace paisible pour les photos et vidéos qui vous sont chères."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Benvenuto in Pattern. Uno spazio tranquillo per le foto e i video che vuoi tenere vicini."
+            "value" : "Benvenuto in PatternVault. Uno spazio tranquillo per le foto e i video che vuoi tenere vicini."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Patternへようこそ。大切な写真や動画をそばに置く、穏やかな場所です。"
+            "value" : "PatternVaultへようこそ。大切な写真や動画をそばに置く、穏やかな場所です。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern에 오신 것을 환영합니다. 소중한 사진과 동영상을 간직하는 편안한 공간입니다."
+            "value" : "PatternVault에 오신 것을 환영합니다. 소중한 사진과 동영상을 간직하는 편안한 공간입니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "欢迎使用 Pattern。在这里，安心珍藏你想留在身边的照片和视频。"
+            "value" : "欢迎使用 PatternVault。在这里，安心珍藏你想留在身边的照片和视频。"
           }
         }
       }

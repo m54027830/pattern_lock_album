@@ -8,7 +8,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Pattern"
+            "value" : "PatternVault"
           }
         }
       },
@@ -21,7 +21,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "patternlock"
+            "value" : "PatternVault"
           }
         }
       },

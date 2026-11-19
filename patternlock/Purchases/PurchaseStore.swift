@@ -84,7 +84,7 @@ nonisolated enum PurchaseError: LocalizedError {
         switch self {
         case .unavailable: String(localized: "The purchase is currently unavailable. Try again when the App Store is available.")
         case .unverified: String(localized: "The App Store purchase couldn’t be verified. Try Restore purchases.")
-        case .noScene: String(localized: "Return to Pattern and try the purchase again.")
+        case .noScene: String(localized: "Return to PatternVault and try the purchase again.")
         case .offerExpired: String(localized: "This special offer has ended. You can still unlock Pro at the regular price.")
         }
     }
@@ -202,7 +202,7 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
                 // Grant only the signed, verified entitlement, then acknowledge delivery.
                 refreshRevision += 1
                 setAccess(true)
-                message = String(localized: "Pattern Pro is unlocked.")
+                message = String(localized: "PatternVault Pro is unlocked.")
                 await client.finish(transactionID: transaction.id)
             }
         } catch { self.error = error.localizedDescription }
@@ -217,7 +217,7 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
             // This may show an Apple Account prompt; only a user action calls it.
             try await client.synchronize()
             await refreshEntitlements()
-            message = isUnlimited ? String(localized: "Your one-time purchase has been restored.") : String(localized: "No Pattern Pro purchase was found for this Apple Account.")
+            message = isUnlimited ? String(localized: "Your one-time purchase has been restored.") : String(localized: "No PatternVault Pro purchase was found for this Apple Account.")
         } catch { self.error = error.localizedDescription }
     }
 
@@ -236,7 +236,7 @@ nonisolated enum PurchaseStatus { case checking, free, unlimited }
         access.update(isUnlimited: verifiedUnlimited)
         let unlimited = access.isUnlimited
         if unlimited && status != .unlimited {
-            message = String(localized: "Pattern Pro is unlocked.")
+            message = String(localized: "PatternVault Pro is unlocked.")
             error = nil
         } else if !unlimited && status == .unlimited {
             message = String(localized: "Pro access is no longer available. Your existing albums and media are kept.")

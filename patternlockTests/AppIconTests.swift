@@ -39,7 +39,12 @@ import XCTest
             XCTAssertEqual(icon.shortcutName, icon.title)
         }
         XCTAssertEqual(client.calls.compactMap { $0 }, ["AppIconCalculator", "AppIconPrinter", "AppIconWiFi", "AppIconChatbot", "AppIconNotes", "AppIconWeather", "AppIconClock", "AppIconCompass"])
-        XCTAssertEqual(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String, "Pattern")
+        for key in ["CFBundleDisplayName", "CFBundleName"] {
+            XCTAssertEqual(Bundle.main.object(forInfoDictionaryKey: key) as? String, "PatternVault")
+        }
+        for icon in [.classic] + AppIcon.patternIcons {
+            XCTAssertEqual(icon.shortcutName, "PatternVault")
+        }
     }
 
     func testShortcutArtworkExportsAsAFullResolutionPNG() async throws {

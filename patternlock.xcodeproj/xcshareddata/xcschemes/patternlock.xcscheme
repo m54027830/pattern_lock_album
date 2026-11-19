@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "375C793930918C8500A5C58A"
-               BuildableName = "patternlock.app"
+               BuildableName = "PatternVault.app"
                BlueprintName = "patternlock"
                ReferencedContainer = "container:patternlock.xcodeproj">
             </BuildableReference>
@@ -55,7 +55,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "375C793930918C8500A5C58A"
-            BuildableName = "patternlock.app"
+            BuildableName = "PatternVault.app"
             BlueprintName = "patternlock"
             ReferencedContainer = "container:patternlock.xcodeproj">
          </BuildableReference>
@@ -72,7 +72,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "375C793930918C8500A5C58A"
-            BuildableName = "patternlock.app"
+            BuildableName = "PatternVault.app"
             BlueprintName = "patternlock"
             ReferencedContainer = "container:patternlock.xcodeproj">
          </BuildableReference>
