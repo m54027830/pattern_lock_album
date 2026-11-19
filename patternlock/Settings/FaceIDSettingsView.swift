@@ -112,7 +112,7 @@ private struct FaceIDSettingsConfirmationView: View {
         }
         .background(AlbumTheme.background)
         .navigationTitle(String(localized: "Confirm access")).navigationBarTitleDisplayMode(.inline)
-        .interactiveDismissDisabled(busy)
+        .protectedInteractiveDismissDisabled(busy)
         .onDisappear { operation?.cancel(); faceID.cancel(); currentPattern = [] }
     }
 

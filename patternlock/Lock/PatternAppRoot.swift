@@ -308,6 +308,6 @@ private struct PrivacyCover: View {
                 Image(systemName: "lock").font(.system(size: 32, weight: .light))
                 Text("PATTERN").font(.system(size: 12, weight: .semibold, design: .monospaced)).tracking(4)
             }.foregroundStyle(AlbumTheme.accent)
-        }.preferredColorScheme(.light)
+        }.protectedPreferredColorScheme(.light)
     }
 }

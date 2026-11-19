@@ -52,7 +52,7 @@ struct PatternSetupView: View {
         }
         .background(AlbumTheme.background)
         .navigationTitle(title).navigationBarTitleDisplayMode(.inline)
-        .interactiveDismissDisabled(busy)
+        .protectedInteractiveDismissDisabled(busy)
         .purchaseOffer(item: $purchaseLimit)
         .onChange(of: vaultName?.wrappedValue) { _, _ in error = nil }
         .onDisappear { operation?.cancel(); current = []; proposed = [] }
@@ -119,7 +119,7 @@ struct PatternAuthorizationView: View {
         }
         .background(AlbumTheme.background)
         .navigationTitle(title).navigationBarTitleDisplayMode(.inline)
-        .interactiveDismissDisabled(busy)
+        .protectedInteractiveDismissDisabled(busy)
         .onDisappear { operation?.cancel() }
     }
 }

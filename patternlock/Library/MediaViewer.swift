@@ -1,4 +1,3 @@
-import AVKit
 import QuickLook
 import SwiftUI
 
@@ -7,6 +6,7 @@ struct MediaViewer: View {
     let initialID: UUID
     @Bindable var store: LibraryStore
     @State private var currentID: UUID
+    @State private var mediaFullscreen = false
     @Environment(\.dismiss) private var dismiss
 
     init(items: [MediaItem], initialID: UUID, store: LibraryStore) {
@@ -19,22 +19,30 @@ struct MediaViewer: View {
     private var currentItem: MediaItem? { items.first { $0.id == currentID } }
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
+            if !mediaFullscreen { HStack {
                 Button { dismiss() } label: { Image(systemName: "xmark").font(.body.weight(.medium)).frame(width: 44, height: 44).background(.white.opacity(0.12), in: Circle()) }
                     .accessibilityLabel(String(localized: "Close preview"))
                 Spacer()
                 Text(String(localized: "\((items.firstIndex { $0.id == currentID } ?? 0) + 1) of \(items.count)")).font(.subheadline).foregroundStyle(.white.opacity(0.7))
                 Spacer()
+                if currentItem?.kind == .photo || currentItem?.kind == .video {
+                    Button { mediaFullscreen = true } label: {
+                        Image(systemName: "arrow.up.left.and.arrow.down.right")
+                            .font(.body).frame(width: 44, height: 44).background(.white.opacity(0.12), in: Circle())
+                    }
+                    .accessibilityLabel(currentItem?.kind == .video ? String(localized: "View video fullscreen") : String(localized: "View photo fullscreen"))
+                    .accessibilityIdentifier("mediaFullscreen")
+                }
                 if store.allowsExport { Button { Task { await store.export([currentID]) } } label: {
                     Image(systemName: "square.and.arrow.up").font(.body).frame(width: 44, height: 44).background(.white.opacity(0.12), in: Circle())
                 }.accessibilityLabel(String(localized: "Export media")).disabled(store.isBusy) }
-            }.padding(.horizontal, 20).padding(.vertical, 12)
+            }.padding(.horizontal, 20).padding(.vertical, 12) }
             TabView(selection: $currentID) {
                 ForEach(items) { item in
                     MediaPage(item: item, url: store.repository.mediaURL(item), isActive: item.id == currentID).tag(item.id)
                 }
             }.tabViewStyle(.page(indexDisplayMode: .never))
-            if let item = currentItem {
+            if !mediaFullscreen, let item = currentItem {
                 VStack(spacing: 6) {
                     Text(item.originalName).font(.subheadline.weight(.medium)).lineLimit(1)
                     Text(String(localized: "Added \(item.importedAt.formatted(date: .abbreviated, time: .shortened))"))
@@ -42,9 +50,23 @@ struct MediaViewer: View {
                 }.padding(22)
             }
         }
-        .background(Color.black).foregroundStyle(.white).preferredColorScheme(.dark)
+        .ignoresSafeArea(edges: mediaFullscreen ? .all : [])
+        .overlay(alignment: .topTrailing) {
+            if mediaFullscreen {
+                Button { mediaFullscreen = false } label: {
+                    Image(systemName: "arrow.down.right.and.arrow.up.left")
+                        .font(.body.weight(.medium)).frame(width: 44, height: 44)
+                        .background(.black.opacity(0.55), in: Circle())
+                }
+                .accessibilityLabel(String(localized: "Exit fullscreen"))
+                .accessibilityIdentifier("exitMediaFullscreen")
+                .padding(.horizontal, 20).padding(.top, 12)
+            }
+        }
+        .onChange(of: currentID) { _, _ in if currentItem?.kind != .photo && currentItem?.kind != .video { mediaFullscreen = false } }
+        .background(Color.black).foregroundStyle(.white).protectedPreferredColorScheme(.dark)
         .statusBarHidden()
-        .sheet(item: $store.exportSession, onDismiss: { store.finishExport() }) { session in
+        .protectedSheet(item: $store.exportSession, onDismiss: { store.finishExport() }) { session in
             ShareSheet(urls: session.urls) { store.finishExport() }
         }
         .overlay { if store.isBusy { ProgressView(String(localized: "Preparing export…")).padding(24).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16)) } }
@@ -59,9 +81,7 @@ private struct MediaPage: View {
     let url: URL
     let isActive: Bool
     @State private var image: UIImage?
-    @State private var player: AVPlayer?
     @State private var failed = false
-    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         Group {
@@ -70,8 +90,7 @@ private struct MediaPage: View {
             } else if item.kind == .document {
                 VaultDocumentPreview(url: url, name: item.originalName)
             } else if item.kind == .video {
-                if let player { FullscreenVideoPlayer(player: player) }
-                else { ProgressView().tint(.white) }
+                VaultVideoPlayback(url: url, isActive: isActive)
             } else if let image {
                 ZoomablePhoto(image: image)
             } else if failed {
@@ -79,15 +98,8 @@ private struct MediaPage: View {
             } else { ProgressView().tint(.white) }
         }
         .task(id: item.id) {
-            if item.kind == .video {
-                // Returning from native fullscreen can restart this task.
-                // Keep the same player so its position is preserved.
-                if player == nil { player = AVPlayer(url: url); player?.allowsExternalPlayback = false }
-            }
-            else if item.kind == .photo { image = await ImageLoader.shared.image(at: url, maxPixels: 3000); failed = image == nil }
+            if item.kind == .photo { image = await ImageLoader.shared.image(at: url, maxPixels: 3000); failed = image == nil }
         }
-        .onChange(of: isActive) { _, active in if !active { player?.pause() } }
-        .onChange(of: scenePhase) { _, phase in if phase != .active { player?.pause() } }
     }
 }
 
@@ -151,30 +163,6 @@ private struct VaultDocumentPreview: UIViewControllerRepresentable {
         func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> any QLPreviewItem { self }
         func previewController(_ controller: QLPreviewController, editingModeFor previewItem: any QLPreviewItem) -> QLPreviewItemEditingMode { .disabled }
         func previewController(_ controller: QLPreviewController, shouldOpen url: URL, for item: any QLPreviewItem) -> Bool { false }
-    }
-}
-
-private struct FullscreenVideoPlayer: UIViewControllerRepresentable {
-    let player: AVPlayer
-
-    func makeUIViewController(context: Context) -> AVPlayerViewController {
-        let controller = AVPlayerViewController()
-        controller.player = player
-        controller.showsPlaybackControls = true
-        // Vault media must stay inside the app's lock and privacy cover.
-        controller.allowsPictureInPicturePlayback = false
-        return controller
-    }
-
-    func updateUIViewController(_ controller: AVPlayerViewController, context: Context) {
-        if controller.player !== player { controller.player = player }
-    }
-
-    static func dismantleUIViewController(_ controller: AVPlayerViewController, coordinator: ()) {
-        // Native fullscreen covers MediaPage without ending playback. Stop only
-        // when its controller is removed; page changes/backgrounding pause above.
-        controller.player?.pause()
-        controller.player = nil
     }
 }
 

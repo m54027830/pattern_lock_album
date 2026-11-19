@@ -70,7 +70,7 @@ struct ContentView: View {
         }
         .navigationSplitViewStyle(.balanced)
         .tint(AlbumTheme.accent)
-        .preferredColorScheme(.light)
+        .protectedPreferredColorScheme(.light)
     }
 
     private var folderSidebar: some View {
@@ -143,27 +143,27 @@ struct ContentView: View {
                 case .failure(let error): store.errorMessage = error.localizedDescription
                 }
             }
-            .sheet(item: $addDestination) { destination in
+            .protectedSheet(item: $addDestination) { destination in
                 if destination == .memo { MemoComposer(store: store, folderID: importFolderID) }
             }
-            .fullScreenCover(isPresented: $showingCamera) { VaultCameraView(store: store, folderID: importFolderID) }
+            .protectedFullScreenCover(isPresented: $showingCamera) { VaultCameraView(store: store, folderID: importFolderID) }
             .purchaseOffer(isPresented: $showingUpgrade)
             .purchaseOffer(item: $store.purchaseLimit)
-            .sheet(item: $folderEditor) { destination in
+            .protectedSheet(item: $folderEditor) { destination in
                 FolderEditor(folder: destination.folder, store: store)
             }
-            .sheet(isPresented: $showingSettings) {
+            .protectedSheet(isPresented: $showingSettings) {
                 if let vault {
                     VaultSettingsView(store: store, vault: vault, onVaultChanged: { onVaultChanged?($0) }, onDeleted: { onVaultDeleted?() })
                 }
             }
-            .sheet(isPresented: $showingMove) {
+            .protectedSheet(isPresented: $showingMove) {
                 MoveMediaSheet(store: store, selected: selected) { finishSelection() }
             }
-            .sheet(item: Binding(get: { viewer == nil ? store.exportSession : nil }, set: { if viewer == nil { store.exportSession = $0 } }), onDismiss: { store.finishExport() }) { session in
+            .protectedSheet(item: Binding(get: { viewer == nil ? store.exportSession : nil }, set: { if viewer == nil { store.exportSession = $0 } }), onDismiss: { store.finishExport() }) { session in
                 ShareSheet(urls: session.urls) { store.finishExport() }
             }
-            .fullScreenCover(item: $viewer) { destination in
+            .protectedFullScreenCover(item: $viewer) { destination in
                 MediaViewer(items: visibleItems, initialID: destination.id, store: store)
             }
             .alert(String(localized: "Something went wrong"), isPresented: Binding(get: { store.errorMessage != nil && viewer == nil && folderEditor == nil && addDestination == nil && !showingCamera && !showingMove }, set: { if !$0 { store.errorMessage = nil } })) {
@@ -210,7 +210,7 @@ struct ContentView: View {
             .onDisappear { cloudTask?.cancel() }
         }
         .tint(AlbumTheme.accent)
-        .preferredColorScheme(.light)
+        .protectedPreferredColorScheme(.light)
     }
 
     private func scheduleCloudUpdate() {

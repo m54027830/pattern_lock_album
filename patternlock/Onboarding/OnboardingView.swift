@@ -80,23 +80,23 @@ struct OnboardingView: View {
         }
         .background(AlbumTheme.background.ignoresSafeArea())
         .safeAreaInset(edge: .bottom) { footer }
-        .foregroundStyle(AlbumTheme.ink).tint(AlbumTheme.accent).preferredColorScheme(.light)
+        .foregroundStyle(AlbumTheme.ink).tint(AlbumTheme.accent).protectedPreferredColorScheme(.light)
         .disabled(setup.busy)
         .onDisappear { operation?.cancel(); setup.clearSecrets() }
         .purchaseOffer(isPresented: $showingProOffer, onDismiss: finishSetup)
-        .sheet(item: $phraseShare) { share in
+        .protectedSheet(item: $phraseShare) { share in
             OnboardingNotesShareGuide(phrase: share.phrase) { completed in
                 setup.recordPhraseShare(completed: completed, phraseID: share.id)
                 phraseShare = nil
             }
         }
-        .sheet(isPresented: $showingJoin) {
+        .protectedSheet(isPresented: $showingJoin) {
             NavigationStack {
                 JoinSharedVaultView(onJoined: { showingJoin = false; onRestored?() })
                     .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { showingJoin = false } } }
             }.tint(AlbumTheme.accent)
         }
-        .sheet(isPresented: $showingRestore) {
+        .protectedSheet(isPresented: $showingRestore) {
             NavigationStack {
                 RestoreVaultView(onRestored: { showingRestore = false; onRestored?() })
                     .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { showingRestore = false } } }

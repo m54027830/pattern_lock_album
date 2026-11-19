@@ -161,22 +161,22 @@ struct PatternLockView: View {
         }
         .background(AlbumTheme.background.ignoresSafeArea())
         .tint(AlbumTheme.accent)
-        .preferredColorScheme(.light)
+        .protectedPreferredColorScheme(.light)
         .sensoryFeedback(.error, trigger: lock.failureRevision)
         .purchaseOffer(item: $lock.purchaseLimit)
-        .sheet(isPresented: $showingRecovery) {
+        .protectedSheet(isPresented: $showingRecovery) {
             NavigationStack {
                 RecoverPatternView { showingRecovery = false; lock.lock(); Task { await lock.activate() } }
                     .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { showingRecovery = false } } }
             }.tint(AlbumTheme.accent)
         }
-        .sheet(isPresented: $showingJoin) {
+        .protectedSheet(isPresented: $showingJoin) {
             NavigationStack {
                 JoinSharedVaultView(onJoined: { showingJoin = false; Task { await lock.activate() } })
                     .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { showingJoin = false } } }
             }.tint(AlbumTheme.accent)
         }
-        .sheet(isPresented: $showingRestore) {
+        .protectedSheet(isPresented: $showingRestore) {
             NavigationStack {
                 RestoreVaultView(onRestored: { showingRestore = false; lock.lock(); Task { await lock.activate() } })
                     .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { showingRestore = false } } }

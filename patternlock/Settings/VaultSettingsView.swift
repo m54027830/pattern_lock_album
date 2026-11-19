@@ -156,7 +156,7 @@ struct VaultSettingsView: View {
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button(String(localized: "Done")) { dismiss() } } }
             .purchaseOffer(isPresented: $showingPurchase)
             .task(id: revision) { await load() }
-            .sheet(isPresented: $renaming) {
+            .protectedSheet(isPresented: $renaming) {
                 RenameVaultView(name: vault.name) { name in
                     vault = try await authenticator.renameVault(vault.id, name: name)
                     onVaultChanged(vault)
@@ -229,8 +229,8 @@ private struct RenameVaultView: View {
             }
         }
         .tint(AlbumTheme.accent)
-        .presentationDetents([.medium, .large])
-        .interactiveDismissDisabled(busy)
+        .protectedPresentationDetents([.medium, .large])
+        .protectedInteractiveDismissDisabled(busy)
     }
 }
 

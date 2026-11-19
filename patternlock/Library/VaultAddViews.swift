@@ -85,7 +85,7 @@ struct MemoComposer: View {
             }
             .overlay { if store.isBusy { ProgressView() } }
             .onAppear { focused = true }
-            .interactiveDismissDisabled(!text.isEmpty || store.isBusy)
+            .protectedInteractiveDismissDisabled(!text.isEmpty || store.isBusy)
         }
         .tint(AlbumTheme.accent)
     }

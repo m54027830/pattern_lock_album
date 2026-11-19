@@ -73,7 +73,26 @@ func render(_ name: String, pixels: Int) -> CGImage {
         c.closePath()
         c.fillPath()
         c.restoreGState()
-        rect(280, 280, 360, 360, 58, isPurchase ? (isSpecial ? 0xBA965B : 0x70889E) : 0xA6B4B5)
+        if isPurchase {
+            rect(280, 280, 360, 360, 58, isSpecial ? 0xBA965B : 0x70889E)
+        } else {
+            // Three distinct rear-tile sections echo the gold, green, and blue
+            // keys in Passwords while preserving Pattern's overlapping squares.
+            c.saveGState()
+            c.addPath(CGPath(roundedRect: CGRect(x: 280, y: 280, width: 360, height: 360),
+                             cornerWidth: 58, cornerHeight: 58, transform: nil))
+            c.clip()
+            let sections: [(UInt32, UInt32)] = [(0xF1D15B, 0xC3A139), (0x78C878, 0x439B57), (0x4E9EE4, 0x286CB3)]
+            for (index, shades) in sections.enumerated() {
+                let x = CGFloat(280 + index * 120)
+                c.saveGState()
+                c.clip(to: CGRect(x: x, y: 280, width: 120, height: 360))
+                let gradient = CGGradient(colorsSpace: space, colors: [color(shades.0), color(shades.1)] as CFArray, locations: [0, 1])!
+                c.drawLinearGradient(gradient, start: CGPoint(x: x, y: 280), end: CGPoint(x: x + 120, y: 640), options: [])
+                c.restoreGState()
+            }
+            c.restoreGState()
+        }
         rect(384, 384, 360, 360, 58, isPurchase ? (isSpecial ? 0xF8E7BE : 0xE0E6EA) : 0xDBE0DB)
         if isPurchase {
             // Both products unlock the same unlimited access: the same infinity mark.

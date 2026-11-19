@@ -61,7 +61,7 @@ struct CaptureReviewView: View {
 
             Group {
                 if draft.media.kind == .video {
-                    CaptureReviewVideo(url: draft.media.url, isSaving: isSaving)
+                    VaultVideoPlayback(url: draft.media.url, isSaving: isSaving)
                 } else {
                     CaptureReviewPhoto(url: draft.media.url)
                 }
@@ -84,7 +84,7 @@ struct CaptureReviewView: View {
             .padding(20)
             .frame(maxWidth: 560)
         }
-        .foregroundStyle(.white).background(.black).preferredColorScheme(.dark)
+        .foregroundStyle(.white).background(.black).protectedPreferredColorScheme(.dark)
         .accessibilityIdentifier("captureReview")
         .overlay {
             if isSaving {
@@ -121,12 +121,14 @@ private struct CaptureReviewPhoto: View {
     }
 }
 
-/// Inline playback avoids a second fullscreen presentation during capture review.
-/// The player never enables external playback or Picture in Picture.
-private struct CaptureReviewVideo: View {
+/// Playback stays inside the protected capture-review or fullscreen media viewer.
+/// A separate native AVKit fullscreen presentation would escape its secure canvas.
+struct VaultVideoPlayback: View {
     let url: URL
-    let isSaving: Bool
+    var isSaving = false
+    var isActive = true
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.isSceneCaptured) private var isCaptured
     @State private var player: AVPlayer?
     @State private var duration = 0.0
     @State private var scrubPosition = 0.0
@@ -162,7 +164,7 @@ private struct CaptureReviewVideo: View {
                                 player.pause()
                             } else {
                                 player.seek(to: CMTime(seconds: scrubPosition, preferredTimescale: 600))
-                                if resumeAfterScrubbing && !isSaving && scenePhase == .active { player.play() }
+                                if resumeAfterScrubbing && !isSaving && isActive && !isCaptured && scenePhase == .active { player.play() }
                                 resumeAfterScrubbing = false
                             }
                             isScrubbing = editing
@@ -171,7 +173,7 @@ private struct CaptureReviewVideo: View {
                         Text(verbatim: timestamp(isScrubbing ? scrubPosition : position) + " / " + timestamp(duration))
                             .font(.caption.monospacedDigit()).fixedSize()
                     }
-                    .disabled(isSaving).padding(.horizontal, 16)
+                    .disabled(isSaving || !isActive || isCaptured).padding(.horizontal, 16)
                 }
             } else if failed {
                 ContentUnavailableView(String(localized: "This file could not be opened."), systemImage: "video")
@@ -190,6 +192,8 @@ private struct CaptureReviewVideo: View {
             } catch { if !Task.isCancelled { failed = true } }
         }
         .onChange(of: isSaving) { _, saving in if saving { pause() } }
+        .onChange(of: isActive) { _, active in if !active { pause() } }
+        .onChange(of: isCaptured) { _, captured in if captured { pause() } }
         .onChange(of: scenePhase) { _, phase in if phase != .active { pause() } }
         .onDisappear { pause(); player?.replaceCurrentItem(with: nil); player = nil }
     }

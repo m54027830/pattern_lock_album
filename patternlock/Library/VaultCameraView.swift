@@ -66,7 +66,7 @@ struct VaultCameraView: View {
                 }
             }
         }
-        .background(.black).preferredColorScheme(.dark)
+        .background(.black).protectedPreferredColorScheme(.dark)
         .task(id: cameraScene) { await authorize() }
         .onChange(of: silentCamera.error) { _, message in if let message { error = message } }
         .onChange(of: scenePhase) { _, phase in if phase == .background { close() } }

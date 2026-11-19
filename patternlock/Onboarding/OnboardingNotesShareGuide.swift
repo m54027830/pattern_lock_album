@@ -59,7 +59,7 @@ struct OnboardingNotesShareGuide: View {
                     Button(String(localized: "Cancel")) { completion(false) }
                 }
             }
-            .sheet(isPresented: $showingShareSheet) {
+            .protectedSheet(isPresented: $showingShareSheet) {
                 OnboardingPhraseShareSheet(phrase: phrase) { completed in
                     showingShareSheet = false
                     // The system may dismiss its tray before reporting success.
@@ -69,9 +69,9 @@ struct OnboardingNotesShareGuide: View {
             }
         }
         .foregroundStyle(AlbumTheme.ink).tint(AlbumTheme.accent)
-        .preferredColorScheme(.light)
-        .presentationDetents([.large])
-        .presentationDragIndicator(.visible)
+        .protectedPreferredColorScheme(.light)
+        .protectedPresentationDetents([.large])
+        .protectedPresentationDragIndicator(.visible)
         .accessibilityIdentifier("onboardingNotesShareGuide")
     }
 

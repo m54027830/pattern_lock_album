@@ -68,8 +68,8 @@ struct PurchaseView: View {
         // Scope the offer's appearance to its own content. A presentation-level
         // preference can leave the presenting settings sheet in dark appearance.
         .environment(\.colorScheme, isSpecial ? .dark : .light)
-        .interactiveDismissDisabled()
-        .presentationDragIndicator(.hidden)
+        .protectedInteractiveDismissDisabled()
+        .protectedPresentationDragIndicator(.hidden)
     }
 
     private var hero: some View {

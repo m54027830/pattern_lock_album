@@ -96,6 +96,8 @@ struct VaultSharingSettingsView: View {
     @State private var allowsExport = true
     @State private var phrase: String?
     @State private var busy = false
+    @State private var creatingPhrase = false
+    @State private var showingLabelError = false
     @State private var error: String?
     @State private var showingPurchase = false
     @State private var revoking: OwnedVaultShare?
@@ -120,17 +122,31 @@ struct VaultSharingSettingsView: View {
                 Toggle(String(localized: "Limit number of opens"), isOn: $limitsOpens)
                 if limitsOpens { Stepper(String(localized: "Maximum opens: \(maximumOpens)"), value: $maximumOpens, in: 1...1000) }
                 Toggle(String(localized: "Allow export"), isOn: $allowsExport)
-                Button(purchases.isUnlimited ? String(localized: "Create sharing phrase") : String(localized: "Unlock sharing"),
-                       systemImage: purchases.isUnlimited ? "person.badge.plus" : "lock.fill") {
+                Button {
+                    guard !busy, !cloud.busyVaults.contains(vault.id) else { return }
+                    guard !label.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                        showingLabelError = true
+                        return
+                    }
                     if !purchases.isUnlimited { showingPurchase = true }
                     else {
-                        run {
+                        run(creatingShare: true) {
                             phrase = try await cloud.createShare(vault: vault, store: store, label: label,
                                 policy: VaultSharePolicy(expiresAt: expires ? expiry : nil, maximumOpens: limitsOpens ? maximumOpens : nil, allowsExport: allowsExport))
                         }
                     }
+                } label: {
+                    if creatingPhrase {
+                        HStack(spacing: 10) {
+                            ProgressView()
+                            Text(String(localized: "Creating sharing phrase…"))
+                        }
+                    } else {
+                        Label(purchases.isUnlimited ? String(localized: "Create sharing phrase") : String(localized: "Unlock sharing"),
+                              systemImage: purchases.isUnlimited ? "person.badge.plus" : "lock.fill")
+                    }
                 }
-                .disabled(purchases.status == .checking || label.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .disabled(busy || cloud.busyVaults.contains(vault.id) || purchases.status == .checking)
                 .accessibilityIdentifier("createSharingPhrase")
             } header: { Text(String(localized: "Share this vault")) } footer: {
                 Text(String(localized: "Creating shares requires Pattern Pro. Opening a shared vault is free. Each phrase can be claimed by one Apple Account. Create a separate phrase for each person."))
@@ -156,7 +172,7 @@ struct VaultSharingSettingsView: View {
                     Button(String(localized: "Send latest changes")) { run { try await cloud.synchronize(vault: vault, store: store, force: true) } }
                 } header: { Text(String(localized: "People with access")) }
             }
-            if busy { Section { ProgressView(String(localized: "Updating iCloud…")) } }
+            if busy && !creatingPhrase { Section { ProgressView(String(localized: "Updating iCloud…")) } }
             if let error { Section { Text(error).foregroundStyle(.red) } }
             if cloud.deletionError != nil {
                 Section {
@@ -170,6 +186,11 @@ struct VaultSharingSettingsView: View {
         .navigationTitle(String(localized: "Sharing")).navigationBarTitleDisplayMode(.inline)
         .task { await purchases.start(); await reload() }
         .purchaseOffer(isPresented: $showingPurchase, purchases: purchases)
+        .alert(String(localized: "Recipient label required"), isPresented: $showingLabelError) {
+            Button(String(localized: "OK"), role: .cancel) {}
+        } message: {
+            Text(String(localized: "Enter a recipient label before creating a sharing phrase."))
+        }
         .confirmationDialog(String(localized: "Revoke this person’s access?"), isPresented: Binding(get: { revoking != nil }, set: { if !$0 { revoking = nil } }), titleVisibility: .visible) {
             if let share = revoking {
                 Button(String(localized: "Revoke access"), role: .destructive) { run { try await cloud.revoke(vaultID: vault.id, shareID: share.id); phrase = nil } }
@@ -181,11 +202,13 @@ struct VaultSharingSettingsView: View {
         do { shares = try await cloud.authenticator.settings(for: vault.id).ownedShares ?? [] }
         catch { self.error = error.localizedDescription }
     }
-    private func run(_ action: @escaping @MainActor () async throws -> Void) {
-        busy = true; error = nil
+    private func run(creatingShare: Bool = false, _ action: @escaping @MainActor () async throws -> Void) {
+        guard !busy, !cloud.busyVaults.contains(vault.id) else { return }
+        busy = true; creatingPhrase = creatingShare; error = nil
         Task {
+            defer { busy = false; creatingPhrase = false }
             do { try await action() } catch { self.error = error.localizedDescription }
-            await reload(); busy = false
+            await reload()
         }
     }
 }

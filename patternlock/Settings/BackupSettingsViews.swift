@@ -70,7 +70,7 @@ struct BackupExportView: View {
         }
         .scrollContentBackground(.hidden).background(AlbumTheme.background)
         .navigationTitle(String(localized: "Export backup file")).navigationBarTitleDisplayMode(.inline)
-        .sheet(item: $export, onDismiss: cleanup) { backup in
+        .protectedSheet(item: $export, onDismiss: cleanup) { backup in
             BackupFileExporter(url: backup.url) { didSave in saved = didSave; export = nil; cleanupURL(backup.url) }
                 .ignoresSafeArea()
         }

@@ -134,6 +134,27 @@ import XCTest
         equal(try await auth.settings(for: vault.id).ownedShares?.first?.label, "Family")
     }
 
+    func testSharingBlocksRepeatedRequestsWhileProcessingAndClearsBusyAfterFailure() async throws {
+        let (auth, vault, store, transport, service, _) = try await fixture()
+        await transport.pauseNextAccountRequest()
+        let first = Task { try await service.createShare(vault: vault, store: store, label: "Friend", policy: VaultSharePolicy()) }
+        for _ in 0..<100 where await transport.accountCalls == 0 { await Task.yield() }
+        truth(service.busyVaults.contains(vault.id))
+        do {
+            _ = try await service.createShare(vault: vault, store: store, label: "Friend", policy: VaultSharePolicy())
+            XCTFail("Repeated tap created another sharing request")
+        } catch VaultSettingsError.busy {} catch { XCTFail("Unexpected error: \(error)") }
+        equal(await transport.accountCalls, 1)
+        await transport.resumeAccountRequest()
+        _ = try await first.value
+        truth(service.busyVaults.isEmpty)
+        equal(try await auth.settings(for: vault.id).ownedShares?.count, 1)
+
+        await transport.setOffline(true)
+        do { _ = try await service.createShare(vault: vault, store: store, label: "Another friend", policy: VaultSharePolicy()); XCTFail("Offline sharing succeeded") } catch {}
+        XCTAssertTrue(service.busyVaults.isEmpty, "A failed request must allow retrying")
+    }
+
     func testSharingUsesIndependentSecretsAndFreeRecipientIsReadOnly() async throws {
         let (auth, vault, store, transport, service, root) = try await fixture()
         _ = await store.saveFolder(nil, name: "For you", colorIndex: 3)
@@ -342,10 +363,21 @@ actor TestCloudTransport: VaultCloudTransport {
     var shareRecords: [String: Record] = [:]
     var invitations: [String: CloudEnvelope] = [:]
     var claimers: [String: String] = [:]
+    private var pausesAccount = false
+    private var accountContinuation: CheckedContinuation<Void, Never>?
+    func pauseNextAccountRequest() { pausesAccount = true }
+    func resumeAccountRequest() { accountContinuation?.resume(); accountContinuation = nil }
     func setAccount(_ value: String) { account = value }
     func setOffline(_ value: Bool) { offline = value }
     private func check() throws { if offline { throw URLError(.notConnectedToInternet) } }
-    func accountID() throws -> String { accountCalls += 1; try check(); return account }
+    func accountID() async throws -> String {
+        accountCalls += 1
+        if pausesAccount {
+            pausesAccount = false
+            await withCheckedContinuation { accountContinuation = $0 }
+        }
+        try check(); return account
+    }
     func backups() throws -> [CloudBackupSummary] { try check(); return backupRecords.keys.map { CloudBackupSummary(id: $0, date: .now) } }
     func uploadBackup(id: String, archive: URL, metadata: Data, recovery: CloudEnvelope) throws {
         try check(); backupRecords[id] = Record(archive: try Data(contentsOf: archive), metadata: metadata, recovery: recovery)

@@ -223,8 +223,8 @@ struct FolderEditor: View {
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { dismiss() } } }
             .onAppear { name = folder?.name ?? ""; colorIndex = folder?.colorIndex ?? 0 }
         }
-        .presentationDetents([.height(510), .large])
-        .presentationDragIndicator(.visible)
+        .protectedPresentationDetents([.height(510), .large])
+        .protectedPresentationDragIndicator(.visible)
         .tint(AlbumTheme.accent)
     }
 
@@ -260,11 +260,11 @@ struct MoveMediaSheet: View {
             .scrollContentBackground(.hidden).background(AlbumTheme.background)
             .navigationTitle(String(localized: "Move to folder")).navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "Cancel")) { dismiss() } } }
-            .sheet(isPresented: $creatingFolder) { FolderEditor(folder: nil, store: store) }
+            .protectedSheet(isPresented: $creatingFolder) { FolderEditor(folder: nil, store: store) }
             .alert(String(localized: "Couldn’t move items"), isPresented: Binding(get: { store.errorMessage != nil && !creatingFolder }, set: { if !$0 { store.errorMessage = nil } })) {
                 Button(String(localized: "OK"), role: .cancel) { store.errorMessage = nil }
             } message: { Text(store.errorMessage ?? "") }
-        }.tint(AlbumTheme.accent).presentationDetents([.medium, .large])
+        }.tint(AlbumTheme.accent).protectedPresentationDetents([.medium, .large])
     }
     private func move(to id: UUID?) {
         Task { if await store.move(selected, to: id) { completion(); dismiss() } }

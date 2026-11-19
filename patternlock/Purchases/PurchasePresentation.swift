@@ -33,7 +33,7 @@ import SwiftUI
 
     func body(content: Content) -> some View {
         content
-            .sheet(item: $flow.offer, onDismiss: {
+            .protectedSheet(item: $flow.offer, onDismiss: {
                 if flow.presentationDidDismiss(purchases: purchases) {
                     isPresented = false
                     onDismiss?()

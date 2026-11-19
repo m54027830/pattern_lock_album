@@ -122,12 +122,18 @@ logic, not Apple's claim semantics, quotas, account permissions, or delivery.
    and export enabled/disabled. Update the owner's vault, then reopen the
    recipient's vault to receive the new version. Recipients cannot upload edits.
 8. Test expiration and open limits across relaunch. In all app screens (including
-   presented photos/video, onboarding, and sheets), recording/mirroring must show
+   presented photos/video, onboarding, and sheets), verify the secure text-field
+   canvas excludes the first hardware screenshot while taps, keyboard entry,
+   scrolling, photo zoom, and fullscreen controls still work. This relies on
+   undocumented UIKit behavior; simulator renderings are not proof of hardware
+   screenshot exclusion. Also verify recording/mirroring shows
    a blank white cover until capture ends. Start recording before launch as well
    as while the app is open. A screenshot notification covers the app for two
    seconds, then restores its prior state; it must not uncover ongoing recording
    or an inactive scene. Verify on an iPhone/iPad: the original screenshot is
-   already saved before notification and cannot be blanked retroactively. These
+   already saved before notification; first-frame protection must come from the
+   secure canvas, never from that later event. Test OS updates and system-owned
+   previews/share UI separately. These
    are app policies; reinstall/removal can reset local open counts.
 9. Revoke while online and while offline. A pending revocation must remain
    queued across relaunch and complete later. After server revocation, recipient
